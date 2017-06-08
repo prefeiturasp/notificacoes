@@ -188,6 +188,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\SGP\v1\CourseController.cs" />
+    <Compile Include="Areas\SGP\v1\CoursePeriodController.cs" />
+    <Compile Include="Areas\SGP\v1\DisciplineController.cs" />
+    <Compile Include="Areas\SGP\v1\PositionController.cs" />
+    <Compile Include="Areas\SGP\v1\SchoolClassificationController.cs" />
+    <Compile Include="Areas\SGP\v1\SchoolController.cs" />
+    <Compile Include="Areas\SGP\v1\SchoolSuperiorController.cs" />
+    <Compile Include="Areas\SGP\v1\TeamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
