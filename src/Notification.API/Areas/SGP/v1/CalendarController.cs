@@ -9,12 +9,12 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.SGP.v1
 {
-    public class DisciplineController : ApiController
+    public class CalendarController : ApiController
     {
         [HttpGet]
-        [Route("api/SGP/v1/Discipline")]
-        [ResponseType(typeof(IEnumerable<Discipline>))]
-        public HttpResponseMessage Get(int calendarId, Nullable<int> courseId = null, Nullable<int> coursePeriodId = null)
+        [Route("api/SGP/v1/Calendar")]
+        [ResponseType(typeof(IEnumerable<Calendar>))]
+        public HttpResponseMessage Get()
         {
             try
             {

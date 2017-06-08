@@ -43,6 +43,15 @@
     <Compile Include="API\CoreSSO\Group.cs" />
     <Compile Include="API\CoreSSO\GroupAU.cs" />
     <Compile Include="API\CoreSSO\System.cs" />
+    <Compile Include="API\SGP\Calendar.cs" />
+    <Compile Include="API\SGP\Course.cs" />
+    <Compile Include="API\SGP\CoursePeriod.cs" />
+    <Compile Include="API\SGP\Discipline.cs" />
+    <Compile Include="API\SGP\Position.cs" />
+    <Compile Include="API\SGP\School.cs" />
+    <Compile Include="API\SGP\SchoolClassification.cs" />
+    <Compile Include="API\SGP\SchoolSuperior.cs" />
+    <Compile Include="API\SGP\Team.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
