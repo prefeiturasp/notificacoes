@@ -11,6 +11,12 @@ namespace Notification.API.Areas.HelpPage.Controllers
     /// </summary>
     public class HelpController : Controller
     {
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (!HttpContext.IsDebuggingEnabled)
+                filterContext.Result = new HttpStatusCodeResult(System.Net.HttpStatusCode.NotFound);
+        }
+
         private const string ErrorViewName = "Error";
 
         public HelpController()
