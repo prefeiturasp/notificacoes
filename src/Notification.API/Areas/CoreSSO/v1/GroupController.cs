@@ -1,4 +1,5 @@
-﻿using Notification.Entity.API.CoreSSO;
+﻿using Notification.Business.CoreSSO;
+using Notification.Entity.API.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,14 @@ namespace Notification.API.Areas.CoreSSO.v1
     public class GroupController : ApiController
     {
         [HttpGet]
-        [Route("api/CoreSSO/v1/Group")]
+        [Route("api/CoreSSO/v1/GroupDown")]
         [ResponseType(typeof(IEnumerable<Group>))]
         public HttpResponseMessage Get(int systemId)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = GroupBusiness.GetGroupDown(new Guid(), systemId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)
             {

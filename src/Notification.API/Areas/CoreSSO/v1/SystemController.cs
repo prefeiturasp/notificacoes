@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Notification.Business.CoreSSO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,7 +18,8 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);                
+                var result = SystemBusiness.Get(new Guid());
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)
             {

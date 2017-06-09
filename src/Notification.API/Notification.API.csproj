@@ -258,9 +258,17 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Notification.Business\Notification.Business.csproj">
+      <Project>{ab8ac362-4955-46d1-8532-f39ffc943ed2}</Project>
+      <Name>Notification.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Notification.Entity\Notification.Entity.csproj">
       <Project>{9ad8de86-69e3-4aff-bf07-9d2a36e7260b}</Project>
       <Name>Notification.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Notification.Repository\Notification.Repository.csproj">
+      <Project>{9f308968-8b67-4009-846d-2b38dfcee287}</Project>
+      <Name>Notification.Repository</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
