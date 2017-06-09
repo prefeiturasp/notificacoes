@@ -13,13 +13,13 @@ namespace Notification.API.Areas.CoreSSO.v1
     public class GroupController : ApiController
     {
         [HttpGet]
-        [Route("api/CoreSSO/v1/Group")]
+        [Route("api/CoreSSO/v1/GroupDown")]
         [ResponseType(typeof(IEnumerable<Group>))]
         public HttpResponseMessage Get(int systemId)
         {
             try
             {
-                var result = GroupBusiness.Get(new Guid(), systemId);
+                var result = GroupBusiness.GetGroupDown(new Guid(), systemId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)

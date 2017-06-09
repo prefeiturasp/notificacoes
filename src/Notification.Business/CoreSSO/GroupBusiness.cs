@@ -10,10 +10,10 @@ namespace Notification.Business.CoreSSO
 {
     public class GroupBusiness
     {
-        public static IEnumerable<Group> Get(Guid userId, int systemId)
+        public static IEnumerable<Group> GetGroupDown(Guid userId, int systemId)
         {
             var repository = new GroupRepository();
-            return repository.Get(userId, systemId);
+            return repository.GetGroupDown(userId, systemId);
         }
     }
 }
