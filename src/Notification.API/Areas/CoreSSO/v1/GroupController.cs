@@ -1,4 +1,5 @@
-﻿using Notification.Entity.API.CoreSSO;
+﻿using Notification.Business.CoreSSO;
+using Notification.Entity.API.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = GroupBusiness.Get(new Guid(), systemId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)
             {
