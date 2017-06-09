@@ -262,6 +262,10 @@
       <Project>{9ad8de86-69e3-4aff-bf07-9d2a36e7260b}</Project>
       <Name>Notification.Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Notification.Repository\Notification.Repository.csproj">
+      <Project>{9f308968-8b67-4009-846d-2b38dfcee287}</Project>
+      <Name>Notification.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
