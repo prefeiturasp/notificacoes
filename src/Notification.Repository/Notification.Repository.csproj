@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Connection.cs" />
     <Compile Include="CoreSSO\CoreSSOContext.cs" />
+    <Compile Include="CoreSSO\GroupAURepository.cs" />
     <Compile Include="CoreSSO\GroupRepository.cs" />
     <Compile Include="CoreSSO\SystemRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

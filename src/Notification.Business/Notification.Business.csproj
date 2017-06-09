@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoreSSO\GroupAUBusiness.cs" />
     <Compile Include="CoreSSO\GroupBusiness.cs" />
     <Compile Include="CoreSSO\SystemBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
