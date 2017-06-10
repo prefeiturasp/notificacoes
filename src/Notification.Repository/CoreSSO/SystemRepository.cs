@@ -1,5 +1,6 @@
 ﻿//using Dapper;
 using Dapper;
+using Notification.Repository.Connections;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

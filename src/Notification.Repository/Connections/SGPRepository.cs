@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Notification.Repository.CoreSSO
+namespace Notification.Repository.Connections
 {
-    public abstract class CoreSSORepository
+    public abstract class SGPRepository
     {
         internal readonly string stringConnection;
 
-        public CoreSSORepository()
+        public SGPRepository()
         {
-            stringConnection = Connection.Get("CoreSSO");
+            stringConnection = Connection.Get("SGP");
         }
     }
 }

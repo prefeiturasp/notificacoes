@@ -44,6 +44,15 @@
     <Compile Include="CoreSSO\GroupBusiness.cs" />
     <Compile Include="CoreSSO\SystemBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SGP\CalendarBusiness.cs" />
+    <Compile Include="SGP\CourseBusiness.cs" />
+    <Compile Include="SGP\CoursePeriodBusiness.cs" />
+    <Compile Include="SGP\DisciplineBusiness.cs" />
+    <Compile Include="SGP\PositionBusiness.cs" />
+    <Compile Include="SGP\SchoolBusiness.cs" />
+    <Compile Include="SGP\SchoolClassificationBusiness.cs" />
+    <Compile Include="SGP\SchoolSuperiorBusiness.cs" />
+    <Compile Include="SGP\TeamBusiness.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Notification.Entity\Notification.Entity.csproj">
