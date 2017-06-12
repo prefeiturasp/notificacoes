@@ -1,0 +1,44 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "description": "SME Notificação",
+  "main": "src/index.html",
+  "scripts": {
+    "test": "echo \"Error no test specified\" && exit 1",
+    "build": "npm i && node_modules/.bin/grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/smecotic/notificacoes"
+  },
+  "keywords": [
+    "SME"
+  ],
+  "author": {
+    "name": "Everton Luis Ferriera",
+    "email": "everton.ferreira@mstech.com.br"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-resource": "^1.6.4",
+    "angular-route": "^1.6.4",
+    "angular-sanitize": "^1.6.4",
+    "bootstrap": "^3.3.7",
+    "grunt-cli": "latest",
+    "grunt": "latest",
+    "grunt-contrib-clean": "latest",
+    "grunt-contrib-compress": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-cssmin": "latest",
+    "grunt-contrib-htmlmin": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-usemin": "latest",
+    "grunt-wiredep": "latest",
+    "load-grunt-tasks": "latest"
+  }
+}
