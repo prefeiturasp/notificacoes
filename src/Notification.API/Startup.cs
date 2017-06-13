@@ -18,6 +18,7 @@ namespace NotifTeste.API
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
+                //endereço identity server
                 Authority = "http://localhost:5000",
                 RequiredScopes = new[] { "api1" },
             });
