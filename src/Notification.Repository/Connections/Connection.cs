@@ -24,7 +24,7 @@ namespace Notification.Repository.Connections
 
                 if (string.IsNullOrEmpty(str))
                 {
-                    str = GetFromWebConfig(str);
+                    str = GetFromWebConfig(connectionName);
                 }
 
                 if (string.IsNullOrEmpty(str))

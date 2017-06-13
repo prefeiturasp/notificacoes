@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Notification.Repository.SGP
 {
-    class CalendarRepository
+    public class CalendarRepository : Connections.SGPRepository
     {
     }
 }

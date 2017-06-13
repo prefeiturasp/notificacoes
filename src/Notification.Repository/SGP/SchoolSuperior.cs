@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Notification.Repository.SGP
 {
-    class SchoolSuperior
+    public class SchoolSuperior : Connections.SGPRepository
     {
     }
 }

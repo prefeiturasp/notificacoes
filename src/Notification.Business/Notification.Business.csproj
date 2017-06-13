@@ -43,6 +43,7 @@
     <Compile Include="CoreSSO\GroupAUBusiness.cs" />
     <Compile Include="CoreSSO\GroupBusiness.cs" />
     <Compile Include="CoreSSO\SystemBusiness.cs" />
+    <Compile Include="LogBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SGP\CalendarBusiness.cs" />
     <Compile Include="SGP\CourseBusiness.cs" />
