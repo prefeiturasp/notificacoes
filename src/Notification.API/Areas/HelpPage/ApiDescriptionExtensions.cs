@@ -3,7 +3,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http.Description;
 
-namespace NotifTeste.API.Areas.HelpPage
+namespace Notification.API.Areas.HelpPage
 {
     public static class ApiDescriptionExtensions
     {

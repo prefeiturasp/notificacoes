@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace NotifTeste.API.Models
+namespace Notification.API.Models
 {
     // Models used as parameters to AccountController actions.
 

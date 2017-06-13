@@ -1,10 +1,10 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using NotifTeste.API.Areas.HelpPage.ModelDescriptions;
-using NotifTeste.API.Areas.HelpPage.Models;
+using Notification.API.Areas.HelpPage.ModelDescriptions;
+using Notification.API.Areas.HelpPage.Models;
 
-namespace NotifTeste.API.Areas.HelpPage.Controllers
+namespace Notification.API.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.

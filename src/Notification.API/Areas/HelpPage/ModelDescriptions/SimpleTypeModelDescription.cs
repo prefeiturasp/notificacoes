@@ -1,4 +1,4 @@
-namespace NotifTeste.API.Areas.HelpPage.ModelDescriptions
+namespace Notification.API.Areas.HelpPage.ModelDescriptions
 {
     public class SimpleTypeModelDescription : ModelDescription
     {

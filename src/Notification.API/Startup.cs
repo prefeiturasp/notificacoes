@@ -7,9 +7,9 @@ using System.IdentityModel.Tokens;
 using IdentityServer3.AccessTokenValidation;
 using System.Configuration;
 
-[assembly: OwinStartup(typeof(NotifTeste.API.Startup))]
+[assembly: OwinStartup(typeof(Notification.API.Startup))]
 
-namespace NotifTeste.API
+namespace Notification.API
 {
     public partial class Startup
     {

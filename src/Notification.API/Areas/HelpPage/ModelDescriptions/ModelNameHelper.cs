@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace NotifTeste.API.Areas.HelpPage.ModelDescriptions
+namespace Notification.API.Areas.HelpPage.ModelDescriptions
 {
     internal static class ModelNameHelper
     {

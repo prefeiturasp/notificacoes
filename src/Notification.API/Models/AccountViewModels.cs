@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NotifTeste.API.Models
+namespace Notification.API.Models
 {
     // Models returned by AccountController actions.
 

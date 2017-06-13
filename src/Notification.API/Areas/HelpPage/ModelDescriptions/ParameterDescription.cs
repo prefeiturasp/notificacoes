@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace NotifTeste.API.Areas.HelpPage.ModelDescriptions
+namespace Notification.API.Areas.HelpPage.ModelDescriptions
 {
     public class ParameterDescription
     {

@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace NotifTeste.API.Areas.HelpPage.ModelDescriptions
+namespace Notification.API.Areas.HelpPage.ModelDescriptions
 {
     public class ComplexTypeModelDescription : ModelDescription
     {

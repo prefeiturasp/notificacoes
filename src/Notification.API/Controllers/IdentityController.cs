@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 
-namespace NotifTeste.API.Controllers
+namespace Notification.API.Controllers
 {
     [Authorize]
     public class IdentityController : ApiController

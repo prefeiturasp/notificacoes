@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace NotifTeste.API
+namespace Notification.API
 {
     public class BundleConfig
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace NotifTeste.API.Areas.HelpPage.ModelDescriptions
+namespace Notification.API.Areas.HelpPage.ModelDescriptions
 {
     public interface IModelDocumentationProvider
     {

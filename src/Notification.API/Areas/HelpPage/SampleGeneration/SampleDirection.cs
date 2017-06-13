@@ -1,4 +1,4 @@
-namespace NotifTeste.API.Areas.HelpPage
+namespace Notification.API.Areas.HelpPage
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

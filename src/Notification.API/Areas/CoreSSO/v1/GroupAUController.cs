@@ -10,7 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Linq;
 
-namespace NotifTeste.API.Areas.CoreSSO.v1
+namespace Notification.API.Areas.CoreSSO.v1
 {
     [Authorize]
     public class GroupAUController : ApiController

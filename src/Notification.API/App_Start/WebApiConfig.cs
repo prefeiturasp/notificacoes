@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 using System.Web.Http.Cors;
 using System.Configuration;
 
-namespace NotifTeste.API
+namespace Notification.API
 {
     public static class WebApiConfig
     {

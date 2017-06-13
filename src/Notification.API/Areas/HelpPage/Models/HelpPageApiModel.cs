@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using NotifTeste.API.Areas.HelpPage.ModelDescriptions;
+using Notification.API.Areas.HelpPage.ModelDescriptions;
 
-namespace NotifTeste.API.Areas.HelpPage.Models
+namespace Notification.API.Areas.HelpPage.Models
 {
     /// <summary>
     /// The model that represents an API displayed on the help page.

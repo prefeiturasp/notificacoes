@@ -1,6 +1,6 @@
 using System;
 
-namespace NotifTeste.API.Areas.HelpPage.ModelDescriptions
+namespace Notification.API.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
     /// Describes a type model.

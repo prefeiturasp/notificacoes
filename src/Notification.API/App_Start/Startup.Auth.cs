@@ -8,10 +8,10 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using NotifTeste.API.Providers;
-using NotifTeste.API.Models;
+using Notification.API.Providers;
+using Notification.API.Models;
 
-namespace NotifTeste.API
+namespace Notification.API
 {
     public partial class Startup
     {

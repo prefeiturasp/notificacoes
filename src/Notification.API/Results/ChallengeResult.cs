@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace NotifTeste.API.Results
+namespace Notification.API.Results
 {
     public class ChallengeResult : IHttpActionResult
     {

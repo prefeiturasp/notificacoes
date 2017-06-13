@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using System.Xml.XPath;
-using NotifTeste.API.Areas.HelpPage.ModelDescriptions;
+using Notification.API.Areas.HelpPage.ModelDescriptions;
 
-namespace NotifTeste.API.Areas.HelpPage
+namespace Notification.API.Areas.HelpPage
 {
     /// <summary>
     /// A custom <see cref="IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
