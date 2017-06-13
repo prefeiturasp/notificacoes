@@ -358,6 +358,10 @@
       <Project>{9AD8DE86-69E3-4AFF-BF07-9D2A36E7260B}</Project>
       <Name>Notification.Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Notification.Repository\Notification.Repository.csproj">
+      <Project>{9F308968-8B67-4009-846D-2B38DFCEE287}</Project>
+      <Name>Notification.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
