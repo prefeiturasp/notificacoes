@@ -54,8 +54,8 @@
                 message: ""
             };
 
-            //console.log($util.getToken());
-            //console.log($util.getUser());
+            console.log($util.getToken());
+            console.log($util.getUser());
         }
 
         $scope.selectMessageType = function __selectMessageType(e){

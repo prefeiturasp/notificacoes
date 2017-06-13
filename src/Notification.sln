@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Repository", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Business", "Notification.Business\Notification.Business.csproj", "{AB8AC362-4955-46D1-8532-F39FFC943ED2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.API", "NotifTeste.API\Notification.API.csproj", "{E9DE2A58-6BDE-462F-9E9C-DB6F1668F821}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.API", "Notification.API\Notification.API.csproj", "{E9DE2A58-6BDE-462F-9E9C-DB6F1668F821}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Web", "NotifTeste.Web\Notification.Web.csproj", "{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Web", "Notification.Web\Notification.Web.csproj", "{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

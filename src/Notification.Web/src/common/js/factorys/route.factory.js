@@ -23,13 +23,9 @@
                             templateUrl: 'register/login.html',
                             resolve: {
                                 auth: ['$util', '$location', function ($util, $location) {
-
-                                    $util.getUserToken(function(user){
-                                        console.log(user);
-                                        if($util.getToken()) {
-                                            $location.path("register");
-                                        }
-                                    });
+                                    if($util.getToken()) {
+                                        $location.path("register");
+                                    }
                                 }]//auth
                             }//resolve
                     })

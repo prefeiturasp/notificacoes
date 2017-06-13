@@ -25,16 +25,27 @@
 
             function init(){
                 $scope.tokenId = null;
-                $scope.mgr = $util.createMgr();
+
+                $scope.config = {
+                    authority: "http://10.10.10.37:5000",
+                    client_id: "mstechjs",
+                    redirect_uri: "http://localhost:5003/callback.html",
+                    response_type: "id_token token",
+                    scope:"openid profile api1",
+                    post_logout_redirect_uri : "http://localhost:5003/index.html"
+                };
+
+                mgr = new Oidc.UserManager($scope.config);
                 getUserToken();
 
             }
 
             function getUserToken(){
 
-                $util.getUserToken(function(user){
+                mgr.getUser().then(function (user) {
                     if (user) {
                         $scope.tokenId = user.id_token;
+                        $scope.user = user;
                         $scope.redirectToPage();
                     }
                 });
@@ -51,7 +62,7 @@
 
 
             $scope.login = function __login() {
-                $scope.mgr.signinRedirect();
+                mgr.signinRedirect();
             };
 
             //function api() {

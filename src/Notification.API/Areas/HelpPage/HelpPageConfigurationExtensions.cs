@@ -11,10 +11,10 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using Notification.API.Areas.HelpPage.ModelDescriptions;
-using Notification.API.Areas.HelpPage.Models;
+using NotifTeste.API.Areas.HelpPage.ModelDescriptions;
+using NotifTeste.API.Areas.HelpPage.Models;
 
-namespace Notification.API.Areas.HelpPage
+namespace NotifTeste.API.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

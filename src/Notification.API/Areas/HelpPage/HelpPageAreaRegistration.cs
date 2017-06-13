@@ -1,7 +1,7 @@
 using System.Web.Http;
 using System.Web.Mvc;
 
-namespace Notification.API.Areas.HelpPage
+namespace NotifTeste.API.Areas.HelpPage
 {
     public class HelpPageAreaRegistration : AreaRegistration
     {

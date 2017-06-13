@@ -19,35 +19,6 @@
 
         var app = {};
 
-        app.createMgr = function __createMgr(){
-
-            var config = {
-                authority: "http://10.10.10.37:5000",
-                client_id: "mstechjs",
-                redirect_uri: "http://localhost:5003/callback.html",
-                response_type: "id_token token",
-                scope:"openid profile api1",
-                post_logout_redirect_uri : "http://localhost:5003/index.html"
-            };
-
-            var mgr = new Oidc.UserManager(config);
-
-            return mgr;
-        };
-
-        app.getUserToken = function __getUserToken(callback){
-
-            if(!mgr){
-                var mgr = app.createMgr();
-            }
-
-            mgr.getUser().then(function (user) {
-                if (user) {
-                    callback(user);
-                }
-            });
-        };
-
         app.setToken = function __setToken(_user, _token){
             $window.localStorage.setItem("token", btoa(_token));
             $window.localStorage.setItem("user",  btoa(JSON.stringify(_user)));
