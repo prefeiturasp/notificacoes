@@ -6,6 +6,7 @@ using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using System.Web.Http.Cors;
+using System.Configuration;
 
 namespace NotifTeste.API
 {
@@ -40,7 +41,11 @@ namespace NotifTeste.API
             //require authentication for all controllers
             //config.Filters.Add(new AuthorizeAttribute());
 
-            config.EnableCors(new EnableCorsAttribute("http://localhost:5000, http://localhost:5003, http://localhost:5010, http://localhost:5020", "accept, authorization", "GET", "WWW-Authenticate"));
+            string urlIdentityServer = ConfigurationManager.AppSettings["IdentityServer"];
+            string urlNotificationSite = ConfigurationManager.AppSettings["NotificationSite"];
+
+            //config.EnableCors(new EnableCorsAttribute("http://localhost:5000, http://localhost:5003, http://localhost:5010, http://localhost:5020", "accept, authorization", "GET", "WWW-Authenticate"));
+            config.EnableCors(new EnableCorsAttribute(urlIdentityServer +", "+ urlNotificationSite, "accept, authorization", "GET", "WWW-Authenticate"));
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

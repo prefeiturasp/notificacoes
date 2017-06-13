@@ -21,8 +21,8 @@ namespace Notification.Repository.CoreSSO
 	                    FROM SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK)
 	                    INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) ON UG.usu_id = UGUA.usu_id AND UG.gru_id = UGUA.gru_id
 	                    INNER JOIN SYS_UnidadeAdministrativa AS UAD WITH(NOLOCK) ON UAD.ent_id = UGUA.ent_id AND UAD.uad_id = UGUA.uad_id
-	                    WHERE UG.usg_situacao = 1 AND UGUA.gru_id = @groupId /*AND UGUA.usu_id = ''*/",
-                    new { groupId = groupId });
+	                    WHERE UG.usg_situacao = 1 AND UGUA.gru_id = @groupId AND UGUA.usu_id = @userId",
+                    new { groupId = groupId, userId = userId });
                 return query;
             }
         }

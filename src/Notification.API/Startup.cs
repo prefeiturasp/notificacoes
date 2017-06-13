@@ -5,6 +5,7 @@ using Microsoft.Owin;
 using Owin;
 using System.IdentityModel.Tokens;
 using IdentityServer3.AccessTokenValidation;
+using System.Configuration;
 
 [assembly: OwinStartup(typeof(NotifTeste.API.Startup))]
 
@@ -14,12 +15,15 @@ namespace NotifTeste.API
     {
         public void Configuration(IAppBuilder app)
         {
+            string urlIdentityServer = ConfigurationManager.AppSettings["IdentityServer"];
+
             JwtSecurityTokenHandler.InboundClaimTypeMap.Clear();
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
+
                 //endereço identity server
-                Authority = "http://localhost:5000",
+                Authority = urlIdentityServer,
                 RequiredScopes = new[] { "api1" },
             });
 
