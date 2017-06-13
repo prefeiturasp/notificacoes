@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Notification.API
+namespace NotifTeste.API
 {
     public class RouteConfig
     {

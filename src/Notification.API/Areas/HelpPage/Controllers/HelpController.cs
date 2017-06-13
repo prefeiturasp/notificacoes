@@ -1,22 +1,16 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using Notification.API.Areas.HelpPage.ModelDescriptions;
-using Notification.API.Areas.HelpPage.Models;
+using NotifTeste.API.Areas.HelpPage.ModelDescriptions;
+using NotifTeste.API.Areas.HelpPage.Models;
 
-namespace Notification.API.Areas.HelpPage.Controllers
+namespace NotifTeste.API.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.
     /// </summary>
     public class HelpController : Controller
     {
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (!HttpContext.IsDebuggingEnabled)
-                filterContext.Result = new HttpStatusCodeResult(System.Net.HttpStatusCode.NotFound);
-        }
-
         private const string ErrorViewName = "Error";
 
         public HelpController()

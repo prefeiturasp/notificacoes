@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Notification.API.Controllers
+namespace NotifTeste.API.Controllers
 {
     public class HomeController : Controller
     {

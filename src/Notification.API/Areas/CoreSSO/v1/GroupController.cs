@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
-namespace Notification.API.Areas.CoreSSO.v1
+namespace NotifTeste.API.Areas.CoreSSO.v1
 {
     public class GroupController : ApiController
     {

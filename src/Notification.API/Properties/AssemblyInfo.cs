@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Notification.API")]
+[assembly: AssemblyTitle("NotifTeste.API")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MSTECH Educação e Tecnologia SA")]
-[assembly: AssemblyProduct("Notification.API")]
-[assembly: AssemblyCopyright("Copyright © MSTECH Educação e Tecnologia SA 2017")]
+[assembly: AssemblyCompany("MSTECH EDUCACAO E TECNOLOGIA EIRELI")]
+[assembly: AssemblyProduct("NotifTeste.API")]
+[assembly: AssemblyCopyright("Copyright © MSTECH EDUCACAO E TECNOLOGIA EIRELI 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2151566c-bd1f-4138-88d1-4e8bb75cb725")]
+[assembly: Guid("8a590d1a-d5b6-4227-9d6a-6bc9a80861ec")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 
-namespace Notification.API.Areas.SGP.v1
+namespace NotifTeste.API.Areas.SGP.v1
 {
     public class PositionController : ApiController
     {
