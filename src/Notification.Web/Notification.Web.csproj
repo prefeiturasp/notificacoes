@@ -66,6 +66,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Gruntfile.js" />
     <Content Include="node_modules\angular-resource\angular-resource.js" />
     <Content Include="node_modules\angular-resource\angular-resource.min.js" />
     <Content Include="node_modules\angular-resource\index.js" />
@@ -103,6 +104,7 @@
     <Content Include="node_modules\angular\LICENSE.md" />
     <Content Include="node_modules\angular\package.json" />
     <Content Include="node_modules\angular\README.md" />
+    <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
