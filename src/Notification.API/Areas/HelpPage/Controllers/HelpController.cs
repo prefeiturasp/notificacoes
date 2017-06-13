@@ -1,8 +1,8 @@
+using Notification.API.Areas.HelpPage.ModelDescriptions;
+using Notification.API.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using Notification.API.Areas.HelpPage.ModelDescriptions;
-using Notification.API.Areas.HelpPage.Models;
 
 namespace Notification.API.Areas.HelpPage.Controllers
 {
@@ -11,6 +11,12 @@ namespace Notification.API.Areas.HelpPage.Controllers
     /// </summary>
     public class HelpController : Controller
     {
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (!HttpContext.IsDebuggingEnabled)
+                filterContext.Result = new HttpStatusCodeResult(System.Net.HttpStatusCode.NotFound);
+        }
+
         private const string ErrorViewName = "Error";
 
         public HelpController()

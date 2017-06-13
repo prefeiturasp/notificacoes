@@ -47,11 +47,11 @@ namespace Notification.API
             //config.EnableCors(new EnableCorsAttribute("http://localhost:5000, http://localhost:5003, http://localhost:5010, http://localhost:5020", "accept, authorization", "GET", "WWW-Authenticate"));
             config.EnableCors(new EnableCorsAttribute(urlIdentityServer +", "+ urlNotificationSite, "accept, authorization", "GET", "WWW-Authenticate"));
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "{controller}/{id}", //"api/{controller}/{id}"
-                defaults: new { id = RouteParameter.Optional }
-            );
+            //config.Routes.MapHttpRoute(
+            //    name: "DefaultApi",
+            //    routeTemplate: "{controller}/{id}", //"api/{controller}/{id}"
+            //    defaults: new { id = RouteParameter.Optional }
+            //);
 
             return config;
         }
