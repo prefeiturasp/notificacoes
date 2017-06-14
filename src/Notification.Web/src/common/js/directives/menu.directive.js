@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$notification', '$util', '$location', '$window'];
+    Menu.$inject = ['$util', '$location', '$window'];
 
     function Menu() {
         var directive = {
@@ -19,15 +19,10 @@
             transclude: false
         };
 
-        function MenuController($scope, $notification, $util, $location, $window) {
-
-            //var token = $window.sessionStorage.token;
+        function MenuController($scope, $util, $location, $window) {
 
             function init(){
-                //$scope.profile = $util.getUser(token);
-                //$scope.isAdmin = $scope.profile.admin;
-                //$scope.userName = $scope.profile.name;
-                //$scope.isAdminGame = false;
+
             }
 
             /**
@@ -35,14 +30,11 @@
              * destruindo token de acesso
              */
             $scope.logout = function __logout() {
-                //delete $window.sessionStorage.token;
-                //$util.profile = null;
-                //$location.path("");
+               var mgr = $util.getMgr();
+                mgr.signoutRedirect();
             };//logout
 
-
-            //if(token != undefined)
-                init();
+            init();
 
         }//MenuController
 
