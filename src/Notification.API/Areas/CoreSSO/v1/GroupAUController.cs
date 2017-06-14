@@ -9,11 +9,12 @@ using System.Security.Claims;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Linq;
+using Notification.API.Areas.v1;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
-    [Authorize]
-    public class GroupAUController : ApiController
+    
+    public class GroupAUController : AuthBaseController
     {
         [HttpGet]
         [Route("api/CoreSSO/v1/GroupAU")]
@@ -22,19 +23,19 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                var principal = User as ClaimsPrincipal;
+                //var principal = User as ClaimsPrincipal;
 
 
-                var teste = from c in principal.Identities.First().Claims
-                            where c.Type == "sub"
-                            select c.Value;//.FirstOrDefault();
+                //var teste = from c in principal.Identities.First().Claims
+                //            where c.Type == "sub"
+                //            select c.Value;//.FirstOrDefault();
 
-                Guid idUsuario = new Guid(teste.FirstOrDefault());
+                //Guid idUsuario = new Guid(teste.FirstOrDefault());
 
-                var result = GroupAUBusiness.Get(idUsuario, groupId);
+                var result = GroupAUBusiness.Get(claimData.Usu_id, groupId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
-            catch (Exception)
+            catch (Exception err)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }

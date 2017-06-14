@@ -1,4 +1,5 @@
-﻿using Notification.Business.CoreSSO;
+﻿using Notification.API.Areas.v1;
+using Notification.Business.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
-    public class SystemController : ApiController
+    public class SystemController : AuthBaseController
     {
         [HttpGet]
         [Route("api/CoreSSO/v1/System")]
@@ -18,7 +19,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                var result = SystemBusiness.Get(new Guid());
+                var result = SystemBusiness.Get(claimData.Usu_id);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)

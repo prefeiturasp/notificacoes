@@ -1,4 +1,5 @@
-﻿using Notification.Business.CoreSSO;
+﻿using Notification.API.Areas.v1;
+using Notification.Business.CoreSSO;
 using Notification.Entity.API.CoreSSO;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
-    public class GroupController : ApiController
+    public class GroupController : AuthBaseController
     {
         [HttpGet]
         [Route("api/CoreSSO/v1/GroupDown")]
@@ -19,7 +20,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                var result = GroupBusiness.GetGroupDown(new Guid(), systemId);
+                var result = GroupBusiness.GetGroupDown(claimData.Usu_id, systemId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)
