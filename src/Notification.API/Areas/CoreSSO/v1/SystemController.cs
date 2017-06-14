@@ -22,7 +22,7 @@ namespace Notification.API.Areas.CoreSSO.v1
                 var result = SystemBusiness.Get(claimData.Usu_id);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }            

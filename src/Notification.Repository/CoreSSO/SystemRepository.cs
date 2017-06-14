@@ -17,7 +17,7 @@ namespace Notification.Repository.CoreSSO
             using (var context = new SqlConnection(stringConnection))
             {
                 var query = context.Query<Notification.Entity.API.CoreSSO.System>(
-                    @"SELECT S.SIS_ID AS Id, S.SIS_NOME AS Name FROM ( 
+                    @"SELECT S.SIS_ID AS Id, S.SIS_NOME AS Name, S.SIS_CAMINHO AS Url, S.SIS_URLIMAGEM AS Image FROM ( 
 	                    SELECT G.sis_id	FROM
                             SYS_UsuarioGrupo AS UG WITH(NOLOCK) 
                         INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id

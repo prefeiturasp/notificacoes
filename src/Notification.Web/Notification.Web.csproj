@@ -133,8 +133,7 @@
     <Content Include="src\common\view\login.directive.html" />
     <Content Include="src\common\view\menu.directive.html" />
     <Content Include="src\index.html" />
-    <Content Include="src\register\index.html" />
-    <Content Include="src\register\login.html" />
+    <Content Include="src\login\login.html" />
     <Content Include="src\register\register.controller.js" />
     <Content Include="src\register\register.view.html" />
     <Content Include="Web.config" />

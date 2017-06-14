@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("login", Login);
 
-    Login.$inject = ['$notification', '$util', '$location', '$timeout'];
+    Login.$inject = ['$util', '$location', '$timeout'];
 
     function Login() {
         var directive = {
@@ -19,30 +19,20 @@
             transclude: false
         };
 
-        function LoginController($scope, $notification, $util, $location, $timeout) {
+        function LoginController($scope, $util, $location, $timeout) {
 
             var mgr = null;
 
             function init(){
                 $scope.tokenId = null;
-
-                $scope.config = {
-                    authority: "http://10.10.10.37:5000",
-                    client_id: "mstechjs",
-                    redirect_uri: "http://localhost:5003/callback.html",
-                    response_type: "id_token token",
-                    scope:"openid profile api1",
-                    post_logout_redirect_uri : "http://localhost:5003/index.html"
-                };
-
-                mgr = new Oidc.UserManager($scope.config);
+                $scope.mgr = $util.getMgr();
                 getUserToken();
 
             }
 
             function getUserToken(){
 
-                mgr.getUser().then(function (user) {
+                $util.getUserToken(function(user){
                     if (user) {
                         $scope.tokenId = user.id_token;
                         $scope.user = user;
@@ -52,7 +42,6 @@
             }
 
             $scope.redirectToPage = function (){
-                $util.setToken($scope.user, $scope.tokenId);
                 if($scope.tokenId){
                     $timeout(function(){
                         $location.path('register');}, 0
@@ -62,23 +51,35 @@
 
 
             $scope.login = function __login() {
-                mgr.signinRedirect();
+                $scope.mgr.signinRedirect();
             };
 
-            //function api() {
-            //    mgr.getUser().then(function (user) {
-            //        var url = "http://localhost:5001/identity";
-            //
-            //        var xhr = new XMLHttpRequest();
-            //        xhr.open("GET", url);
-            //        xhr.onload = function () {
-            //            log(xhr.status, JSON.parse(xhr.responseText));
-            //        };
-            //        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
-            //        xhr.send();
-            //    });
-            //}
-            //
+            $scope.api = function __api() {
+                if (!$scope.user) {
+
+                    $util.getUserToken(function(user){
+                        if (user) {
+                            $scope.user = user;
+                            Authorization(user);
+                        }
+                    });
+                }else{
+                    Authorization($scope.user);
+                }
+            }
+
+            function Authorization(){
+                var url = "http://localhost:5001/identity";
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", url);
+                xhr.onload = function () {
+                    log(xhr.status, JSON.parse(xhr.responseText));
+                };
+                xhr.setRequestHeader("Authorization", "Bearer " + $scope.user.access_token);
+                xhr.send();
+            }
+
             //function api45() {
             //    mgr.getUser().then(function (user) {
             //        var url = "http://localhost:6454/identity";
@@ -91,10 +92,6 @@
             //        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
             //        xhr.send();
             //    });
-            //}
-            //
-            //function logout() {
-            //    mgr.signoutRedirect();
             //}
 
             init();

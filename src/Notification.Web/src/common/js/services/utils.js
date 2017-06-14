@@ -17,19 +17,39 @@
      */
     function $util($window) {
 
-        var app = {};
+        var app = {}, mgr = null, user;
 
-        app.setToken = function __setToken(_user, _token){
-            $window.localStorage.setItem("token", btoa(_token));
-            $window.localStorage.setItem("user",  btoa(JSON.stringify(_user)));
+        app.createMgr = function __createMgr(){
+
+            var config = {
+                authority: "http://10.10.10.37:5000",
+                client_id: "mstechjs",
+                redirect_uri: "http://localhost:5003/callback.html",
+                response_type: "id_token token",
+                scope:"openid profile api1",
+                post_logout_redirect_uri : "http://localhost:5003/index.html"
+            };
+
+            mgr = new Oidc.UserManager(config);
+            return mgr;
         };
 
-        app.getToken = function __setToken(){
-            return $window.localStorage.getItem("token") && atob($window.localStorage.getItem("token"));
+        app.getUserToken = function __getUserToken(callback){
+
+            if(!mgr){ mgr = app.createMgr(); }
+
+            if(!user) {
+                mgr.getUser().then(function (_user) {
+                    user = _user;
+                    callback(user);
+                });
+            }else{
+                callback(user);
+            }
         };
 
-        app.getUser = function __getUser(){
-            return $window.localStorage.getItem("user") && JSON.parse(atob($window.localStorage.getItem("user")));
+        app.getMgr = function __getMgr(){
+            return mgr ? mgr : app.createMgr();
         };
 
         app.base_url = function __base_url(url) {

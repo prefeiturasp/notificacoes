@@ -14,18 +14,24 @@
                         templateUrl: 'register/register.view.html',
                         controller:'RegisterController',
                         resolve: {
-                            auth: ['$window', '$location', function ($window, $location) {
-
+                            auth: ['$util', '$location', function ($util, $location) {
+                                $util.getUserToken(function(user){
+                                    if(!user) {
+                                        $location.path("/");
+                                    }
+                                });
                             }]//auth
                         }//resolve
                     })
                     .when('/', {
-                            templateUrl: 'register/login.html',
+                            templateUrl: 'login/login.html',
                             resolve: {
                                 auth: ['$util', '$location', function ($util, $location) {
-                                    if($util.getToken()) {
-                                        $location.path("register");
-                                    }
+                                    $util.getUserToken(function(user){
+                                        if(user) {
+                                            $location.path("register");
+                                        }
+                                    });
                                 }]//auth
                             }//resolve
                     })
