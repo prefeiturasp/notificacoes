@@ -8,6 +8,8 @@ namespace Notification.API.Controllers
     [Authorize]
     public class IdentityController : ApiController
     {
+        [HttpGet]
+        [Route("api/Teste/v1/identity")]
         public dynamic Get()
         {
             var principal = User as ClaimsPrincipal;

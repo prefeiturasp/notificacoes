@@ -24,14 +24,14 @@ namespace Notification.API.Areas.CoreSSO.v1
             {
                 var principal = User as ClaimsPrincipal;
 
-                var teste = from c in principal.Identities.First().Claims
-                       select new
-                       {
-                           c.Type,
-                           c.Value
-                       };
 
-                var result = GroupAUBusiness.Get(new Guid(), groupId);
+                var teste = from c in principal.Identities.First().Claims
+                            where c.Type == "sub"
+                            select c.Value;//.FirstOrDefault();
+
+                Guid idUsuario = new Guid(teste.FirstOrDefault());
+
+                var result = GroupAUBusiness.Get(idUsuario, groupId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)
