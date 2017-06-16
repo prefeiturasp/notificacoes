@@ -1,4 +1,5 @@
-﻿using Notification.Entity.API.SGP;
+﻿using Notification.API.Areas.v1;
+using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.SGP.v1
 {
-    public class CourseController : ApiController
+    public class CourseController : AuthBaseController
     {
         [HttpGet]
         [Route("api/SGP/v1/Course")]
