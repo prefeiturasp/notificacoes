@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Linq;
 using Notification.API.Areas.v1;
+using Notification.Business;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
@@ -35,9 +36,10 @@ namespace Notification.API.Areas.CoreSSO.v1
                 var result = GroupAUBusiness.Get(claimData.Usu_id, groupId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
-            catch (Exception err)
+            catch (Exception exc)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
             }
         }
     }

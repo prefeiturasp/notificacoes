@@ -1,4 +1,5 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.Business;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,10 @@ namespace Notification.API.Areas.SGP.v1
             {
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
             }
         }
     }

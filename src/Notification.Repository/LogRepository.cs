@@ -11,22 +11,26 @@ namespace Notification.Repository
 {
     public class LogRepository : Connections.NotificationRepository<Log>
     {
-        public IEnumerable<Log> Get()
+        public IEnumerable<Log> Get(int page, int size)
         {
-            return Collection.Find(new BsonDocument()).ToList();
+            return Collection.Find(new BsonDocument()).Skip(page * size).Limit(size).ToList();
         }
 
-        public void Insert()
+        public IEnumerable<Log> GetById(string id)
         {
-            var entity = new Log()
-            {
-                date = DateTime.Now,
-                level = "Info",
-                message = "Mensagem Padrão",
-                exception = new LogException() { message = "teste", source = "source", stackTrace = "trace"}
-            };
+            return Collection.Find(l => l.id == new ObjectId(id)).ToList();
+        }
 
+        public ObjectId InsertOne(Log entity)
+        {
             Collection.InsertOne(entity);
+            return entity.id;
         }
+
+        public async Task<ObjectId> InsertOneAsync(Log entity)
+        {
+            await Collection.InsertOneAsync(entity);
+            return entity.id;
+        }        
     }
 }
