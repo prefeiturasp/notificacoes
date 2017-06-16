@@ -11,48 +11,67 @@ namespace Notification.Business
 {
     public class LogBusiness
     {
+        public const string ConfigIsEnabledInfo = "LogIsEnabledInfo";
+        public const string ConfigIsEnabledWarn = "LogIsEnabledWarn";
+        public const string ConfigIsEnabledError = "LogIsEnabledError";
+
+        public static bool IsEnabledInfo = false;
+        public static bool IsEnabledWarn = false;
+        public static bool IsEnabledError = true;
+
         public static void Info(string message)
         {
-            var entity = new Log()
+            if (IsEnabledInfo)
             {
-                date = DateTime.Now,
-                level = "INFO",
-                message = message                
-            };
+                var entity = new Log()
+                {
+                    date = DateTime.Now,
+                    level = "INFO",
+                    message = message
+                };
 
-            var repository = new LogRepository();
-            repository.InsertOneAsync(entity);
+                var repository = new LogRepository();
+                repository.InsertOneAsync(entity);
+            }
         }
 
         public static void Warn(string message)
         {
-            var entity = new Log()
+            if (IsEnabledWarn)
             {
-                date = DateTime.Now,
-                level = "WARN",
-                message = message
-            };
+                var entity = new Log()
+                {
+                    date = DateTime.Now,
+                    level = "WARN",
+                    message = message
+                };
 
-            var repository = new LogRepository();
-            repository.InsertOneAsync(entity);
+                var repository = new LogRepository();
+                repository.InsertOneAsync(entity);
+            }
         }
         
         public static ObjectId Error(Exception exception)
         {
-            var entity = new Log()
+            if (IsEnabledError)
             {
-                date = DateTime.Now,
-                level = "ERROR",
-                message = exception.Message,
-                exception = new LogException()
-            };
-            
-            entity.exception.message = exception.Message;
-            entity.exception.source = exception.Source;
-            entity.exception.stackTrace = exception.GetType().ToString() + exception.StackTrace;
-            
-            var repository = new LogRepository();
-            return repository.InsertOne(entity);
+                var entity = new Log()
+                {
+                    date = DateTime.Now,
+                    level = "ERROR",
+                    message = exception.Message,
+                    exception = new LogException()
+                };
+
+                entity.exception.message = exception.Message;
+                entity.exception.source = exception.Source;
+                entity.exception.stackTrace = exception.GetType().ToString() + exception.StackTrace;
+
+                var repository = new LogRepository();
+                return repository.InsertOne(entity);
+            }
+            else
+                return new ObjectId();
         }
 
         public static IEnumerable<Log> Get(int page, int size)
