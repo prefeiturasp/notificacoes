@@ -1,8 +1,9 @@
-
+    <div class="loading" ng-if="load"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></div>
     <menu></menu>
 
-    <section class="body-content">
+    <section class="body-content" ng-cloak>
         <alert></alert>
+
         <div class="headerCustom">
             <div class="max-width-menor">
                 <h4><i class="fa fa-bell-o" aria-hidden="true"></i> CADASTRO DE NOTIFICAÇÃO<span> <strong>Escreva sua mensagem</strong> para enviar<br> uma notificação para os <strong>grupos de usuários</strong>.</span></h4>
@@ -143,8 +144,10 @@
             <div class="filtro-conteudo sist">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Sistemas</h2>
-                <ul ng-repeat="systemType in listSystem">
-                    <li><input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystem(systemType)">{{systemType.name}}</li>
+                <ul>
+                    <li ng-repeat="systemType in listSystem">
+                        <input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystemGroup('system', systemType)">{{systemType.Name}}
+                    </li>
                 </ul>
                 <a class="enviar" ng-click="emitFilters($event, system.systemType)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
                 <a class="continuar" ng-click="nextFilter($event, 2)">Continuar filtro</a>
@@ -152,18 +155,33 @@
             <div class="filtro-conteudo grup">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Grupos</h2>
-                <ul ng-repeat="keyGroup in Groups">
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="{{keyGroup.name}}" ng-click="selectTypeFilter($event, system.Group, keyGroup)" >{{keyGroup.name}}</li>
+                <ul>
+                    <li ng-repeat="keyGroup in listGroups">
+                        <input type="radio" class="primeiro" name="grupos" value="{{keyGroup.Name}}" ng-click="selectedSystemGroup('group', keyGroup)" >{{keyGroup.Name}}
+                    </li>
                 </ul>
                 <a class="enviar" ng-click="emitFilters($event, system.Group)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
                 <a class="continuar" ng-click="nextFilter($event, 3)">Continuar filtro</a>
             </div>
 
+            <div class="filtro-conteudo dre">
+                <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>DREs</h2>
+                <ul>
+                    <li ng-repeat="dre in listDREs">
+                        <input type="checkbox" class="primeiro" name="grupos" value="{{dre.Name}}" ng-click="selectTypeFilter($event, system.DRE, dre)">{{adm.Name}}
+                    </li>
+                </ul>
+                <a class="enviar" ng-click="emitFilters($event, system.DREs)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+            </div>
+
             <div class="filtro-conteudo admUnit">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Unidade administrativa</h2>
-                <ul ng-repeat="adm in AdministrativeUnits">
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="{{adm.name}}" ng-click="selectTypeFilter($event, system.AdministrativeUnit, adm)">{{adm.name}}</li>
+                <ul>
+                    <li ng-repeat="adm in AdministrativeUnits">
+                        <input type="checkbox" class="primeiro" name="grupos" value="{{adm.Name}}" ng-click="selectTypeFilter($event, system.AdministrativeUnit, adm)">{{adm.Name}}
+                    </li>
                 </ul>
                 <a class="enviar" ng-click="emitFilters($event, system.AdministrativeUnit)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
             </div>
@@ -178,9 +196,6 @@
         <form class="maxWidthNotf">
             <div class="card selecionados">
                 <label>Filtros selecionados:</label>
-                <p>Biblioteca<a><i class="fa fa-times" aria-hidden="true"></i></a></p>
-                <p>Administração<a><i class="fa fa-times" aria-hidden="true"></i></a></p>
-                <p>Professor<a><i class="fa fa-times" aria-hidden="true"></i></a></p>
             </div>
 
             <div class="card tipo-mensagem">

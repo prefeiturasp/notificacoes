@@ -2,44 +2,34 @@
  * Created by everton.ferreira on 09/06/2017.
  */
 (function () {
-    angular.module('services').factory('Model', ['$resource', '$util',
-        function ($resource, $util) {
+    angular.module('services').factory('Model', ['$util',
+        function ($util) {
 
-        // Model
-        var model = {
-
-            'load': {
-                method: 'GET',
-                url: $util.base_url('AbsenceReason/Load')
-            },
-            'find': {
-                method: 'GET',
-                url: $util.base_url('AbsenceReason/Find')
-            },
-            'findSimple': {
-                method: 'GET',
-                url: $util.base_url('AbsenceReason/FindSimple')
-            },
-            'search': {
-                method: 'GET',
-                url: $util.base_url('AbsenceReason/Search')
-            },
-            'save': {
-                method: 'POST',
-                url: $util.base_url('AbsenceReason/Save')
-            },
-            'delete': {
-                method: 'POST',
-                url: $util.base_url('AbsenceReason/Delete')
-            },
-            'loadCombo': {
-                method: 'GET',
-                url: $util.base_url('AbsenceReason/LoadCombo')
+            function getSystem() {
+                return getheaders('GET', $util.base_url('/System'));
             }
-        };
 
-        // Retorna o serviço
-        return $resource('', {}, model);
+            function getGroupsAU(id) {
+                return getheaders('GET', $util.base_url('/GroupDown?systemId=' + (id ? id : 0 )));
+            }
+
+            function getAdministrativeUnits(id) {
+                return getheaders('GET', $util.base_url('/GroupAU?groupId=' + (id ? id : 0 )));
+            }
+
+            function getheaders(_method, _url) {
+                return {
+                    method: _method,
+                    url: _url,
+                    "headers": {"Authorization": "Bearer " + $util.getAccessToken()}
+                }
+            }
+
+        return {
+            getSystem: getSystem,
+            getGroupsAU: getGroupsAU,
+            getAdministrativeUnits: getAdministrativeUnits
+        }
 
     }]);
 })();

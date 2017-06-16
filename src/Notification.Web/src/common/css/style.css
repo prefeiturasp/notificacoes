@@ -169,7 +169,9 @@ a {
   padding: 0;
   background: #FFFFFF;
   border-radius: 8px;
-  overflow: hidden; }
+  overflow: hidden;
+  max-height: 420px;
+  overflow-y: auto;}
 .filtro-modal .filtro-conteudo ul li {
   list-style: none;
   padding: 20px;
@@ -288,12 +290,14 @@ input, textarea, select, button {
 .selecionados label {
   display: inline-block; }
 .selecionados p {
-  vertical-align: middle;
+  vvertical-align: middle;
   padding: 10px 15px;
   display: inline-block;
   background: #f4f6f7;
   border: 1px solid #93a6af;
-  border-radius: 30px; }
+  border-radius: 30px;
+  position: relative;
+  top: -8px; }
 .selecionados p a {
   font-size: 2rem;
   vertical-align: middle;
@@ -585,8 +589,58 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   text-align: left;
 }
 
+li.sistemas {
+  position: relative;
+}
+/*li.sistemas .sub-menu-sistemas.abre {*/
+/*display: block;*/
+/*}*/
+li.sistemas .sub-menu-sistemas {
+  position: absolute;
+  left: -10px;
+  top: 35px;
+  margin: 0;
+  padding: 0;
+  background: #FFFFFF;
+  border-radius: 6px;
+  text-align: left;
+  width: 150px;
+  /*display: none;*/
+}
+li.sistemas .sub-menu-sistemas:before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+}
+li.sistemas .sub-menu-sistemas li {
+  display: inline-block;
+  margin: 0;
+  width: 100%;
+}
+li.sistemas .sub-menu-sistemas li a {
+  display: inline-block;
+  color: #888;
+  padding: 8px 15px;
+  width: 100%;
+  border-bottom: 1px solid #DCDCDC;
+}
+li.sistemas .sub-menu-sistemas li a:hover {
+  color: #000;
+}
+li.sistemas .sub-menu-sistemas li:last-child a {
+  border-bottom: 0;
+}
+
 .filtro-por-usuario{display: none}
 .admUnit{display: none}
+.dre{display: none}
 
 .customAlert-top-full-width {
   top: 0;
@@ -601,3 +655,20 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   margin: 0 0 0 -30%;
   left: 55%;
 }
+
+
+.filters-selected{border: 1px solid; border-radius: 3%; height: 58px;}
+.filters-selected p{font-size: 1.3rem;}
+
+.hidden-body{overflow: hidden}
+
+.loading{
+  background: rgba(0,0,0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 99999;
+  text-align: center;
+}
+
+.fa-spin{font-size: 7rem;  margin: 50px;}
