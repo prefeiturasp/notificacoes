@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$util', '$location', '$window'];
+    Menu.$inject = ['$util', 'HttpServices'];
 
     function Menu() {
         var directive = {
@@ -19,11 +19,23 @@
             transclude: false
         };
 
-        function MenuController($scope, $util, $location, $window) {
+        function MenuController($scope, $util, HttpServices) {
+
+            $scope.listMenuSystem = [];
+            $scope.showListMenu = false;
 
             function init(){
-
+                HttpServices.getListSystem(function(data){
+                    $scope.listMenuSystem = data;
+                });
             }
+
+            $scope.openMenuSytem = function __openMenuSytem() {
+                $scope.showListMenu = !$scope.showListMenu;
+            };
+            $scope.mouseOver = function __mouseOver() {
+                $scope.showListMenu = false;
+            };
 
             /**
              * Efetua o logout do sistema

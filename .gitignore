@@ -246,3 +246,7 @@ ModelManifest.xml
 .fake/
 *.dll.config
 *Backup.rdl
+
+# Plugin notificação
+/src/Notification.Web/src/common/js/lib/plg-notify/basic.html
+/src/Notification.Web/src/common/js/lib/plg-notify/package-lock.json

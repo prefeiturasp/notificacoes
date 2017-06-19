@@ -20,17 +20,7 @@
         var app = {}, mgr = null, user;
 
         app.createMgr = function __createMgr(){
-
-            var config = {
-                authority: "http://10.10.10.37:5000",
-                client_id: "mstechjs",
-                redirect_uri: "http://localhost:5003/callback.html",
-                response_type: "id_token token",
-                scope:"openid profile api1",
-                post_logout_redirect_uri : "http://localhost:5003/index.html"
-            };
-
-            mgr = new Oidc.UserManager(config);
+            mgr = new Oidc.UserManager(Config.OIDCCLIENT);
             return mgr;
         };
 
@@ -48,13 +38,38 @@
             }
         };
 
+        app.getAccessToken = function __getAccessToken(){
+            return user && user.access_token;
+        };
+
+        app.getKey = function __getKey(){
+            return user && user.token_type;
+        };
+
+
+        app.getTokenExpired = function __getTokenExpired(){
+
+            var date;
+
+            if(user){
+                date = Date(user.expires_at);
+            }
+
+            return date;
+        };
+
         app.getMgr = function __getMgr(){
             return mgr ? mgr : app.createMgr();
         };
 
-        app.base_url = function __base_url(url) {
+        app.base_url_APICoreSSO = function __base_url(url) {
             url = url || "";
-            return 'http://localhost:63342/' + url;
+            return Config.SITE + Config.APICoreSSO + url;
+        };
+
+        app.base_url_APISGP = function __base_url(url) {
+            url = url || "";
+            return Config.SITE + Config.APISGP + url;
         };
 
         /**

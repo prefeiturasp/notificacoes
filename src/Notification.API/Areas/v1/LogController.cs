@@ -1,5 +1,5 @@
-﻿using Notification.Entity.Database;
-using Notification.Repository;
+﻿using Notification.Business;
+using Notification.Entity.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,18 +19,30 @@ namespace Notification.API.Areas.v1
         {
             try
             {
-                var rep = new LogRepository();
-
-                rep.Insert();
-                rep.Insert();
-
-                var result = rep.Get();
-                
+                var result = LogBusiness.Get(0, 10);                
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
-            catch (Exception exp)
+            catch (Exception exc)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/Log/{id}")]
+        [ResponseType(typeof(IEnumerable<Log>))]
+        public HttpResponseMessage GetById(string id)
+        {
+            try
+            {
+                var result = LogBusiness.GetById(id);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
             }
         }
     }

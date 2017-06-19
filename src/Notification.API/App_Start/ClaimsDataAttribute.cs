@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Notification.Business;
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,6 +39,9 @@ namespace Notification.API.App_Start
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
+            var watch = new Stopwatch();
+            watch.Start();
+
             //ActionExecuting
             InternalActionExecuting(actionContext, cancellationToken);
 
@@ -62,6 +67,10 @@ namespace Notification.API.App_Start
 
             //ActionExecuted
             //await InternalActionExecuted(executedContext, cancellationToken);
+
+            watch.Stop();
+            LogBusiness.Info(string.Format("API-Path:{0} Total: {1}", actionContext.Request.RequestUri.AbsolutePath, watch.Elapsed.ToString()));
+            
             return executedContext.Response;
         }
 
@@ -77,13 +86,15 @@ namespace Notification.API.App_Start
                             where c.Type == TYPE_USU_ID
                             select c.Value;//.FirstOrDefault();
 
-                usu_id = new Guid(getUsuId.FirstOrDefault());
-
+                if (getUsuId.Any())
+                    usu_id = new Guid(getUsuId.FirstOrDefault());
+                
                 var getEntId = from c in principal.Identities.First().Claims
                                where c.Type == TYPE_ENT_ID
                                select c.Value;//.FirstOrDefault();
 
-                ent_id = new Guid(getEntId.FirstOrDefault());
+                if (getEntId.Any())
+                    ent_id = new Guid(getEntId.FirstOrDefault());
 
             }
             else

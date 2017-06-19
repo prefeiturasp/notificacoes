@@ -1,8 +1,9 @@
-
+    <div class="loading" ng-if="load"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></div>
     <menu></menu>
 
-    <section class="body-content">
+    <section class="body-content" ng-cloak>
         <alert></alert>
+
         <div class="headerCustom">
             <div class="max-width-menor">
                 <h4><i class="fa fa-bell-o" aria-hidden="true"></i> CADASTRO DE NOTIFICAÇÃO<span> <strong>Escreva sua mensagem</strong> para enviar<br> uma notificação para os <strong>grupos de usuários</strong>.</span></h4>
@@ -11,7 +12,7 @@
 
         <div class="remetente">
             <div class="max-width-menor">
-                <input type="text" placeholder="Digite o nome do remetente" ng-model="filters.sendersName">
+                <input type="text" placeholder="Digite o nome do remetente" ng-model="filters.sendersName" maxlength="150">
             </div>
         </div>
         <!--filtro por usuario-->
@@ -21,7 +22,7 @@
             <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
           </div>
 
-          <div class="filtro-conteudo sist">
+          <div class="filtro-conteudo user-modal">
             <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
             <h2>Escolha o tipo de usuário</h2>
             <ul>
@@ -34,10 +35,11 @@
           <div class="filtro-conteudo filtro-por-usuario">
               <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
             <h2>Filtro por tipo de usuário: Docente</h2>
-            <select>
-              <option value="2017">2017</option>
-              <option value="2016">2016</option>
-            </select>
+              <!--<select ng-options="item as item.label for item in listCalendar track by item.Id" ng-model="selected"></select>-->
+            <!--<select>-->
+              <!--<option value="2017">2017</option>-->
+              <!--<option value="2016">2016</option>-->
+            <!--</select>-->
             <div class="por-usuario">
                 <div class="divisao-filtro">
                   <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">DRE</h3>
@@ -143,27 +145,44 @@
             <div class="filtro-conteudo sist">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Sistemas</h2>
-                <ul ng-repeat="systemType in listSystem">
-                    <li><input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystem(systemType)">{{systemType.name}}</li>
+                <ul>
+                    <li ng-repeat="systemType in listSystem">
+                        <input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystemGroup('system', systemType)">{{systemType.Name}}
+                    </li>
                 </ul>
-                <a class="enviar" ng-click="emitFilters($event, system.systemType)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-click="nextFilter($event, 2)">Continuar filtro</a>
+                <a class="enviar" ng-if="system.systemType.Name" ng-click="emitFilters($event, system.systemType, 'systemType')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="system.systemType.Name" ng-click="nextFilter($event, 2)">Continuar filtro</a>
             </div>
             <div class="filtro-conteudo grup">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Grupos</h2>
-                <ul ng-repeat="keyGroup in Groups">
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="{{keyGroup.name}}" ng-click="selectTypeFilter($event, system.Group, keyGroup)" >{{keyGroup.name}}</li>
+                <ul>
+                    <li ng-repeat="keyGroup in listGroups">
+                        <input type="radio" class="primeiro" name="grupos" value="{{keyGroup.Name}}" ng-click="selectedSystemGroup('group', keyGroup)" >{{keyGroup.Name}}
+                    </li>
                 </ul>
-                <a class="enviar" ng-click="emitFilters($event, system.Group)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-click="nextFilter($event, 3)">Continuar filtro</a>
+                <a class="enviar" ng-if="system.Group.Name" ng-click="emitFilters($event, system.Group, 'Group')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="system.Group.Name" ng-click="nextFilter($event, 3)">Continuar filtro</a>
+            </div>
+
+            <div class="filtro-conteudo dre">
+                <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>DREs</h2>
+                <ul>
+                    <li ng-repeat="dre in listDREs">
+                        <input type="checkbox" class="primeiro" name="grupos" value="{{dre.Name}}" ng-click="selectTypeFilter($event, system.DRE, dre)">{{adm.Name}}
+                    </li>
+                </ul>
+                <a class="enviar" ng-click="emitFilters($event, system.DREs)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
             </div>
 
             <div class="filtro-conteudo admUnit">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Unidade administrativa</h2>
-                <ul ng-repeat="adm in AdministrativeUnits">
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="{{adm.name}}" ng-click="selectTypeFilter($event, system.AdministrativeUnit, adm)">{{adm.name}}</li>
+                <ul>
+                    <li ng-repeat="adm in AdministrativeUnits">
+                        <input type="checkbox" class="primeiro" name="grupos" value="{{adm.Name}}" ng-click="selectTypeFilter($event, system.AdministrativeUnit, adm)">{{adm.Name}}
+                    </li>
                 </ul>
                 <a class="enviar" ng-click="emitFilters($event, system.AdministrativeUnit)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
             </div>
@@ -177,10 +196,30 @@
 
         <form class="maxWidthNotf">
             <div class="card selecionados">
-                <label>Filtros selecionados:</label>
-                <p>Biblioteca<a><i class="fa fa-times" aria-hidden="true"></i></a></p>
-                <p>Administração<a><i class="fa fa-times" aria-hidden="true"></i></a></p>
-                <p>Professor<a><i class="fa fa-times" aria-hidden="true"></i></a></p>
+                <label class="accordion" ng-click="accordion($event)">Filtros por sistema:</label>
+                <div class="panel" style="display: none">
+                  <div ng-repeat="filter in filters.filters" class="bloco-panel">
+                    <p>
+                      {{filter.systemType.Name}} <span ng-if="filter.Group.Name">-</span> 
+                      {{filter.Group.Name}} <span ng-if="filter.DREs.Name">-</span>
+                      {{filter.DREs.Name}} <span ng-if="filter.AdministrativeUnit.Name">-</span> 
+                      {{filter.AdministrativeUnit.Name}}
+                      <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>
+                    </p>
+                  </div>
+                </div>
+                <label class="accordion">Filtros por usuário:</label>
+                <div class="panel" style="display: none">
+                    <!--<div ng-repeat="filter in filters.filters" class="bloco-panel">-->
+                        <!--<p>-->
+                            <!--{{filter.systemType.Name}} <span ng-if="filter.Group.Name">-</span>-->
+                            <!--{{filter.Group.Name}} <span ng-if="filter.DREs.Name">-</span>-->
+                            <!--{{filter.DREs.Name}} <span ng-if="filter.AdministrativeUnit.Name">-</span>-->
+                            <!--{{filter.AdministrativeUnit.Name}}-->
+                            <!--<i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                </div>
             </div>
 
             <div class="card tipo-mensagem">
@@ -207,7 +246,7 @@
                 <div class="divisao">
                     <div>
                         <label>Titulo</label>
-                        <input type="text" ng-model="filters.title">
+                        <input type="text" ng-model="filters.title" maxlength="100">
                     </div>
                 </div>
             </div>
@@ -224,15 +263,3 @@
             <p>Sistema para cadastro de notificação<span>Todos os direitos reservados.</span></p>
         </div>
     </footer>
-
-    <ul class="notificacoes">
-        <li class="urgente"><span>09/06/2017 - Urgente</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li><span>09/06/2017</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li><span>09/06/2017</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li class="lida"><span>09/06/2017</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li class="lida"><span>09/06/2017</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li class="urgente lida"><span>09/06/2017 - Urgente</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li class="lida"><span>09/06/2017</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-        <li class="lida"><span>09/06/2017</span> Lorem Ipsum is simply dummy text of the printing and typesetting...</li>
-    </ul>
-    <a class="float-menu" ng-click="notificationMenu()"><i class="fa fa-bell" aria-hidden="true"></i></a>

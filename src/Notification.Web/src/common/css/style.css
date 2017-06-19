@@ -9,7 +9,7 @@ body {
   padding: 0; }
 
 * {
-  box-sizing: border-box;
+  /*box-sizing: border-box;*/
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
   -webkit-transition: all .3s ease;
@@ -169,7 +169,9 @@ a {
   padding: 0;
   background: #FFFFFF;
   border-radius: 8px;
-  overflow: hidden; }
+  overflow: hidden;
+  max-height: 420px;
+  overflow-y: auto;}
 .filtro-modal .filtro-conteudo ul li {
   list-style: none;
   padding: 20px;
@@ -220,12 +222,13 @@ a {
 .remetente input {
   background: transparent;
   border: 0;
-  border-bottom: 1px solid #67abff;
+  border-bottom: 1px solid #ffffff;
   padding: 15px 20px;
   margin-bottom: 80px;
   width: 100%;
   color: #FFFFFF;
-  font-size: 1.6rem; }
+  font-size: 1.6rem;
+  }
 .remetente input:focus {
   outline: none;
   background: #FFFFFF;
@@ -287,13 +290,46 @@ input, textarea, select, button {
 
 .selecionados label {
   display: inline-block; }
+.bloco-panel {
+  display: inline-block;
+  vertical-align: top;
+}
+.redactor-styles {
+  background: #fcfdfd;
+  border: 1px solid #ced6da;
+  border-top: 0;
+  min-height: 190px !important;
+}
 .selecionados p {
   vertical-align: middle;
-  padding: 10px 15px;
+  padding: 8px 20px;
   display: inline-block;
   background: #f4f6f7;
   border: 1px solid #93a6af;
-  border-radius: 30px; }
+  border-radius: 30px;
+  position: relative;
+  margin-right: 25px;
+  font-size: 1.4rem;
+  }
+  .selecionados p i.fa-times {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    background: #93a6af;
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    border-radius: 100%;
+    text-align: center;
+    padding-top: 4px;
+    cursor: pointer;
+  }
+    .selecionados p i.fa-times {
+      background: #6e8793;
+    }
 .selecionados p a {
   font-size: 2rem;
   vertical-align: middle;
@@ -406,64 +442,6 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   margin-right: 25px; }
 .divisao > div:last-child {
   margin-right: 0; }
-
-.notificacoes {
-  position: fixed;
-  background: #FFFFFF;
-  width: 320px;
-  display: inline-block;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
-  bottom: 80px;
-  right: 80px;
-  margin: 0;
-  padding: 0;
-  border-radius: 10px;
-  overflow-y: auto;
-  height: 0; }
-.notificacoes.abre {
-  height: 60%; }
-.notificacoes li {
-  display: inline-block;
-  width: 100%;
-  padding: 15px;
-  border-bottom: 1px solid #ebeef0;
-  font-size: 1.4rem; }
-.notificacoes li.lida {
-  opacity: .5; }
-.notificacoes li:last-child {
-  border-bottom: 0; }
-.notificacoes li:nth-child(odd) {
-  background: #fafbfb; }
-.notificacoes li.urgente {
-  background: #d11d1d;
-  color: #ffffff; }
-.notificacoes li.urgente * {
-  color: #ffffff; }
-.notificacoes li span {
-  font-size: 1.2rem;
-  display: block;
-  font-weight: 900;
-  color: #768e99; }
-
-.float-menu {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  border-radius: 100%;
-  background: #232b38;
-  color: white;
-  text-align: center;
-  padding-top: 5px;
-  display: inline-block;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-  bottom: 30px;
-  right: 30px;
-  padding-top: 13px; }
-.float-menu:hover {
-  background: #0172ff;
-  color: #FFFFFF; }
-.float-menu i {
-  font-size: 3.3rem; }
 
 .footer {
   background: #ebeef0;
@@ -585,8 +563,58 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   text-align: left;
 }
 
+li.sistemas {
+  position: relative;
+}
+/*li.sistemas .sub-menu-sistemas.abre {*/
+/*display: block;*/
+/*}*/
+li.sistemas .sub-menu-sistemas {
+  position: absolute;
+  left: -10px;
+  top: 35px;
+  margin: 0;
+  padding: 0;
+  background: #FFFFFF;
+  border-radius: 6px;
+  text-align: left;
+  width: 150px;
+  /*display: none;*/
+}
+li.sistemas .sub-menu-sistemas:before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+}
+li.sistemas .sub-menu-sistemas li {
+  display: inline-block;
+  margin: 0;
+  width: 100%;
+}
+li.sistemas .sub-menu-sistemas li a {
+  display: inline-block;
+  color: #888;
+  padding: 8px 15px;
+  width: 100%;
+  border-bottom: 1px solid #DCDCDC;
+}
+li.sistemas .sub-menu-sistemas li a:hover {
+  color: #000;
+}
+li.sistemas .sub-menu-sistemas li:last-child a {
+  border-bottom: 0;
+}
+
 .filtro-por-usuario{display: none}
 .admUnit{display: none}
+.dre{display: none}
 
 .customAlert-top-full-width {
   top: 0;
@@ -600,4 +628,76 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   width: 50%;
   margin: 0 0 0 -30%;
   left: 55%;
+}
+
+
+.filters-selected{border: 1px solid; border-radius: 3%; height: 58px;}
+.filters-selected p{font-size: 1.3rem;}
+
+.hidden-body{overflow: hidden}
+
+.loading{
+  background: rgba(0,0,0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 99999;
+  text-align: center;
+}
+
+.fa-spin{font-size: 7rem;  margin: 50px;}
+
+.accordion {
+  background: #fcfdfd;
+  border: 1px solid #ced6da;
+  vertical-align: middle;
+  padding: 15px 20px;
+  display: inline-block !important;
+  width: 100% !important;
+  line-height: inherit;
+  outline: none;
+  margin-bottom: 0 !important;
+  margin-top: 15px !important;
+  cursor: pointer !important;
+}
+
+.accordion:hover {
+  background: #e6eded;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #ced6da;
+  border-top: 0;
+  vertical-align: middle;
+  display: inline-block;
+  width: 100%;
+  line-height: inherit;
+  outline: none;
+  padding: 10px 15px;
+}
+
+.shake-anime {
+  animation: shake 1s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }

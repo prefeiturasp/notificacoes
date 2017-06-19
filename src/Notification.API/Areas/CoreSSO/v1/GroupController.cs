@@ -1,4 +1,5 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.Business;
 using Notification.Business.CoreSSO;
 using Notification.Entity.API.CoreSSO;
 using System;
@@ -23,9 +24,10 @@ namespace Notification.API.Areas.CoreSSO.v1
                 var result = GroupBusiness.GetGroupDown(claimData.Usu_id, systemId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
             }
         }
     }

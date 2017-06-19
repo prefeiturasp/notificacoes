@@ -1,13 +1,21 @@
 <header class="frame-header">
     <div class="max-width">
-        <a href="" class="toggle-menu-bootstrap-bar" >
+        <a href="" class="toggle-menu-bootstrap-bar" ng-if="">
             <i class="fa fa-bars" aria-hidden="true"></i> Menu
         </a>
         <p>Sistema para cadastro de notificação</p>
         <ul class="opcoesGerais">
             <li><span class="nomeUsuario">Bem-vindo, <b>admin</b></span></li>
-            <li><a type="button" class="ng-scope" ><i class="fa fa-th" aria-hidden="true"></i> Sistemas</a></li>
-            <li><a class="toggleBox" title="Configurações" ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i> Sair</a></li>
+            <li class="sistemas" ng-click="openMenuSytem()">
+                <a type="button" class="ng-scope" ><i class="fa fa-th" aria-hidden="true"></i> Sistemas</a>
+                <ul class="sub-menu-sistemas" ng-if="showListMenu" ng-mouseleave="mouseOver()">
+                    <li ng-repeat="system in listMenuSystem">
+                        <img rec="{{system.Image}}">
+                        <a href="{{system.Url}}" target="_blank">{{system.Name}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li><a class="toggleBox" title="Configurações" ng-click="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i> Sair </a></li>
         </ul>
     </div>
 </header>
