@@ -64,7 +64,7 @@ var plgnotify = function (sysconfig) {
      */
     function containRect(pai, filho) {
         return (filho.h) <= ( pai.h);
-        return ((filho.x + filho.w <= pai.x + pai.w) && (filho.y + filho.h) <= (pai.y + pai.h) );
+        //return ((filho.x + filho.w <= pai.x + pai.w) && (filho.y + filho.h) <= (pai.y + pai.h) );
         //return (filho.x >= pai.x && filho.y >= pai.y) && ((filho.x + filho.w <= pai.x + pai.w) && (filho.y + filho.h) <= (pai.y + pai.h) );
     }
 
@@ -422,7 +422,7 @@ var plgnotify = function (sysconfig) {
 
             var dom = addContentHTML('div', html, true);
             dom.children[0].classList.add(layout.container);
-            document.body.append(dom);
+            document.body.appendChild(dom);
 
             var templateMensages = '<li class="urgente"><span>20/06/2017</span><div>Essa mensagem é urgente !</div></li><li class="lida"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li><li class="lida urgente"><span>20/06/2017</span><div>Essa mensagem é urgente e já foi lida!</div></li><li><span>12/06/2017</span><div>Uma mensagem muito muito muito muito muito muitolonga mesmo ...</div></li>';
             dom = addContentHTML('ul', templateMensages, true);
@@ -443,11 +443,16 @@ var plgnotify = function (sysconfig) {
 
 
         style = getComputedStyle(layout.domplugin);
-        layout.paddingX = parseInt(style.boxShadow.split(' ')[4].substr(0, 1)) + 10;
-        layout.paddingY = parseInt(style.boxShadow.split(' ')[5].substr(0, 1)) + 10;
+
+        //layout.paddingX = parseInt(style.boxShadow.split(' ')[4].substr(0, 1)) + 10;
+        //layout.paddingY = parseInt(style.boxShadow.split(' ')[5].substr(0, 1)) + 10;
+
+        layout.paddingX = layout.paddingY = 14;
+
         layout.width = parseInt(style.width.substr(0, style.width.indexOf('px')));
 
         layout.height = parseInt(style.height.substr(0, style.width.indexOf('px')));
+
         style = getComputedStyle(layout.domlist);
         layout.widthList = parseInt(style.width.substr(0, style.width.indexOf('px')));
 
@@ -503,7 +508,7 @@ var plgnotify = function (sysconfig) {
         var socket;
 
         if (!_config || !_config.ws || !_config.ws.url || window.io == undefined) {
-            console.warn('socket não detectado');
+            console.warn('socket.io-client não detectado');
             return;
         }
         if (ws) return console.warn('ws já instânciado.');
@@ -552,8 +557,17 @@ var plgnotify = function (sysconfig) {
         publish();
     }
 
-    // async ou sync - ( DOMContentLoaded / load )
-    addEventListener(window, 'load', init, {once: true, passive: true});
+    // Internet Explorer 6-11 ou Edge 20+
+    var isIE = /*@cc_on!@*/false || !!document.documentMode, isEdge = !isIE && !!window.StyleMedia;
+
+    //Valida se é IE ou Edge
+    if (isIE || isEdge){
+        init();
+    }
+    else{
+        // async ou sync - ( DOMContentLoaded / load )
+        addEventListener(window, 'load', init, {once: true, passive: true});
+    }
 
     //exporta metodos públicos
     return exports;

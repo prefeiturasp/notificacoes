@@ -443,64 +443,6 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
 .divisao > div:last-child {
   margin-right: 0; }
 
-.notificacoes {
-  position: fixed;
-  background: #FFFFFF;
-  width: 320px;
-  display: inline-block;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
-  bottom: 80px;
-  right: 80px;
-  margin: 0;
-  padding: 0;
-  border-radius: 10px;
-  overflow-y: auto;
-  height: 0; }
-.notificacoes.abre {
-  height: 60%; }
-.notificacoes li {
-  display: inline-block;
-  width: 100%;
-  padding: 15px;
-  border-bottom: 1px solid #ebeef0;
-  font-size: 1.4rem; }
-.notificacoes li.lida {
-  opacity: .5; }
-.notificacoes li:last-child {
-  border-bottom: 0; }
-.notificacoes li:nth-child(odd) {
-  background: #fafbfb; }
-.notificacoes li.urgente {
-  background: #d11d1d;
-  color: #ffffff; }
-.notificacoes li.urgente * {
-  color: #ffffff; }
-.notificacoes li span {
-  font-size: 1.2rem;
-  display: block;
-  font-weight: 900;
-  color: #768e99; }
-
-.float-menu {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  border-radius: 100%;
-  background: #232b38;
-  color: white;
-  text-align: center;
-  padding-top: 5px;
-  display: inline-block;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
-  bottom: 30px;
-  right: 30px;
-  padding-top: 13px; }
-.float-menu:hover {
-  background: #0172ff;
-  color: #FFFFFF; }
-.float-menu i {
-  font-size: 3.3rem; }
-
 .footer {
   background: #ebeef0;
   display: inline-block;
