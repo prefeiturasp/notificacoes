@@ -222,12 +222,13 @@ a {
 .remetente input {
   background: transparent;
   border: 0;
-  border-bottom: 1px solid #67abff;
+  border-bottom: 1px solid #ffffff;
   padding: 15px 20px;
   margin-bottom: 80px;
   width: 100%;
   color: #FFFFFF;
-  font-size: 1.6rem; }
+  font-size: 1.6rem;
+  }
 .remetente input:focus {
   outline: none;
   background: #FFFFFF;
@@ -289,15 +290,46 @@ input, textarea, select, button {
 
 .selecionados label {
   display: inline-block; }
+.bloco-panel {
+  display: inline-block;
+  vertical-align: top;
+}
+.redactor-styles {
+  background: #fcfdfd;
+  border: 1px solid #ced6da;
+  border-top: 0;
+  min-height: 190px !important;
+}
 .selecionados p {
-  vvertical-align: middle;
-  padding: 10px 15px;
+  vertical-align: middle;
+  padding: 8px 20px;
   display: inline-block;
   background: #f4f6f7;
   border: 1px solid #93a6af;
   border-radius: 30px;
   position: relative;
-  top: -8px; }
+  margin-right: 25px;
+  font-size: 1.4rem;
+  }
+  .selecionados p i.fa-times {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    background: #93a6af;
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    display: inline-block;
+    border-radius: 100%;
+    text-align: center;
+    padding-top: 4px;
+    cursor: pointer;
+  }
+    .selecionados p i.fa-times {
+      background: #6e8793;
+    }
 .selecionados p a {
   font-size: 2rem;
   vertical-align: middle;
@@ -672,3 +704,33 @@ li.sistemas .sub-menu-sistemas li:last-child a {
 }
 
 .fa-spin{font-size: 7rem;  margin: 50px;}
+
+.accordion {
+  background: #fcfdfd;
+  border: 1px solid #ced6da;
+  vertical-align: middle;
+  padding: 15px 20px;
+  display: inline-block !important;
+  width: 100% !important;
+  line-height: inherit;
+  outline: none;
+  margin-bottom: 0 !important;
+  margin-top: 15px !important;
+  cursor: pointer !important;
+}
+
+.accordion:hover {
+  background: #e6eded;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #ced6da;
+  border-top: 0;
+  vertical-align: middle;
+  display: inline-block;
+  width: 100%;
+  line-height: inherit;
+  outline: none;
+  padding: 10px 15px;
+}

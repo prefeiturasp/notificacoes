@@ -22,7 +22,7 @@
             <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
           </div>
 
-          <div class="filtro-conteudo sist">
+          <div class="filtro-conteudo user-modal">
             <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
             <h2>Escolha o tipo de usuário</h2>
             <ul>
@@ -35,10 +35,11 @@
           <div class="filtro-conteudo filtro-por-usuario">
               <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
             <h2>Filtro por tipo de usuário: Docente</h2>
-            <select>
-              <option value="2017">2017</option>
-              <option value="2016">2016</option>
-            </select>
+              <select ng-options="item as item.label for item in listCalendar track by item.Id" ng-model="selected"></select>
+            <!--<select>-->
+              <!--<option value="2017">2017</option>-->
+              <!--<option value="2016">2016</option>-->
+            <!--</select>-->
             <div class="por-usuario">
                 <div class="divisao-filtro">
                   <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">DRE</h3>
@@ -149,8 +150,8 @@
                         <input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystemGroup('system', systemType)">{{systemType.Name}}
                     </li>
                 </ul>
-                <a class="enviar" ng-click="emitFilters($event, system.systemType)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-click="nextFilter($event, 2)">Continuar filtro</a>
+                <a class="enviar" ng-if="system.systemType.Name" ng-click="emitFilters($event, system.systemType, 'systemType')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="system.systemType.Name" ng-click="nextFilter($event, 2)">Continuar filtro</a>
             </div>
             <div class="filtro-conteudo grup">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
@@ -160,8 +161,8 @@
                         <input type="radio" class="primeiro" name="grupos" value="{{keyGroup.Name}}" ng-click="selectedSystemGroup('group', keyGroup)" >{{keyGroup.Name}}
                     </li>
                 </ul>
-                <a class="enviar" ng-click="emitFilters($event, system.Group)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-click="nextFilter($event, 3)">Continuar filtro</a>
+                <a class="enviar" ng-if="system.Group.Name" ng-click="emitFilters($event, system.Group, 'Group')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="system.Group.Name" ng-click="nextFilter($event, 3)">Continuar filtro</a>
             </div>
 
             <div class="filtro-conteudo dre">
@@ -195,7 +196,30 @@
 
         <form class="maxWidthNotf">
             <div class="card selecionados">
-                <label>Filtros selecionados:</label>
+                <label class="accordion" ng-click="accordion($event)">Filtros por sistema:</label>
+                <div class="panel" style="display: none">
+                  <div ng-repeat="filter in filters.filters" class="bloco-panel">
+                    <p>
+                      {{filter.systemType.Name}} <span ng-if="filter.Group.Name">-</span> 
+                      {{filter.Group.Name}} <span ng-if="filter.DREs.Name">-</span>
+                      {{filter.DREs.Name}} <span ng-if="filter.AdministrativeUnit.Name">-</span> 
+                      {{filter.AdministrativeUnit.Name}}
+                      <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>
+                    </p>
+                  </div>
+                </div>
+                <label class="accordion">Filtros por usuário:</label>
+                <div class="panel" style="display: none">
+                    <!--<div ng-repeat="filter in filters.filters" class="bloco-panel">-->
+                        <!--<p>-->
+                            <!--{{filter.systemType.Name}} <span ng-if="filter.Group.Name">-</span>-->
+                            <!--{{filter.Group.Name}} <span ng-if="filter.DREs.Name">-</span>-->
+                            <!--{{filter.DREs.Name}} <span ng-if="filter.AdministrativeUnit.Name">-</span>-->
+                            <!--{{filter.AdministrativeUnit.Name}}-->
+                            <!--<i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                </div>
             </div>
 
             <div class="card tipo-mensagem">
