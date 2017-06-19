@@ -421,7 +421,7 @@ var plgnotify = function (sysconfig) {
             addContentHTML('style', css);
 
             var dom = addContentHTML('div', html, true);
-            dom.children[0].classList.add(layout.container);
+            dom.childNodes[0].classList.add(layout.container);
             document.body.appendChild(dom);
 
             var templateMensages = '<li class="urgente"><span>20/06/2017</span><div>Essa mensagem é urgente !</div></li><li class="lida"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li><li class="lida urgente"><span>20/06/2017</span><div>Essa mensagem é urgente e já foi lida!</div></li><li><span>12/06/2017</span><div>Uma mensagem muito muito muito muito muito muitolonga mesmo ...</div></li>';
