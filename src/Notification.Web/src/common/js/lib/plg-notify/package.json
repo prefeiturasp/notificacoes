@@ -1,0 +1,14 @@
+{
+  "name": "plugin_notificacao",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm i &&  node_modules/.bin/uglifyjs ./plugin.js -o ../plg-notify.min.js -c dead_code,drop_debugger,inline,drop_console,passes -m -p 'bare_returns' --source-map"
+  },
+  "author": "alexandre calil blasizza paravani",
+  "license": "MIT",
+  "devDependencies": {
+    "socket.io-client": "^2.0.3",
+    "uglify-js": "^3.0.18"
+  }
+}
