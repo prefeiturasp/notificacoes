@@ -29,6 +29,9 @@
          * Contructor
          */
         function initialize() {
+
+            new plgnotify();
+
             $scope.limitCharRedactor = 20;
 
             $scope.filters = {
@@ -294,6 +297,22 @@
         function getCalendar(){
             addLoad();
             HttpServices.getListCalendar(function(data){
+                $scope.listCalendar = data;
+                removeLoad();
+            });
+        }
+
+        function getSchoolSuperior(){
+            addLoad();
+            HttpServices.getListSchoolSuperior(function(data){
+                $scope.listCalendar = data;
+                removeLoad();
+            });
+        }
+
+        function getSchoolClassification(){
+            addLoad();
+            HttpServices.getListSchoolClassification(id, function(data){
                 $scope.listCalendar = data;
                 removeLoad();
             });
