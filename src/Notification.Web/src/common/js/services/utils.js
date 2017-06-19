@@ -42,13 +42,34 @@
             return user && user.access_token;
         };
 
+        app.getKey = function __getKey(){
+            return user && user.token_type;
+        };
+
+
+        app.getTokenExpired = function __getTokenExpired(){
+
+            var date;
+
+            if(user){
+                date = Date(user.expires_at);
+            }
+
+            return date;
+        };
+
         app.getMgr = function __getMgr(){
             return mgr ? mgr : app.createMgr();
         };
 
-        app.base_url = function __base_url(url) {
+        app.base_url_APICoreSSO = function __base_url(url) {
             url = url || "";
-            return Config.SITE + Config.API + url;
+            return Config.SITE + Config.APICoreSSO + url;
+        };
+
+        app.base_url_APISGP = function __base_url(url) {
+            url = url || "";
+            return Config.SITE + Config.APISGP + url;
         };
 
         /**

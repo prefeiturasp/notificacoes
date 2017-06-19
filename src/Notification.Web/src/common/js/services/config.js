@@ -3,7 +3,8 @@
  */
 var Config = {
     SITE: "http://10.10.10.37:5019/",
-    API: "api/CoreSSO/v1",
+    APICoreSSO: "api/CoreSSO/v1",
+    APISGP: "api/SGP/v1",
     OIDCCLIENT: {
         authority: "http://10.10.10.37:5000",
         client_id: "mstechjs",
