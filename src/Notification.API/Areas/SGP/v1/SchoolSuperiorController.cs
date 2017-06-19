@@ -1,4 +1,5 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,12 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/SchoolSuperior")]
         [ResponseType(typeof(IEnumerable<SchoolSuperior>))]
-        public HttpResponseMessage Get()
+        public HttpResponseMessage Get(Guid groupId)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = SchoolSuperiorBusiness.Get(claimData.Usu_id, groupId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception)
             {
