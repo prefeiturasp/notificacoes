@@ -516,9 +516,10 @@ var plgnotify = function (sysconfig) {
         if (ws) return console.warn('ws já instânciado.');
 
         if (!socket) {
-            socket = io(_config.ws.url);
-            socket.hasListeners = false;
-            socket.on('connect', addSocketListeners);
+            socket = $.connection.notificationHub;
+
+            $.connection.hub.url= socket.url;
+            $.connection.hub.start().done(addSocketListeners);
         }
 
         ws = {
@@ -560,16 +561,16 @@ var plgnotify = function (sysconfig) {
     }
 
     // Internet Explorer 6-11 ou Edge 20+
-    var isIE = /*@cc_on!@*/false || !!document.documentMode, isEdge = !isIE && !!window.StyleMedia;
+    //var isIE = /*@cc_on!@*/false || !!document.documentMode, isEdge = !isIE && !!window.StyleMedia;
 
     //Valida se é IE ou Edge
-    if (isIE || isEdge){
+    //if (isIE || isEdge){
         init();
-    }
-    else{
-        // async ou sync - ( DOMContentLoaded / load )
-        addEventListener(window, 'load', init, {once: true, passive: true});
-    }
+    //}
+    //else{
+    //    // async ou sync - ( DOMContentLoaded / load )
+    //    addEventListener(window, 'load', init, {once: true, passive: true});
+    //}
 
     //exporta metodos públicos
     return exports;
