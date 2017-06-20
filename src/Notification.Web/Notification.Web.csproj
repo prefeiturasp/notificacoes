@@ -105,6 +105,7 @@
     <Content Include="node_modules\angular\package.json" />
     <Content Include="node_modules\angular\README.md" />
     <Content Include="package.json" />
+    <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
