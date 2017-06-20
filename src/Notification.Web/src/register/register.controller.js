@@ -133,6 +133,7 @@
         function startRedactor(){
             //instanciando o redactor
             $("#content").redactor({
+                //lang: 'pt_br',
                 limiter: $scope.limitCharRedactor, // number of characters
                 plugins: ['limiter']
             });
@@ -148,6 +149,9 @@
             $(".redactor-toolbar-link-dropdown").on('click', function(){
                 $(".redactor-dropdown-outdent").remove();
                 $(".redactor-dropdown-indent").remove();
+                $(".redactor-dropdown-indent").text('Lista desordenada');
+                $(".redactor-dropdown-unorderedlist").text('Lista desordenada');
+                $(".redactor-dropdown-orderedlist").text('Lista ordenada');
             });
 
 
