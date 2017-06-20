@@ -143,8 +143,8 @@ var plgnotify = function (sysconfig) {
             return;
         }
         dragging = true;
-        offX = e.offsetX;
-        offY = e.offsetY;
+        offX = e.offsetX + e.currentTarget.parentNode.offsetLeft;
+        offY = e.offsetY + e.currentTarget.parentNode.offsetTop;
     }
 
     /**
