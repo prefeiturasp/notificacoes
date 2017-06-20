@@ -28,9 +28,10 @@ namespace Notification.SignalRServer.SignalR
             return base.OnDisconnected(stopCalled);
         }
         
-        public void Hello()
+        public void SendNotification(IEnumerable<Guid> users, Notification.Entity.SignalR.Notification notification)
         {
-            Clients.All.hello();
+            LogBusiness.Info(string.Format("[NotificationHub] SendNotification (connectionId: {0})", Context.ConnectionId));
+            Clients.All.ReceiveNotification(notification);
         }
     }
 }

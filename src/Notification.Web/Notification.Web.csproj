@@ -105,6 +105,7 @@
     <Content Include="node_modules\angular\package.json" />
     <Content Include="node_modules\angular\README.md" />
     <Content Include="package.json" />
+    <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -124,8 +125,14 @@
     <Content Include="src\common\js\factorys\factory.js" />
     <Content Include="src\common\js\factorys\route.factory.js" />
     <Content Include="src\common\js\filters\filter.js" />
+    <Content Include="src\common\js\lib\jquery.min.js" />
+    <Content Include="src\common\js\lib\limiter.js" />
     <Content Include="src\common\js\lib\oidc-client.js" />
+    <Content Include="src\common\js\lib\plg-notify.min.js" />
+    <Content Include="src\common\js\lib\redactor.js" />
     <Content Include="src\common\js\module\app.module.js" />
+    <Content Include="src\common\js\services\config.js" />
+    <Content Include="src\common\js\services\http.register.services.js" />
     <Content Include="src\common\js\services\model.js" />
     <Content Include="src\common\js\services\notification.js" />
     <Content Include="src\common\js\services\services.js" />
