@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.API", "Notific
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Web", "Notification.Web\Notification.Web.csproj", "{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.SignalRServer", "Notification.SignalRServer\Notification.SignalRServer.csproj", "{FF722212-4754-4FFF-85D7-50E037C39F98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF722212-4754-4FFF-85D7-50E037C39F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF722212-4754-4FFF-85D7-50E037C39F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF722212-4754-4FFF-85D7-50E037C39F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF722212-4754-4FFF-85D7-50E037C39F98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
