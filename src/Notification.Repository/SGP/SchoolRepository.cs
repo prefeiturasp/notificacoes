@@ -65,7 +65,7 @@ namespace Notification.Repository.SGP
             {
                 var query = context.Query<School>(
                     @"SELECT DISTINCT
-	                     esc.id 'Id'
+	                     esc.esc_id 'Id'
 	                    , esc.esc_nome 'Name'
                     FROM 
 	                    ESC_Escola esc WITH(NOLOCK)
