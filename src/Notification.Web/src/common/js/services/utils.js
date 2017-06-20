@@ -64,12 +64,12 @@
 
         app.base_url_APICoreSSO = function __base_url(url) {
             url = url || "";
-            return Config.SITE + Config.APICoreSSO + url;
+            return Config.API + Config.APICoreSSO + url;
         };
 
         app.base_url_APISGP = function __base_url(url) {
             url = url || "";
-            return Config.SITE + Config.APISGP + url;
+            return Config.API + Config.APISGP + url;
         };
 
         /**

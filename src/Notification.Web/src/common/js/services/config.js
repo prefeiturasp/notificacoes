@@ -2,7 +2,7 @@
  * Created by everton.ferreira on 16/06/2017.
  */
 var Config = {
-    SITE: "http://10.10.10.37:5019/",
+    API: "http://10.10.10.37:5019/",
     APICoreSSO: "api/CoreSSO/v1",
     APISGP: "api/SGP/v1",
     OIDCCLIENT: {

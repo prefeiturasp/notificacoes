@@ -47,7 +47,7 @@ module.exports = function(grunt){
             dist:{
                 expand: true,
                 cwd: '<%= App.src%>',
-                src: ['**', '!**/**.js'],
+                src: ['**', '!**/css/**.css', '!**/js/directives', '!**/js/factorys', '!**/js/filters', '!**/js/module', '!**/js/services', '!**/lib/**.js', '!**/js/directives/**.js', '!**/js/factorys/**.js', '!**/js/filters/**.js', '!**/js/module/**.js', '!**/js/services/**.js' ],
                 //src: '**',
                 dest: '<%= App.dist%>'
             }
@@ -95,10 +95,19 @@ module.exports = function(grunt){
                 preserveComments: 'some',
                 sourceMap: true,
                 sourceMapIncludeSources: true,
+                mangle: false,
                 //Comenta em que versão foi gerada.
                 banner: '/*! <%= App.name %> - v<%= App.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */'
             },
             target: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= App.dist %>/',
+                    src: ['**/*.js'],
+                    dest: '<%= App.dist %>/'
+                }]
+            },
+            teste: {
                 files: [{
                     expand: true,
                     cwd: '<%= App.dist %>/',
@@ -168,6 +177,19 @@ module.exports = function(grunt){
         'useminPrepare',
         'concat',
         'uglify',
+        'cssmin',
+        'usemin',
+        'htmlmin',
+        'compress:build'
+    ]);
+
+    grunt.registerTask('teste', [
+        'clean',
+        'copy:dist',
+        'useminPrepare',
+        'concat',
+        'uglify',
+        'uglify:teste',
         'cssmin',
         'usemin',
         'htmlmin',

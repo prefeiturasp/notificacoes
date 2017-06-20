@@ -2,8 +2,18 @@
  * Created by everton.ferreira on 16/06/2017.
  */
 (function () {
-    angular.module('services').factory('HttpServices', ['Model', 'toastr', '$http', '$window',
-        function (Model, toastr, $http, $window) {
+
+    'use strict';
+
+    angular
+        .module('appNotification')
+        .factory("HttpServices", HttpRegisterService);
+
+    //Injectors
+    HttpRegisterService.$inject = ['Model', 'toastr', '$http', '$window'];
+
+    //angular.module('services').factory('HttpServices', ['Model', 'toastr', '$http', '$window',
+        function HttpRegisterService(Model, toastr, $http, $window) {
 
             function getLists(model, callback){
 
@@ -200,5 +210,5 @@
                 getListTeam: getListTeam
             }
 
-        }]);
+        };
 })();
