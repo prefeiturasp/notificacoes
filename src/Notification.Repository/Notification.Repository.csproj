@@ -80,7 +80,7 @@
     <Compile Include="SGP\PositionRepository.cs" />
     <Compile Include="SGP\SchoolClassificationRepository.cs" />
     <Compile Include="SGP\SchoolRepository.cs" />
-    <Compile Include="SGP\SchoolSuperior.cs" />
+    <Compile Include="SGP\SchoolSuperiorRepository.cs" />
     <Compile Include="SGP\TeamRepository.cs" />
   </ItemGroup>
   <ItemGroup>

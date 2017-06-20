@@ -59,6 +59,7 @@
     <Compile Include="API\CoreSSO\Group.cs" />
     <Compile Include="API\CoreSSO\GroupAU.cs" />
     <Compile Include="API\CoreSSO\System.cs" />
+    <Compile Include="API\CoreSSO\TypeAU.cs" />
     <Compile Include="API\SGP\Calendar.cs" />
     <Compile Include="API\SGP\Course.cs" />
     <Compile Include="API\SGP\CoursePeriod.cs" />
