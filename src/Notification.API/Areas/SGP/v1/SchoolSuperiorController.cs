@@ -9,20 +9,36 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Notification.Business.CoreSSO;
 
 namespace Notification.API.Areas.SGP.v1
 {
     public class SchoolSuperiorController : AuthBaseController
     {
+        /// <summary>
+        /// Busca as DRE's do usuário logado no sistema de notificações.
+        /// Necessário enviar o id do grupo do usuário logado no Header (groupSid)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/SchoolSuperior")]
         [ResponseType(typeof(IEnumerable<SchoolSuperior>))]
-        public HttpResponseMessage Get(Guid groupId)
+        public HttpResponseMessage Get()
         {
             try
             {
-                var result = SchoolSuperiorBusiness.Get(claimData.Usu_id, groupId);
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                if (Request.Headers.Contains(GroupBusiness.TYPE_GRU_ID))
+                {
+
+                    var result = SchoolSuperiorBusiness.Get(claimData.Usu_id, claimData.Gru_id);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                }
+                else
+                {
+                    MissingFieldException exc = new MissingFieldException("Header: " + GroupBusiness.TYPE_GRU_ID + " não encontrado.");
+                    var logId = LogBusiness.Error(exc);
+                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, logId);
+                }
             }
             catch (Exception exc)
             {

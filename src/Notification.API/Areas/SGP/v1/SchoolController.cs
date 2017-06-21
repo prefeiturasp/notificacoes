@@ -11,11 +11,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
+using Notification.Business.CoreSSO;
 
 namespace Notification.API.Areas.SGP.v1
 {
     public class SchoolController : AuthBaseController
     {
+
         [HttpGet]
         [Route("api/SGP/v1/School")]
         [ResponseType(typeof(IEnumerable<School>))]
@@ -32,15 +34,31 @@ namespace Notification.API.Areas.SGP.v1
             }
         }
 
+        /// <summary>
+        /// Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
+        /// Necessário enviar o id do grupo no Header (groupSid)
+        /// </summary>
+        /// <param name="schoolSuperiorId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/School")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage GetBySuperior(Guid groupId, Guid schoolSuperiorId)
+        public HttpResponseMessage GetBySuperior(Guid schoolSuperiorId)
         {
             try
             {
-                var result = SchoolBusiness.Get(claimData.Usu_id, groupId, schoolSuperiorId);
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                if (Request.Headers.Contains(GroupBusiness.TYPE_GRU_ID))
+                {
+
+                    var result = SchoolBusiness.Get(claimData.Usu_id, claimData.Gru_id, schoolSuperiorId);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                }
+                else
+                {
+                    MissingFieldException exc = new MissingFieldException("Header: " + GroupBusiness.TYPE_GRU_ID + " não encontrado.");
+                    var logId = LogBusiness.Error(exc);
+                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, logId);
+                }
             }
             catch (Exception)
             {

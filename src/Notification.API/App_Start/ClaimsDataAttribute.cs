@@ -1,4 +1,5 @@
 ﻿using Notification.Business;
+using Owin;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace Notification.API.App_Start
     {
         private const string TYPE_USU_ID = "sub";
         private const string TYPE_ENT_ID = "http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid";
+        public const string TYPE_GRU_ID = "groupSid";
         private const string AUTHORIZATION = "Authorization";
 
         private Guid usu_id;
         private Guid ent_id;
+        private Guid gru_id;
 
         public Guid Usu_id
         {
@@ -35,6 +38,15 @@ namespace Notification.API.App_Start
             {
                 return ent_id;
             }
+        }
+
+        public Guid Gru_id
+        {
+            get
+            {
+                return gru_id;
+            }
+           
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -96,6 +108,12 @@ namespace Notification.API.App_Start
                 if (getEntId.Any())
                     ent_id = new Guid(getEntId.FirstOrDefault());
 
+                //Utilizando groupSid do Header. Estudar a persistência de dados no Identity pela API e Javascript.
+                if(actionContext.Request.Headers.Contains(TYPE_GRU_ID))
+                {
+                    gru_id = new Guid(actionContext.Request.Headers.GetValues(TYPE_GRU_ID).First());
+                }
+
             }
             else
             {
@@ -106,5 +124,7 @@ namespace Notification.API.App_Start
             }
 
         }
+
+       
     }
 }
