@@ -32,7 +32,7 @@
 
             new plgnotify();
 
-            $scope.limitCharRedactor = 20;
+            $scope.limitCharRedactor = 300;
 
             $scope.filters = {
                 filters:[],
@@ -50,8 +50,12 @@
             declareVariables();
             startRedactor();
             accordion();
-
         }
+
+        function decodeToken(token){
+            return JSON.parse(atob(token.split('.')[1]));
+        }
+
 
         /**
          * Pega as referencias das classes, id, etc do html
@@ -129,6 +133,7 @@
         function startRedactor(){
             //instanciando o redactor
             $("#content").redactor({
+                //lang: 'pt_br',
                 limiter: $scope.limitCharRedactor, // number of characters
                 plugins: ['limiter']
             });
@@ -138,6 +143,17 @@
             $(".re-italic").remove();
             $(".re-deleted").remove();
             $(".re-horizontalrule").remove();
+            $(".redactor-dropdown-outdent").remove();
+            $(".redactor-dropdown-indent").remove();
+
+            $(".redactor-toolbar-link-dropdown").on('click', function(){
+                $(".redactor-dropdown-outdent").remove();
+                $(".redactor-dropdown-indent").remove();
+                $(".redactor-dropdown-indent").text('Lista desordenada');
+                $(".redactor-dropdown-unorderedlist").text('Lista desordenada');
+                $(".redactor-dropdown-orderedlist").text('Lista ordenada');
+            });
+
 
             //limita a quantidade de  caracteras usando cltr+v
             //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
@@ -150,7 +166,7 @@
                 if(text.length == ($scope.limitCharRedactor + 1)) { return; }
 
                 //se o cltr+v for mair que o limite de caracter aceito
-                if(text.length > $scope.limitCharRedactor){
+                if(text.length > $scope.limitCharRedactor && e.keyCode == 17){
                     //pega apenas a string com a quantida de limite de caracteres
                     text = text.substr(0, $scope.limitCharRedactor);
                     //limpa o campo de texto
@@ -176,9 +192,11 @@
          */
         $scope.selectMessageType = function __selectMessageType(e){
 
+            var p = document.getElementsByClassName('type-message');
             var check = '<i class="fa fa-check" aria-hidden="true"></i>';
+            angular.element(p).addClass('off');
             angular.element(checkSelected).remove();
-            angular.element(e.currentTarget).append(check);
+            angular.element(e.currentTarget).append(check).removeClass('off');
             $scope.filters.messageType = angular.element(e.currentTarget).text();
         };
 

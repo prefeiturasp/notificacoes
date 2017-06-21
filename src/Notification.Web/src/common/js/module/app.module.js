@@ -1,10 +1,12 @@
 /**
  * Created by everton.ferreira on 03/06/2016.
  */
+'use strict';
 var app = angular.module('appNotification', ['services', 'factories', 'directives', 'filters', 'ngAnimate','toastr']);
 
 //config da diretiva de notificação
-app.config(['toastrConfig', function (toastrConfig) {
+app.config(['toastrConfig',
+    function Config(toastrConfig) {
 
     angular.extend(toastrConfig, {
 

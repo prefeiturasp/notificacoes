@@ -2,8 +2,18 @@
  * Created by everton.ferreira on 09/06/2017.
  */
 (function () {
-    angular.module('services').factory('Model', ['$util',
-        function ($util) {
+
+    'use strict';
+
+    angular
+        .module('appNotification')
+        .factory("Model", Model);
+
+    //Injectors
+    Model.$inject = ['$util'];
+
+    //angular.module('services').factory('Model', ['$util',
+        function Model($util) {
 
             /*-----------------------------FILTROS POR SISTEMA------------------------------------*/
 
@@ -85,5 +95,5 @@
             getTeam: getTeam
         }
 
-    }]);
+    }
 })();
