@@ -56,10 +56,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\ContributorRecipient.cs" />
     <Compile Include="API\CoreSSO\Group.cs" />
     <Compile Include="API\CoreSSO\GroupAU.cs" />
     <Compile Include="API\CoreSSO\System.cs" />
     <Compile Include="API\CoreSSO\TypeAU.cs" />
+    <Compile Include="API\Notification.cs" />
+    <Compile Include="API\Recipient.cs" />
     <Compile Include="API\SGP\Calendar.cs" />
     <Compile Include="API\SGP\Course.cs" />
     <Compile Include="API\SGP\CoursePeriod.cs" />
@@ -69,6 +72,8 @@
     <Compile Include="API\SGP\SchoolClassification.cs" />
     <Compile Include="API\SGP\SchoolSuperior.cs" />
     <Compile Include="API\SGP\Team.cs" />
+    <Compile Include="API\SystemRecipient.cs" />
+    <Compile Include="API\TeacherRecipient.cs" />
     <Compile Include="Database\Log.cs" />
     <Compile Include="Database\LogException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
