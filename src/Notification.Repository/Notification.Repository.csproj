@@ -71,9 +71,12 @@
     <Compile Include="CoreSSO\GroupAURepository.cs" />
     <Compile Include="CoreSSO\GroupRepository.cs" />
     <Compile Include="CoreSSO\SystemRepository.cs" />
+    <Compile Include="CoreSSO\UserRepository.cs" />
     <Compile Include="LogRepository.cs" />
+    <Compile Include="NotificationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SGP\CalendarRepository.cs" />
+    <Compile Include="SGP\ContributorRepository.cs" />
     <Compile Include="SGP\CoursePeriodRepository.cs" />
     <Compile Include="SGP\CourseRepository.cs" />
     <Compile Include="SGP\DisciplineRepository.cs" />
