@@ -44,7 +44,7 @@ namespace Notification.Repository.CoreSSO
             using (var context = new SqlConnection(stringConnection))
             {
                 var query = context.Query<Group>(
-                    @"SELECT GP.gru_id AS Id, GP.gru_nome AS Name, GP.sis_id as SystemId, GP.vis_id AS VisionId
+                    @"SELECT G.gru_id AS Id, G.gru_nome AS Name, G.sis_id as SystemId, G.vis_id AS VisionId
 	                    FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
                         WHERE UG.usg_situacao = 1 AND G.gru_situacao = 1 AND G.sis_id = @systemId AND UG.usu_id = @userId",

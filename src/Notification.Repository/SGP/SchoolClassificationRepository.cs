@@ -39,7 +39,7 @@ namespace Notification.Repository.SGP
                     WHERE
 	                    esc.esc_situacao <> 3
 	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                    AND uadSuperior.uad_id IN @idsDRES");
+	                    AND uadSuperior.uad_id = @idsDRES");
                 return query;
             }
         }
