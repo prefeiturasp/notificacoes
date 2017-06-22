@@ -52,5 +52,18 @@ namespace Notification.Repository.CoreSSO
                 return query;
             }
         }
+
+        public Group GetById(Guid groupId)
+        {
+            using (var context = new SqlConnection(stringConnection))
+            {
+                var query = context.Query<Group>(
+                    @"SELECT G.gru_id AS Id, G.gru_nome AS Name, G.sis_id as SystemId, G.vis_id AS VisionId
+	                    FROM SYS_Grupo AS G WITH(NOLOCK)
+                        WHERE G.gru_id = @groupId",
+                    new { groupId = groupId });
+                return query.FirstOrDefault();
+            }
+        }
     }
 }

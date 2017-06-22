@@ -272,6 +272,7 @@
     <Compile Include="Areas\SGP\v1\TeamController.cs" />
     <Compile Include="Areas\v1\AuthBaseController.cs" />
     <Compile Include="Areas\v1\LogController.cs" />
+    <Compile Include="Areas\v1\NotificationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IdentityController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
