@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("login", Login);
 
-    Login.$inject = ['$util', '$location', '$timeout'];
+    Login.$inject = ['$util', '$location', '$timeout', '$window'];
 
     function Login() {
         var directive = {
@@ -19,15 +19,17 @@
             transclude: false
         };
 
-        function LoginController($scope, $util, $location, $timeout) {
+        function LoginController($scope, $util, $location, $timeout, $window) {
 
             var mgr = null;
+            $scope.load = false;
+            $scope.redirect = false;
 
             function init(){
+                $scope.redirect = $window.sessionStorage.loginRedirect == "false" ? false : true;
                 $scope.tokenId = null;
                 $scope.mgr = $util.getMgr();
                 getUserToken();
-
             }
 
             function getUserToken(){
@@ -66,13 +68,12 @@
                 }else{
                     Authorization($scope.user);
                 }
-            }
+            };
 
             function Authorization(){
-                var url = "http://localhost:5001/identity";
 
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", url);
+                xhr.open("GET",Config.IDENTITY);
                 xhr.onload = function () {
                     log(xhr.status, JSON.parse(xhr.responseText));
                 };

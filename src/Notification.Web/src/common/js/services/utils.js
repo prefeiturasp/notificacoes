@@ -46,6 +46,10 @@
             return user && user.token_type;
         };
 
+        app.getUser= function __getUser(){
+            return user || null;
+        };
+
 
         app.getTokenExpired = function __getTokenExpired(){
 

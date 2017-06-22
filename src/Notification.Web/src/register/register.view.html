@@ -1,7 +1,7 @@
     <div class="loading" ng-if="load"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></div>
-    <menu></menu>
+    <menu ng-show="redirect"></menu>
 
-    <section class="body-content" ng-cloak>
+    <section class="body-content" ng-show="redirect">
         <alert></alert>
 
         <div class="headerCustom">
@@ -258,7 +258,7 @@
         </form>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" ng-show="redirect">
         <div class="max-width">
             <p>Sistema para cadastro de notificação<span>Todos os direitos reservados.</span></p>
         </div>

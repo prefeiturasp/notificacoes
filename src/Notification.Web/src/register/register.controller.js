@@ -10,17 +10,18 @@
         .controller("RegisterController", RegisterController);
 
     //Injectors
-    RegisterController.$inject = ['$scope', 'toastr', '$util', 'HttpServices'];
+    RegisterController.$inject = ['$scope', 'toastr', '$util', 'HttpServices', '$window'];
 
     /**
      * @namespace RegisterController
      * @desc Controller da página Register
      * @memberOf Controller
      */
-    function RegisterController($scope, toastr, $util, HttpServices) {
+    function RegisterController($scope, toastr, $util, HttpServices, $window) {
 
         $scope.load = true;
         $scope.modalOpen = false;
+        $scope.redirect = false;
 
         var filtroModalSytem, filtroModalUser, system, group, user,
             admUnit, notificacoes, checkSelected, filtroPorUsuario, selecionados, body = $('body')[0];
@@ -29,7 +30,7 @@
          * Contructor
          */
         function initialize() {
-
+            $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
             new plgnotify();
 
             $scope.limitCharRedactor = 300;
@@ -50,6 +51,7 @@
             declareVariables();
             startRedactor();
             accordion();
+            console.log($util.getAccessToken());
         }
 
         function decodeToken(token){
