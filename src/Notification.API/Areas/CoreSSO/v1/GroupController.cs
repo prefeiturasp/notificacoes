@@ -24,6 +24,11 @@ namespace Notification.API.Areas.CoreSSO.v1
     {
         private const string CHAVE_ID_SISTEMA = "SystemID";
 
+        /// <summary>
+        /// Retorna todos os grupos cuja visão seja menor ou igual à do usuário logado.
+        /// </summary>
+        /// <param name="systemId">ID do sistema selecionado para receber a notificação</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/CoreSSO/v1/GroupDown")]
         [ResponseType(typeof(IEnumerable<Group>))]
@@ -53,9 +58,6 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-
-                var grupoid = claimData.Gru_id;
-
                 int systemId = Convert.ToInt32(ConfigurationManager.AppSettings[CHAVE_ID_SISTEMA]);
 
                 var result = GroupBusiness.Get(claimData.Usu_id, systemId);
