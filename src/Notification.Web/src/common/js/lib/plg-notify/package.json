@@ -1,14 +1,23 @@
 {
   "name": "plugin_notificacao",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm i &&  node_modules/.bin/uglifyjs ./plugin.js -o ../plg-notify.min.js -c dead_code,drop_debugger,inline,drop_console,passes -m -p 'bare_returns' --source-map"
+    "server": "node_modules/.bin/http-server -g -c-1 -o -s -p 1337",
+    "minify": "node_modules/.bin/html-minifier --remove-comments --remove-tag-whitespace -o html.min.html templates.html  && node_modules/.bin/usemin html.min.html -d ./ -o html.min.html --htmlmin true && node_modules/.bin/cleancss -O2 all -o css.min.css css.css",
+    "build": "node_modules/.bin/uglifyjs ./plugin.js -o ../plg-notify.min.js -c dead_code,drop_debugger,inline,drop_console,passes,hoist_vars,hoist_funs,reduce_vars -m -p bare_returns --source-map --overwrite"
   },
   "author": "alexandre calil blasizza paravani",
   "license": "MIT",
   "devDependencies": {
-    "socket.io-client": "^2.0.3",
-    "uglify-js": "^3.0.18"
+    "clean-css": "^4.1.4",
+    "clean-css-cli": "^4.1.5",
+    "html-minifier": "^3.5.2",
+    "http-server": "^0.10.0",
+    "uglify-js": "^3.0.18",
+    "usemin": "^0.5.0",
+    "usemin-cli": "^0.5.1"
+  },
+  "dependencies": {
+    "signalr-client": "0.0.17"
   }
 }
