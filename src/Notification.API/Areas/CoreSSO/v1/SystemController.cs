@@ -13,6 +13,10 @@ namespace Notification.API.Areas.CoreSSO.v1
 {
     public class SystemController : AuthBaseController
     {
+        /// <summary>
+        /// Retorna todos os sistemas cujo usuário logado tenha permissão de acesso.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/CoreSSO/v1/System")]
         [ResponseType(typeof(IEnumerable<Notification.Entity.API.CoreSSO.System>))]

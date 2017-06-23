@@ -20,7 +20,9 @@
                 $http(model).then(function successCallback(response) {
                     callback && callback(response.data);
                 }, function errorCallback(response) {
-                    toastr.error(response.data.Message, 'Error');
+                    if(response.data)
+                        toastr.error(response.data.Message, 'Error');
+
                     callback && callback([]);
                 });
             }
