@@ -15,9 +15,8 @@ using Notification.Business.CoreSSO;
 
 namespace Notification.API.Areas.SGP.v1
 {
-    public class SchoolController : AuthBaseController
+    public class SchoolController : AuthUserGroupBaseController
     {
-
         [HttpGet]
         [Route("api/SGP/v1/School")]
         [ResponseType(typeof(IEnumerable<School>))]
@@ -50,7 +49,7 @@ namespace Notification.API.Areas.SGP.v1
                 if (Request.Headers.Contains(GroupBusiness.TYPE_GRU_ID))
                 {
 
-                    var result = SchoolBusiness.Get(claimData.Usu_id, claimData.Gru_id, schoolSuperiorId);
+                    var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId);
                     return Request.CreateResponse(HttpStatusCode.OK, result);
                 }
                 else
