@@ -1,5 +1,6 @@
 ﻿using Notification.API.Areas.v1;
 using Notification.Business;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,12 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/Course")]
         [ResponseType(typeof(IEnumerable<Course>))]
-        public HttpResponseMessage Get(int calendarId)
+        public HttpResponseMessage Get(string calendarYear)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = CourseBusiness.Get(calendarYear);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
