@@ -50,6 +50,11 @@
             return user || null;
         };
 
+        app.setLogout = function __setLogout(){
+            mgr = null;
+            user = null;
+        };
+
 
         app.getTokenExpired = function __getTokenExpired(){
 

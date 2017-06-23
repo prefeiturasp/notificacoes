@@ -24,14 +24,14 @@
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
 
-            function init(){
-                HttpServices.getListSystem(function(data){
-                    $scope.listMenuSystem = data;
-                });
-            }
-
             $scope.openMenuSytem = function __openMenuSytem() {
                 $scope.showListMenu = !$scope.showListMenu;
+
+                if($scope.listMenuSystem.length == 0 && $scope.showListMenu) {
+                    HttpServices.getListSystem("", function (data) {
+                        $scope.listMenuSystem = data;
+                    });
+                }
             };
             $scope.mouseOver = function __mouseOver() {
                 $scope.showListMenu = false;
@@ -44,9 +44,9 @@
             $scope.logout = function __logout() {
                var mgr = $util.getMgr();
                 mgr.signoutRedirect();
+                $util.setLogout();
+                window.sessionStorage.clear();
             };//logout
-
-            init();
 
         }//MenuController
 

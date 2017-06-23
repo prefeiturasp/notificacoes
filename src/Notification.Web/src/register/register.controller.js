@@ -22,18 +22,12 @@
         $scope.load = true;
         $scope.modalOpen = false;
         $scope.redirect = false;
-
-        var filtroModalSytem, filtroModalUser, system, group, user,
-            admUnit, notificacoes, checkSelected, filtroPorUsuario, selecionados, body = $('body')[0];
+        var body = $('body')[0];
 
         /**
          * Contructor
          */
         function initialize() {
-            $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
-            new plgnotify();
-
-            $scope.limitCharRedactor = 300;
 
             $scope.filters = {
                 filters:[],
@@ -45,35 +39,40 @@
                 title: ""
             };
 
-            $scope.listSystem = [];
+            $scope.showTypeFilter ={
+                typeVision: true,
+                typeSystem: false,
+                typeUser: false
+            };
 
-            getElementsHtml();
+            $scope.typeFilter = {
+                system: 'system',
+                group: 'group',
+                dre: 'dre',
+                school: 'school'
+            };
+
+            $scope.listVisionSystem = [];
+            $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
+            $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
+
+            new plgnotify({
+                ws: {
+                  url: Config.URL_SIGGNALR
+                }
+            });
+
             declareVariables();
             startRedactor();
             accordion();
-            console.log($util.getAccessToken());
-        }
 
-        function decodeToken(token){
-            return JSON.parse(atob(token.split('.')[1]));
-        }
-
-
-        /**
-         * Pega as referencias das classes, id, etc do html
-         */
-        function getElementsHtml(){
-            filtroModalSytem = document.getElementsByClassName('filtro-system');
-            filtroModalUser = document.getElementsByClassName('filtro-user');
-            user = document.getElementsByClassName('user-modal');
-            system = document.getElementsByClassName('sist');
-            group = document.getElementsByClassName('grup');
-            admUnit = document.getElementsByClassName('admUnit');
-            notificacoes = document.getElementsByClassName('notificacoes');
-            checkSelected = document.getElementsByClassName('fa-check');
-            filtroPorUsuario = document.getElementsByClassName('filtro-por-usuario');
-            selecionados = document.getElementsByClassName('selecionados');
-
+            //ve se o usúario já escolheu umtipo de grupo
+            if($scope.VisionSystem.length == 0) {
+                getVisionSystem();
+            }else{
+                $scope.showTypeFilter.typeVision = false;
+                removeLoad();
+            }
         }
 
         /**
@@ -81,7 +80,15 @@
          */
         function declareVariables(){
 
-            getSystem();
+            $scope.showFilter ={
+                showSystem: false,
+                showGroup: false,
+                showDRE: false,
+                showShool: false
+            };
+
+            $scope.limitCharRedactor = 300;
+            $scope.listSystem = [];
 
             //variaveis de lista de filtros por sistema
             $scope.listGroups = [];
@@ -110,6 +117,7 @@
                 Discipline:[],
                 Team:[]
             };
+
         }
 
         /**
@@ -117,8 +125,7 @@
          */
         function removeLoad(){
             $scope.load = false;
-            if(!$scope.modalOpen)
-                angular.element(body).removeClass('hidden-body');
+            if(!$scope.modalOpen)angular.element(body).removeClass('hidden-body');
         }
 
         /**
@@ -181,6 +188,23 @@
         }
 
         /**
+         *
+         * @param typeVision
+         */
+        $scope.selectedVisionGroupSystem = function __selectedVisionGroupSystem(typeVision){
+            $scope.VisionSystem = typeVision;
+            $window.sessionStorage.visionSelected = btoa(JSON.stringify(typeVision));
+        };
+
+        /**
+         *
+         */
+        $scope.closeVisionGroupSystem = function __closeVisionGroupSystem(){
+            closeModal();
+            $scope.showTypeFilter.typeVision = false;
+        };
+
+        /**
          * Remove registro de filtro selecionado
          * @param {Int} id - id da posição do registro dentro do objeto - $scope.filters.filters
          */
@@ -194,8 +218,10 @@
          */
         $scope.selectMessageType = function __selectMessageType(e){
 
-            var p = document.getElementsByClassName('type-message');
-            var check = '<i class="fa fa-check" aria-hidden="true"></i>';
+            var p = document.getElementsByClassName('type-message'),
+                checkSelected = document.getElementsByClassName('fa-check'),
+                check = '<i class="fa fa-check" aria-hidden="true"></i>';
+
             angular.element(p).addClass('off');
             angular.element(checkSelected).remove();
             angular.element(e.currentTarget).append(check).removeClass('off');
@@ -209,8 +235,6 @@
         $scope.openFilterTypeUser = function __openFilterTypeUser(e){
             if($scope.User.UserType) {
                 getCalendar();
-                angular.element(filtroPorUsuario).css('display', 'block');
-                angular.element(user).css('display', 'none');
             }else{
                 toastr.warning("Selecione um tipo de usuário!");
             }
@@ -221,57 +245,81 @@
          * @param {Event} e
          */
         $scope.openModalUser = function __openModalUser(e){
-            //mostra scroll vertical da tela
-            $scope.modalOpen = true;
-            angular.element(body).addClass('hidden-body');
-            angular.element(filtroModalUser).addClass('abre');
-            angular.element(user).css('display', 'block');
-            angular.element(filtroPorUsuario).css('display', 'none');
-            angular.element(system).css('display', 'block');
+
         };
 
         /**
          * Abre a modal de filtros por sistemas
-         * @param {Event} e
          */
-        $scope.openModalSystem = function __openModalSystem(e){
-
-            if($scope.listSystem.length > 1) {
-                //mostra scroll vertical da tela
-                angular.element(body).addClass('hidden-body');
-                $scope.modalOpen = true;
-                angular.element(filtroModalSytem).addClass('abre');
-                angular.element(system).addClass('aparece').removeClass('some');
-                angular.element(group).addClass('some').removeClass('aparece');
-                angular.element(admUnit).addClass('some').removeClass('aparece');
-            }else{
-                toastr.warning("Não existe uma lista de sistemas cadastrada!");
-            }
+        $scope.openModalSystem = function __openModalSystem(){
+            getSystem();
         };
+
+        function openModal(){
+            $scope.modalOpen = true;
+            angular.element(body).addClass('hidden-body');
+        }
+
+        function closeModal(){
+            $scope.modalOpen = false;
+            angular.element(body).removeClass('hidden-body');
+        }
 
         /**
          *
          * @param e
          * @param {Int} - idModal
          */
-        $scope.nextFilter = function __nextFilter(e, idModal) {
-            if (idModal == 2){
+        $scope.nextFilterSytem = function __nextFilterSytem(idModal) {
+            if (idModal == 'system'){
                 getGroups();
-            }else if (idModal == 3 ){
+            }else if (idModal == 'group' ){
+                getDREs();
+            }else if (idModal == 'dre' ){
                 getAdministrativeUnits();
             }
 
         };
+
+        $scope.checkVisionUser = function checkVisionUser( arr, type){
+
+            if( arr && arr.Name && ($scope.VisionSystem.VisionId != type) ){
+                return true;
+            }else{
+                return false;
+            }
+
+        }
 
         /*--------------------------------------FILTROS POR SISTEMA----------------------------------------*/
 
         /**
          * busca a lista de sistema
          */
+        function getVisionSystem(){
+
+            HttpServices.getListVisionSystem(function(data){
+                $scope.listVisionSystem = data;
+                openModal();
+                removeLoad();
+            });
+        }
+
+        /**
+         * busca a lista de sistema
+         */
         function getSystem(){
 
-            HttpServices.getListSystem(function(data){
+            HttpServices.getListSystem($scope.VisionSystem.Id, function(data){
                 $scope.listSystem = data;
+
+                if($scope.listSystem.length > 1) {
+                    $scope.showFilter.showSystem = true;
+                    $scope.showTypeFilter.typeSystem = true;
+                    openModal();
+                }else{
+                    toastr.warning("Não existe uma lista de sistemas cadastrada!");
+                }
                 removeLoad();
             });
         }
@@ -284,14 +332,31 @@
             HttpServices.getListGroups($scope.system.systemType.Id,
                 function(data){
                     $scope.listGroups = data;
-                    removeLoad()
 
-                    if(data.length > 0) {
-                        angular.element(system).addClass('some').removeClass('aparece');
-                        angular.element(group).removeClass('some').addClass('aparece');
-                        angular.element(admUnit).addClass('some').removeClass('aparece');
+                    if($scope.listGroups.length > 1) {
+                        $scope.showFilter.showSystem = false;
+                        $scope.showFilter.showGroup = true;
+                    }else{
+                        toastr.warning("Não existe uma lista de grupo cadastrada!");
                     }
+                    removeLoad();
 
+                });
+        }
+
+        function getDREs(){
+            addLoad();
+            HttpServices.getListSchoolSuperior($scope.VisionSystem.Id,
+                function(data){
+                    $scope.listDREs = data;
+
+                    if($scope.listDREs.length > 1) {
+                        $scope.showFilter.showGroup = false;
+                        $scope.showFilter.showDRE = true;
+                    }else{
+                        toastr.warning("Não existe uma lista de DREs cadastrada!");
+                    }
+                    removeLoad();
                 });
         }
 
@@ -300,15 +365,22 @@
          */
         function getAdministrativeUnits(){
             addLoad();
-            HttpServices.getListAdministrativeUnits( $scope.system.Group.Id,
+
+            var params = {
+                schoolSuperior: $scope.system.DREs.Id,
+                groupSid: $scope.VisionSystem.Id
+            };
+
+            HttpServices.getListSchool( params,
                 function(data){
                     $scope.AdministrativeUnits = data;
-                    removeLoad();
-                    if(data.length > 0) {
-                        angular.element(system).addClass('some').removeClass('aparece');
-                        angular.element(group).addClass('some').removeClass('aparece');
-                        angular.element(admUnit).removeClass('some').addClass('aparece');
+                    if($scope.AdministrativeUnits.length > 1) {
+                        $scope.showFilter.showDRE = false;
+                        openNextFilterModal(admUnit);
+                    }else{
+                        toastr.warning("Não existe nem uma lista de unidades administrativas cadastrada!");
                     }
+                    removeLoad();
                 });
         }
 
@@ -345,10 +417,13 @@
          * @param {Object} obj
          */
         $scope.selectedSystemGroup = function __selectedSystemGroup(type, obj){
+
             if(type =='system') {
                 $scope.system.systemType = obj;
             }else if(type =='group') {
                 $scope.system.Group = obj;
+            }else if(type == 'dre'){
+                $scope.system.DREs = obj;
             }
         };
 
@@ -379,14 +454,12 @@
         $scope.closeModal = function __closeModal(e, type){
 
             if(type == "system") {
-                angular.element(filtroModalSytem).removeClass('abre');
+                $scope.showTypeFilter.typeSystem = false
             }else if(type == "user"){
-                angular.element(filtroModalUser).removeClass('abre');
+                $scope.showTypeFilter.typeUser = false
             }
 
-            $scope.modalOpen = false;
-            //mostra scroll vertical da tela
-            angular.element(body).removeClass('hidden-body');
+            closeModal();
             //reseta as variaveis
             declareVariables();
         };
@@ -413,14 +486,6 @@
 
         };
 
-        /**
-         *
-         * @param e
-         */
-        $scope.notificationMenu = function __notificationMenu(e){
-            angular.element(notificacoes).toggleClass('abre');
-        };
-
         function accordion(){
 
             var i, acc = document.getElementsByClassName("accordion");
@@ -444,11 +509,11 @@
 
         }
 
+        addLoad();
         /**
          * Valida se tem usuário logado no sistema
          */
         $util.getUserToken(function(user){
-            addLoad();
             if(user)initialize();
         });
     }

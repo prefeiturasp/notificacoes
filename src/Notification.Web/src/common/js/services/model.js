@@ -17,73 +17,72 @@
 
             /*-----------------------------FILTROS POR SISTEMA------------------------------------*/
 
-            function getSystem() {
-                return getheaders('GET', $util.base_url_APICoreSSO('/System'));
+            function getVisionSytem() {
+                return getheaders('GET', null, $util.base_url_APICoreSSO('/Group'));
+            }
+
+            function getSystem(visionId) {
+                return getheaders('GET', null, $util.base_url_APICoreSSO('/System?groupSid=' + visionId));
             }
 
             function getGroupsAU(id) {
-                return getheaders('GET', $util.base_url_APICoreSSO('/GroupDown?systemId=' + (id ? id : 0 )));
-            }
-
-            function getDREs(id) {
-                return getheaders('GET', $util.base_url_APICoreSSO('/GroupDown?systemId=' + (id ? id : 0 )));
-            }
-
-            function getAdministrativeUnits(id) {
-                return getheaders('GET', $util.base_url_APICoreSSO('/GroupAU?groupId=' + (id ? id : 0 )));
+                return getheaders('GET', null, $util.base_url_APICoreSSO('/GroupDown?systemId=' + (id ? id : 0 )));
             }
 
             /*-----------------------------FILTROS POR USUÁRIO------------------------------------*/
 
             function getCalendar() {
-                return getheaders('GET', $util.base_url_APISGP('/Calendar'));
+                return getheaders('GET', null, $util.base_url_APISGP('/Calendar'));
             }
 
-            function getSchoolSuperior() {
-                return getheaders('GET', $util.base_url_APISGP('/SchoolSuperior'));
+            function getSchoolSuperior(visionGroupId) {
+                return getheaders('GET', visionGroupId, $util.base_url_APISGP('/SchoolSuperior?groupSid=' + visionGroupId));
             }
 
             function getSchoolClassification(id) {
-                return getheaders('GET', $util.base_url_APISGP('/SchoolClassification?schoolSuperiorId=' + id));
+                return getheaders('GET', null, $util.base_url_APISGP('/SchoolClassification?schoolSuperiorId=' + id));
             }
 
             function getSchool(params) {
-                return getheaders('GET', $util.base_url_APISGP('/School?schoolSuperiorId='+ params +'&schoolClassificationId='+ params +''));
+                return getheaders('GET', null, $util.base_url_APISGP('/School?groupSid='+ params.groupSid +'&schoolSuperiorId=' + params.schoolSuperior));
             }
 
             function getPosition() {
-                return getheaders('GET', $util.base_url_APISGP('/Position'));
+                return getheaders('GET', null, $util.base_url_APISGP('/Position'));
             }
 
             function getCorse(id) {
-                return getheaders('GET', $util.base_url_APISGP('/Course?calendarId=' + id));
+                return getheaders('GET', null, $util.base_url_APISGP('/Course?calendarId=' + id));
             }
 
             function getCoursePeriod(params) {
-                return getheaders('GET', $util.base_url_APISGP('/CoursePeriod?calendarId='+ params +'&periodId=' + params));
+                return getheaders('GET', null, $util.base_url_APISGP('/CoursePeriod?calendarId='+ params +'&periodId=' + params));
             }
 
             function getDiscipline(params) {
-                return getheaders('GET', $util.base_url_APISGP('/Discipline?calendarId='+ params +'&courseId='+ params +'&coursePeriodId='+ params));
+                return getheaders('GET', null, $util.base_url_APISGP('/Discipline?calendarId='+ params +'&courseId='+ params +'&coursePeriodId='+ params));
             }
 
             function getTeam(params) {
-                return getheaders('GET', $util.base_url_APISGP('/Team?calendarId='+ params +'&schoolSuperiorId='+ params +'&schoolClassificationId='+ params +'&schoolId='+ params +'&courseId='+ params +'&coursePeriodId='+ params +'&disciplineId='+ params));
+                return getheaders('GET', null, $util.base_url_APISGP('/Team?calendarId='+ params +'&schoolSuperiorId='+ params +'&schoolClassificationId='+ params +'&schoolId='+ params +'&courseId='+ params +'&coursePeriodId='+ params +'&disciplineId='+ params));
             }
 
-            function getheaders(_method, _url) {
-                return {
-                    method: _method,
-                    url: _url,
-                    "headers": {"Authorization": $util.getKey() + " " + $util.getAccessToken()}
-                }
+            function getheaders(_method, visionGroupId,  _url) {
+
+                var method = {
+                                method: _method,
+                                url: _url,
+                                "headers": {"Authorization": $util.getKey() + " " + $util.getAccessToken() }
+                            };
+                //if(visionGroupId) {method.headers.groupSid = visionGroupId;}
+
+                return method;
             }
 
         return {
+            getVisionSytem: getVisionSytem,
             getSystem: getSystem,
             getGroupsAU: getGroupsAU,
-            getDREs: getDREs,
-            getAdministrativeUnits: getAdministrativeUnits,
             getCalendar: getCalendar,
             getSchoolSuperior: getSchoolSuperior,
             getSchoolClassification: getSchoolClassification,
