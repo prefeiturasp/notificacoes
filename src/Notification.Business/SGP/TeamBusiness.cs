@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Notification.Business.SGP
 {
-    class TeamBusiness
+    public class TeamBusiness
     {
     }
 }

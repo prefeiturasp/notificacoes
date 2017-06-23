@@ -1,5 +1,6 @@
 ﻿using Notification.API.Areas.v1;
 using Notification.Business;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,10 @@ namespace Notification.API.Areas.SGP.v1
 {
     public class CalendarController : AuthBaseController
     {
+        /// <summary>
+        /// Retorna todos os anos de calendários letivos do SGP
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/Calendar")]
         [ResponseType(typeof(IEnumerable<Calendar>))]
@@ -20,7 +25,8 @@ namespace Notification.API.Areas.SGP.v1
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = CalendarBusiness.Get();
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {

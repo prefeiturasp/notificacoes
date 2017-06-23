@@ -109,10 +109,10 @@ namespace Notification.API.App_Start
                     ent_id = new Guid(getEntId.FirstOrDefault());
 
                 //Utilizando groupSid do Header. Estudar a persistência de dados no Identity pela API e Javascript.
-                if(actionContext.Request.Headers.Contains(TYPE_GRU_ID))
-                {
-                    gru_id = new Guid(actionContext.Request.Headers.GetValues(TYPE_GRU_ID).First());
-                }
+                //if(actionContext.Request.Headers.Contains(TYPE_GRU_ID))
+                //{
+                //    gru_id = new Guid(actionContext.Request.Headers.GetValues(TYPE_GRU_ID).First());
+                //}
 
             }
             else
