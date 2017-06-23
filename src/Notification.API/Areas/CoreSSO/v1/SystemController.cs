@@ -16,7 +16,6 @@ namespace Notification.API.Areas.CoreSSO.v1
         /// <summary>
         /// Retorna todos os sistemas cujo usuário logado tenha permissão de acesso.
         /// </summary>
-        /// <param name="groupSid">ID Grupo usuário logado no sistema</param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/CoreSSO/v1/System")]

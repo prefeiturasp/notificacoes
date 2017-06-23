@@ -12,14 +12,14 @@ namespace Notification.Repository.SGP
 {
     public class SchoolClassificationRepository : SGPRepository
     {
-        public IEnumerable<SchoolClassification> Get()
+        public IEnumerable<SchoolClassification> Get(Guid userId, Guid groupId, Guid schoolSuperiorId)
         {
             using (var context = new SqlConnection(stringConnection))
             {
                 var query = context.Query<SchoolClassification>(
                     @"SELECT
-	                    tce.tce_id,
-	                    tce.tce_nome,
+	                    tce.tce_id 'Id',
+	                    tce.tce_nome 'Name',
 	                    tce.tce_permiteQualquerCargoEscola
                     FROM
 	                    ESC_Escola esc WITH(NOLOCK)
@@ -39,7 +39,13 @@ namespace Notification.Repository.SGP
                     WHERE
 	                    esc.esc_situacao <> 3
 	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                    AND uadSuperior.uad_id = @idsDRES");
+	                    AND uadSuperior.uad_id = @idDre",
+                    new
+                    {
+                        usu_idLogado = userId,
+                        gru_idLogado = groupId,
+                        idDre = schoolSuperiorId
+                    });
                 return query;
             }
         }
