@@ -16,16 +16,26 @@ namespace Notification.API.Areas.CoreSSO.v1
         /// <summary>
         /// Retorna todos os sistemas cujo usuário logado tenha permissão de acesso.
         /// </summary>
+        /// <param name="groupSid">ID Grupo usuário logado no sistema</param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/CoreSSO/v1/System")]
         [ResponseType(typeof(IEnumerable<Notification.Entity.API.CoreSSO.System>))]
-        public HttpResponseMessage Get()
+        public HttpResponseMessage Get(Guid groupSid)
         {
             try
             {
-                var result = SystemBusiness.Get(claimData.Usu_id);
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                if (groupSid != Guid.Empty)
+                {
+                    var result = SystemBusiness.Get(claimData.Usu_id);
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                }
+                else
+                {
+                    MissingFieldException exc = new MissingFieldException("Parâmetro: " + GroupBusiness.TYPE_GRU_ID + " vazio.");
+                    LogBusiness.Warn(exc.Message);
+                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, exc.Message);
+                }
             }
             catch (Exception exc)
             {
