@@ -225,11 +225,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\ClaimsDataAttribute.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\UserActionFilterAttribute.cs" />
+    <Compile Include="App_Start\UserGroupActionFilterAttribute.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\CoreSSO\v1\GroupAUController.cs" />
     <Compile Include="Areas\CoreSSO\v1\GroupController.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Areas\SGP\v1\SchoolSuperiorController.cs" />
     <Compile Include="Areas\SGP\v1\TeamController.cs" />
     <Compile Include="Areas\v1\AuthBaseController.cs" />
+    <Compile Include="Areas\v1\AuthUserGroupBaseController.cs" />
     <Compile Include="Areas\v1\LogController.cs" />
     <Compile Include="Areas\v1\NotificationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

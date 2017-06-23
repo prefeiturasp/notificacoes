@@ -7,15 +7,15 @@ using System.Web.Http;
 namespace Notification.API.Areas.v1
 {
     [Authorize]
-    [ClaimsData]
+    [UserActionFilter]
     public class AuthBaseController : ApiController
     {
-        public ClaimsDataAttribute claimData
+        public UserActionFilterAttribute claimData
         {
             get
             {
-                return (ClaimsDataAttribute)ControllerContext.ControllerDescriptor.GetFilters()
-                    .Where(f => f.GetType() == typeof(ClaimsDataAttribute)).Single();
+                return (UserActionFilterAttribute)ControllerContext.ControllerDescriptor.GetFilters()
+                    .Where(f => f.GetType() == typeof(UserActionFilterAttribute)).Single();
             }
         }
     }

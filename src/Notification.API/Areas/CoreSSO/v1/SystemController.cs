@@ -21,21 +21,12 @@ namespace Notification.API.Areas.CoreSSO.v1
         [HttpGet]
         [Route("api/CoreSSO/v1/System")]
         [ResponseType(typeof(IEnumerable<Notification.Entity.API.CoreSSO.System>))]
-        public HttpResponseMessage Get(Guid groupSid)
+        public HttpResponseMessage Get()
         {
             try
             {
-                if (groupSid != Guid.Empty)
-                {
-                    var result = SystemBusiness.Get(claimData.Usu_id);
-                    return Request.CreateResponse(HttpStatusCode.OK, result);
-                }
-                else
-                {
-                    MissingFieldException exc = new MissingFieldException("Parâmetro: " + GroupBusiness.TYPE_GRU_ID + " vazio.");
-                    LogBusiness.Warn(exc.Message);
-                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, exc.Message);
-                }
+                var result = SystemBusiness.Get(claimData.UserId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
