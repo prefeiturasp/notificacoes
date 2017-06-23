@@ -18,10 +18,11 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Notification.API.Areas.CoreSSO.v1.SystemController.Get">
+        <member name="M:Notification.API.Areas.CoreSSO.v1.SystemController.Get(System.Guid)">
             <summary>
             Retorna todos os sistemas cujo usuário logado tenha permissão de acesso.
             </summary>
+            <param name="groupSid">ID Grupo usuário logado no sistema</param>
             <returns></returns>
         </member>
         <member name="M:Notification.API.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
@@ -501,19 +502,27 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
-        <member name="M:Notification.API.Areas.SGP.v1.SchoolController.GetBySuperior(System.Guid)">
+        <member name="M:Notification.API.Areas.SGP.v1.CalendarController.Get">
+            <summary>
+            Retorna todos os anos de calendários letivos do SGP
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Notification.API.Areas.SGP.v1.SchoolController.GetBySuperior(System.Guid,System.Guid)">
             <summary>
             Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
             Necessário enviar o id do grupo no Header (groupSid)
             </summary>
-            <param name="schoolSuperiorId"></param>
+            <param name="groupSid">ID Grupo usuário logado no sistema</param>
+            <param name="schoolSuperiorId">ID Diretoria de ensino (DRE)</param>
             <returns></returns>
         </member>
-        <member name="M:Notification.API.Areas.SGP.v1.SchoolSuperiorController.Get">
+        <member name="M:Notification.API.Areas.SGP.v1.SchoolSuperiorController.Get(System.Guid)">
             <summary>
             Busca as DRE's do usuário logado no sistema de notificações.
             Necessário enviar o id do grupo do usuário logado no Header (groupSid)
             </summary>
+            <param name="groupSid">ID Grupo usuário logado no sistema</param>
             <returns></returns>
         </member>
         <member name="T:Notification.API.Extensions.UserIdentityExtension">

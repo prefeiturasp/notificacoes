@@ -76,13 +76,17 @@ namespace Notification.Repository.SGP
 
                     FROM 
 	                    ESC_Escola esc WITH(NOLOCK)
+	                    INNER JOIN Synonym_SYS_UnidadeAdministrativa uad WITH(NOLOCK)
+		                    ON uad.ent_id = esc.ent_id
+		                    AND uad.uad_id = esc.uad_id
+		                    AND uad.uad_situacao <> 3
 	                    INNER JOIN Synonym_SYS_UnidadeAdministrativa uadSuperior WITH(NOLOCK)
-		                    ON uadSuperior.ent_id = esc.ent_id
-		                    AND uadSuperior.uad_id = esc.uad_idSuperiorGestao
+		                    ON uadSuperior.ent_id = uad.ent_id
+		                    AND uadSuperior.uad_id = ISNULL(esc.uad_idSuperiorGestao, uad.uad_idSuperior)
 		                    AND uadSuperior.uad_situacao  <> 3
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND uadSuperior.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))",
+	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))",
                      new { usu_idLogado = userId, gru_idLogado = groupId }
                     );
                 return query;
