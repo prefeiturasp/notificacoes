@@ -13,7 +13,7 @@ using Notification.Business.CoreSSO;
 
 namespace Notification.API.Areas.SGP.v1
 {
-    public class SchoolSuperiorController : AuthBaseController
+    public class SchoolSuperiorController : AuthUserGroupBaseController
     {
         /// <summary>
         /// Busca as DRE's do usuário logado no sistema de notificações.
@@ -38,7 +38,7 @@ namespace Notification.API.Areas.SGP.v1
                 //}
                 if (groupSid != Guid.Empty)
                 {
-                    var result = SchoolSuperiorBusiness.Get(claimData.Usu_id, groupSid);
+                    var result = SchoolSuperiorBusiness.Get(claimData.UserId, groupSid);
                     return Request.CreateResponse(HttpStatusCode.OK, result);
                 }
                 else

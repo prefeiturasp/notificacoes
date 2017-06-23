@@ -20,7 +20,7 @@ using Notification.API.Extensions;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
-    public class GroupController : AuthBaseController
+    public class GroupController : AuthUserGroupBaseController
     {
         private const string CHAVE_ID_SISTEMA = "SystemID";
 
@@ -36,7 +36,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                var result = GroupBusiness.GetGroupDown(claimData.Usu_id, systemId);
+                var result = GroupBusiness.GetGroupDown(claimData.UserId, systemId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
@@ -60,7 +60,7 @@ namespace Notification.API.Areas.CoreSSO.v1
             {
                 int systemId = Convert.ToInt32(ConfigurationManager.AppSettings[CHAVE_ID_SISTEMA]);
 
-                var result = GroupBusiness.Get(claimData.Usu_id, systemId);
+                var result = GroupBusiness.Get(claimData.UserId, systemId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)

@@ -17,6 +17,8 @@ namespace Notification.API
         {
             string urlIdentityServer = ConfigurationManager.AppSettings["IdentityServer"];
 
+            //app.UseCors()
+
             JwtSecurityTokenHandler.InboundClaimTypeMap.Clear();
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions

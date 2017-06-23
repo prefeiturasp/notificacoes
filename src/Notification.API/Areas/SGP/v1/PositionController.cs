@@ -1,5 +1,6 @@
 ﻿using Notification.API.Areas.v1;
 using Notification.Business;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,8 @@ namespace Notification.API.Areas.SGP.v1
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var lt = PositionBusiness.Get();
+                return Request.CreateResponse(HttpStatusCode.OK, lt);
             }
             catch (Exception exc)
             {

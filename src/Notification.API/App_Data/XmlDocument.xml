@@ -18,7 +18,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Notification.API.Areas.CoreSSO.v1.SystemController.Get(System.Guid)">
+        <member name="M:Notification.API.Areas.CoreSSO.v1.SystemController.Get">
             <summary>
             Retorna todos os sistemas cujo usuário logado tenha permissão de acesso.
             </summary>

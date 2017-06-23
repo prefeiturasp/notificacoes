@@ -9,7 +9,7 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
 {
-    public class NotificationController : AuthBaseController
+    public class NotificationController : AuthUserGroupBaseController
     {
         [HttpPost]
         [Route("api/v1/Notification")]
@@ -18,7 +18,7 @@ namespace Notification.API.Areas.v1
         {
             try
             {
-                NotificationBusiness.Save(claimData.Usu_id, claimData.Gru_id, entity);
+                NotificationBusiness.Save(claimData.UserId, claimData.GroupId, entity);
                 return Request.CreateResponse(HttpStatusCode.Created);
             }
             catch (Exception exc)

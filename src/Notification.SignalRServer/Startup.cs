@@ -4,6 +4,7 @@ using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
+//using Microsoft.Owin.Cors;
 
 [assembly: OwinStartup(typeof(Notification.SignalRServer.Startup))]
 
