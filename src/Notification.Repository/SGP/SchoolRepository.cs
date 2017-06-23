@@ -71,10 +71,11 @@ namespace Notification.Repository.SGP
 	                    ESC_Escola esc WITH(NOLOCK)
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))",
+	                    AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
+                        AND esc.uad_idSuperiorGestao = @idDre",
                     new
                     {
-                        usu_idLogado = userId , gru_idLogado = groupId
+                        usu_idLogado = userId , gru_idLogado = groupId, idDre = schoolSuperiorId
                     }
                     );
                 return query;

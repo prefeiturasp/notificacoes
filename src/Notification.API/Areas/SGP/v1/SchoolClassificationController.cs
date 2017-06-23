@@ -1,5 +1,6 @@
 ﻿using Notification.API.Areas.v1;
 using Notification.Business;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,17 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.SGP.v1
 {
-    public class SchoolClassificationController : AuthBaseController
+    public class SchoolClassificationController : AuthUserGroupBaseController
     {
         [HttpGet]
         [Route("api/SGP/v1/SchoolClassification")]
         [ResponseType(typeof(IEnumerable<SchoolClassification>))]
-        public HttpResponseMessage Get(Nullable<Guid> schoolSuperiorId = null)
+        public HttpResponseMessage Get(Guid schoolSuperiorId)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = SchoolClassificationBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
