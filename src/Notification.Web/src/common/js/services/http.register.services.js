@@ -27,16 +27,30 @@
                 });
             }
 
-            function getListSystem(callback){
+            function getListSystem(visionGroupId, callback){
 
                 if($window.sessionStorage.listSystem){
                     callback( JSON.parse(atob($window.sessionStorage.listSystem)));
                 }else {
 
-                    getLists(Model.getSystem(), function (res) {
+                    getLists(Model.getSystem(visionGroupId), function (res) {
                         callback(res);
                         if(res.length > 1)
                             $window.sessionStorage.listSystem = btoa(JSON.stringify(res));
+                    });
+                }
+            }
+
+            function getListVisionSystem(callback){
+
+                if($window.sessionStorage.listVisionSystem){
+                    callback( JSON.parse(atob($window.sessionStorage.listVisionSystem)));
+                }else {
+
+                    getLists(Model.getVisionSytem(), function (res) {
+                        callback(res);
+                        if(res.length > 1)
+                            $window.sessionStorage.listVisionSystem = btoa(JSON.stringify(res));
                     });
                 }
             }
@@ -51,20 +65,6 @@
                         callback(res);
                         if(res.length > 1)
                             $window.sessionStorage.listGroups = btoa(JSON.stringify(res));
-                    });
-                }
-            }
-
-            function getListAdministrativeUnits(id, callback){
-
-                if($window.sessionStorage.listAdministrativeUnits){
-                    callback(JSON.parse(atob($window.sessionStorage.listAdministrativeUnits)));
-                }else {
-
-                    getLists(Model.getAdministrativeUnits(id), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listAdministrativeUnits = btoa(JSON.stringify(res));
                     });
                 }
             }
@@ -85,13 +85,13 @@
                 }
             }
 
-            function getListSchoolSuperior(callback){
+            function getListSchoolSuperior(visionGroupId, callback){
 
                 if($window.sessionStorage.listSchoolSuperior){
                     callback(JSON.parse(atob($window.sessionStorage.listSchoolSuperior)));
                 }else {
 
-                    getLists(Model.getSchoolSuperior(), function (res) {
+                    getLists(Model.getSchoolSuperior(visionGroupId), function (res) {
                         callback(res);
                         if(res.length > 1)
                             $window.sessionStorage.listSchoolSuperior = btoa(JSON.stringify(res));
@@ -114,17 +114,7 @@
             }
 
             function getListSchool(params, callback){
-
-                if($window.sessionStorage.listSchool){
-                    callback(JSON.parse(atob($window.sessionStorage.listSchool)));
-                }else {
-
-                    getLists(Model.getSchool(params), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listSchool = btoa(JSON.stringify(res));
-                    });
-                }
+                getLists(Model.getSchool(params), function (res) {callback(res);});
             }
 
             function getListPosition(callback){
@@ -198,9 +188,9 @@
             }
 
             return {
+                getListVisionSystem: getListVisionSystem,
                 getListSystem: getListSystem,
                 getListGroups: getListGroups,
-                getListAdministrativeUnits: getListAdministrativeUnits,
                 getListCalendar: getListCalendar,
                 getListSchoolSuperior: getListSchoolSuperior,
                 getListSchoolClassification: getListSchoolClassification,
