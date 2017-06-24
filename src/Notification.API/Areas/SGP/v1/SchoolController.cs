@@ -26,7 +26,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/SchoolByClassification")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage GetByClassification(Guid schoolSuperiorId, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
+        public HttpResponseMessage GetByClassification([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
         {
             try
             {

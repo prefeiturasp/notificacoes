@@ -14,7 +14,7 @@ namespace Notification.Repository.SGP
     {
         //[TODO]: query que busca escolas da tabela Escolas do Gestão
 
-        public IEnumerable<School> Get(Guid userId, Guid groupId, Guid schoolSuperiorId, IEnumerable<int> listClassificationTypeSchool)
+        public IEnumerable<School> Get(Guid userId, Guid groupId, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool)
         {
             using (var context = new SqlConnection(stringConnection))
             {
@@ -47,7 +47,7 @@ namespace Notification.Repository.SGP
                     WHERE
 	                    esc.esc_situacao <> 3
 	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                    AND uadSuperior.uad_id = @idDRE
+	                    AND uadSuperior.uad_id in @idsDRE
 	                    AND tce.tce_id IN @idsTipoClassificacaoEscola",
                     new
                     {
@@ -55,7 +55,7 @@ namespace Notification.Repository.SGP
                     ,
                         gru_idLogado = groupId
                     ,
-                        idDRE = schoolSuperiorId
+                        idsDRE = listSchoolSuperior
                     ,
                         idsTipoClassificacaoEscola = listClassificationTypeSchool
                     }

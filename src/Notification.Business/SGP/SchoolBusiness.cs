@@ -10,10 +10,10 @@ namespace Notification.Business.SGP
 {
     public class SchoolBusiness
     {
-        public static IEnumerable<School> Get(Guid userId, Guid groupId, Guid schoolSuperiorId, IEnumerable<int> listClassificationTypeSchool)
+        public static IEnumerable<School> Get(Guid userId, Guid groupId, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool)
         {
             var repository = new SchoolRepository();
-            return repository.Get(userId, groupId, schoolSuperiorId, listClassificationTypeSchool);
+            return repository.Get(userId, groupId, listSchoolSuperior, listClassificationTypeSchool);
         }
 
         public static IEnumerable<School> Get(Guid userId, Guid groupId, Guid schoolSuperiorId)
