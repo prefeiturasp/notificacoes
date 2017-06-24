@@ -1,4 +1,5 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.API.ModelBinder;
 using Notification.Business;
 using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
@@ -9,15 +10,21 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 
 namespace Notification.API.Areas.SGP.v1
 {
     public class SchoolClassificationController : AuthUserGroupBaseController
     {
+        /// <summary>
+        /// Retorna todas as classificações de escolas baseadas no usuário, grupo e diretoria
+        /// </summary>
+        /// <param name="schoolSuperiorId">Opcional. Repita este parâmetro para cada nova diretoria que gostaria de adicionar no filtro.</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/SchoolClassification")]
         [ResponseType(typeof(IEnumerable<SchoolClassification>))]
-        public HttpResponseMessage Get(Guid schoolSuperiorId)
+        public HttpResponseMessage Get([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null)
         {
             try
             {

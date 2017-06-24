@@ -20,13 +20,13 @@ namespace Notification.API.Areas.SGP.v1
         /// <summary>
         /// Busca escolas por diretoria e uma lista de Classificação
         /// </summary>
-        /// <param name="schoolSuperiorId">Repita este parâmetro para cada Id DRE que queira filtrar</param>
-        /// <param name="schoolClassificationId">Repita este parâmetro para cada classificação que queira filtrar</param>
+        /// <param name="schoolSuperiorId">Opcional. Repita este parâmetro para cada Id DRE que queira filtrar</param>
+        /// <param name="schoolClassificationId">Opcional. Repita este parâmetro para cada classificação que queira filtrar</param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/SchoolByClassification")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage GetByClassification([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
+        public HttpResponseMessage GetByClassification([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
         {
             try
             {

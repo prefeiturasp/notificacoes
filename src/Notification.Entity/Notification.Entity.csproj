@@ -64,6 +64,7 @@
     <Compile Include="API\Notification.cs" />
     <Compile Include="API\Recipient.cs" />
     <Compile Include="API\SGP\Calendar.cs" />
+    <Compile Include="API\SGP\Contributor.cs" />
     <Compile Include="API\SGP\Course.cs" />
     <Compile Include="API\SGP\CoursePeriod.cs" />
     <Compile Include="API\SGP\Discipline.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="API\SGP\School.cs" />
     <Compile Include="API\SGP\SchoolClassification.cs" />
     <Compile Include="API\SGP\SchoolSuperior.cs" />
+    <Compile Include="API\SGP\Teacher.cs" />
     <Compile Include="API\SGP\Team.cs" />
     <Compile Include="API\SystemRecipient.cs" />
     <Compile Include="API\TeacherRecipient.cs" />
