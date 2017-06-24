@@ -18,7 +18,8 @@ namespace Notification.Repository.SGP
         {
             using (var context = new SqlConnection(stringConnection))
             {
-                var query = context.Query<School>(
+                StringBuilder sb = new StringBuilder();
+                sb.Append(
                     @"SELECT
 	                    esc.esc_id 'Id',
 	                    esc.ent_id,
@@ -46,18 +47,21 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_situacao <> 3
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                    AND uadSuperior.uad_id in @idsDRE
-	                    AND tce.tce_id IN @idsTipoClassificacaoEscola",
+	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+
+                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                    sb.Append(" AND uadSuperior.uad_id in @idsDRE");
+
+                if(listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
+                    sb.Append(" AND tce.tce_id IN @idsTipoClassificacaoEscola");
+
+                var query = context.Query<School>(sb.ToString(),
                     new
                     {
                         usu_idLogado = userId
-                    ,
-                        gru_idLogado = groupId
-                    ,
-                        idsDRE = listSchoolSuperior
-                    ,
-                        idsTipoClassificacaoEscola = listClassificationTypeSchool
+                        ,gru_idLogado = groupId
+                        ,idsDRE = listSchoolSuperior
+                        ,idsTipoClassificacaoEscola = listClassificationTypeSchool
                     }
                     );
                 return query;

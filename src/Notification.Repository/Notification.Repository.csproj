@@ -76,6 +76,7 @@
     <Compile Include="NotificationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SGP\CalendarRepository.cs" />
+    <Compile Include="SGP\ContributorRepository.cs" />
     <Compile Include="SGP\CoursePeriodRepository.cs" />
     <Compile Include="SGP\CourseRepository.cs" />
     <Compile Include="SGP\DisciplineRepository.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="SGP\SchoolClassificationRepository.cs" />
     <Compile Include="SGP\SchoolRepository.cs" />
     <Compile Include="SGP\SchoolSuperiorRepository.cs" />
+    <Compile Include="SGP\TeacherRepository.cs" />
     <Compile Include="SGP\TeamRepository.cs" />
   </ItemGroup>
   <ItemGroup>
