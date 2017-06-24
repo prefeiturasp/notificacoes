@@ -1,5 +1,7 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.API.ModelBinder;
 using Notification.Business;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 
 namespace Notification.API.Areas.SGP.v1
 {
@@ -16,11 +19,12 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/CoursePeriod")]
         [ResponseType(typeof(IEnumerable<CoursePeriod>))]
-        public HttpResponseMessage Get(int calendarId, Nullable<int> periodId = null)
+        public HttpResponseMessage Get(string calendarYear, [ModelBinder(typeof(Ints))] IEnumerable<int> courseId = null)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = CoursePeriodBusiness.Get(calendarYear, courseId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
