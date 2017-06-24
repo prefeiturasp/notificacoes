@@ -18,13 +18,14 @@ namespace Notification.API.Areas.SGP.v1
     public class SchoolController : AuthUserGroupBaseController
     {
         [HttpGet]
-        [Route("api/SGP/v1/School")]
+        [Route("api/SGP/v1/SchoolByClassification")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage Get([ModelBinder(typeof(Guids))] IEnumerable<Guid> listSchools, Nullable<Guid> schoolSuperiorId = null, Nullable<int> schoolClassificationId = null)
+        public HttpResponseMessage GetByClassification(Guid schoolSuperiorId, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.NotImplemented);
+                var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId, schoolClassificationId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
