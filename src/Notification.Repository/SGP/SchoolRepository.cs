@@ -14,17 +14,17 @@ namespace Notification.Repository.SGP
     {
         //[TODO]: query que busca escolas da tabela Escolas do Gestão
 
-        public IEnumerable<School> Get(Guid userId, Guid groupId, string listSchoolSuperior, string listClassificationTypeSchool)
+        public IEnumerable<School> Get(Guid userId, Guid groupId, Guid schoolSuperiorId, IEnumerable<int> listClassificationTypeSchool)
         {
             using (var context = new SqlConnection(stringConnection))
             {
                 var query = context.Query<School>(
                     @"SELECT
-	                    esc.esc_id,
+	                    esc.esc_id 'Id',
 	                    esc.ent_id,
 	                    esc.uad_id,
 	                    esc.esc_codigo,
-	                    esc.esc_nome,
+	                    esc.esc_nome 'Name',
 	                    esc.esc_codigoInep,
 	                    esc.uad_idSuperiorGestao,
 	                    esc.esc_controleSistema,
@@ -47,12 +47,17 @@ namespace Notification.Repository.SGP
                     WHERE
 	                    esc.esc_situacao <> 3
 	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                    AND uadSuperior.uad_id IN @idsDRES
+	                    AND uadSuperior.uad_id = @idDRE
 	                    AND tce.tce_id IN @idsTipoClassificacaoEscola",
-                    new { usu_idLogado = userId
-                    , gru_idLogado = groupId
-                    , idsDRES = listSchoolSuperior
-                    , idsTipoClassificacaoEscola = listClassificationTypeSchool
+                    new
+                    {
+                        usu_idLogado = userId
+                    ,
+                        gru_idLogado = groupId
+                    ,
+                        idDRE = schoolSuperiorId
+                    ,
+                        idsTipoClassificacaoEscola = listClassificationTypeSchool
                     }
                     );
                 return query;
