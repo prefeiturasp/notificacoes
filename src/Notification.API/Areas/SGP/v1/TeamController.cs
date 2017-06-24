@@ -1,5 +1,7 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.API.ModelBinder;
 using Notification.Business;
+using Notification.Business.SGP;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 
 namespace Notification.API.Areas.SGP.v1
 {
@@ -17,17 +20,18 @@ namespace Notification.API.Areas.SGP.v1
         [Route("api/SGP/v1/Team")]
         [ResponseType(typeof(IEnumerable<Team>))]
         public HttpResponseMessage Get(
-            int calendarId, 
-            Nullable<Guid> schoolSuperiorId = null, 
-            Nullable<int> schoolClassificationId = null, 
-            Nullable<Guid> schoolId = null, 
-            Nullable<int> courseId = null,
-            Nullable<int> coursePeriodId = null,
-            Nullable<int> disciplineId = null)
+            string calendarYear,
+            [ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> schoolId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> courseId = null,
+            [ModelBinder(typeof(Strings))] IEnumerable<string> coursePeriodId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> disciplineId = null)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = TeamBusiness.Get(calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, courseId, coursePeriodId, disciplineId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
