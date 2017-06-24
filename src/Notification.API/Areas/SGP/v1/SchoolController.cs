@@ -17,6 +17,12 @@ namespace Notification.API.Areas.SGP.v1
 {
     public class SchoolController : AuthUserGroupBaseController
     {
+        /// <summary>
+        /// Busca escolas por diretoria e uma lista de Classificação
+        /// </summary>
+        /// <param name="schoolSuperiorId">Id DRE</param>
+        /// <param name="schoolClassificationId">Repita este parâmetro para cada classificação que queira filtrar</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/SchoolByClassification")]
         [ResponseType(typeof(IEnumerable<School>))]
