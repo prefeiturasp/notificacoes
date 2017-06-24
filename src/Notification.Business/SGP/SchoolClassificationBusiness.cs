@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Notification.Entity.API.SGP;
+using Notification.Repository.SGP;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Notification.Business.SGP
 {
-    class SchoolClassificationBusiness
+    public class SchoolClassificationBusiness
     {
+        public static IEnumerable<SchoolClassification> Get(Guid userId, Guid groupId, Guid schoolSuperiorId)
+        {
+            var repository = new SchoolClassificationRepository();
+            return repository.Get(userId, groupId, schoolSuperiorId);
+        }
     }
 }
