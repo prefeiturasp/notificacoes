@@ -13,6 +13,8 @@ namespace Notification.Repository.SGP
     public class TeamRepository : SGPRepository
     {
         public IEnumerable<Team> Get(
+            Guid userId,
+            Guid groupId,
             string calendarYear, 
             IEnumerable<Guid> schoolSuperiorId, 
             IEnumerable<int> schoolClassificationId, 
@@ -50,7 +52,8 @@ namespace Notification.Repository.SGP
                 sb.Append(") AS T1 ON T1.cur_id = tcr.cur_id AND T1.crr_id = tcr.crr_id AND T1.crp_id = tcr.crp_id");
             }
 
-            sb.Append(" WHERE tur.tur_situacao <> 3 AND cal.cal_ano = @calendarYear");
+            sb.Append(@" WHERE tur.tur_situacao <> 3 AND cal.cal_ano = @calendarYear
+                AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@userId, @groupId))");
 
             if (schoolSuperiorId != null && schoolSuperiorId.Any())
                 sb.Append(" AND uadSuperior.uad_id IN @schoolSuperiorId");
@@ -72,6 +75,8 @@ namespace Notification.Repository.SGP
                 var query = context.Query<Team>(sb.ToString(),
                      new
                      {
+                         userId = userId,
+                         groupId = groupId,
                          calendarYear = calendarYear,
                          schoolSuperiorId = schoolSuperiorId,
                          schoolClassificationId = schoolClassificationId,

@@ -14,7 +14,7 @@ using System.Web.Http.ModelBinding;
 
 namespace Notification.API.Areas.SGP.v1
 {
-    public class TeamController : AuthBaseController
+    public class TeamController : AuthUserGroupBaseController
     {
         [HttpGet]
         [Route("api/SGP/v1/Team")]
@@ -30,7 +30,7 @@ namespace Notification.API.Areas.SGP.v1
         {
             try
             {
-                var result = TeamBusiness.Get(calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, courseId, coursePeriodId, disciplineId);
+                var result = TeamBusiness.Get(claimData.UserId, claimData.GroupId, calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, courseId, coursePeriodId, disciplineId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)

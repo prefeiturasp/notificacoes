@@ -11,6 +11,8 @@ namespace Notification.Business.SGP
     public class TeamBusiness
     {
         public static IEnumerable<Team> Get(
+            Guid userId,
+            Guid groupId,
             string calendarYear,
             IEnumerable<Guid> schoolSuperiorId,
             IEnumerable<int> schoolClassificationId,
@@ -20,7 +22,7 @@ namespace Notification.Business.SGP
             IEnumerable<int> disciplineId)
         {
             var repository = new TeamRepository();
-            return repository.Get(calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, courseId, coursePeriodId, disciplineId);
+            return repository.Get(userId, groupId, calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, courseId, coursePeriodId, disciplineId);
         }
     }
 }
