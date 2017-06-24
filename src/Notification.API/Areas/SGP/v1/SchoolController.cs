@@ -17,14 +17,21 @@ namespace Notification.API.Areas.SGP.v1
 {
     public class SchoolController : AuthUserGroupBaseController
     {
+        /// <summary>
+        /// Busca escolas por diretoria e uma lista de Classificação
+        /// </summary>
+        /// <param name="schoolSuperiorId">Repita este parâmetro para cada Id DRE que queira filtrar</param>
+        /// <param name="schoolClassificationId">Repita este parâmetro para cada classificação que queira filtrar</param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/SGP/v1/School")]
+        [Route("api/SGP/v1/SchoolByClassification")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage Get([ModelBinder(typeof(Guids))] IEnumerable<Guid> listSchools, Nullable<Guid> schoolSuperiorId = null, Nullable<int> schoolClassificationId = null)
+        public HttpResponseMessage GetByClassification([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.NotImplemented);
+                var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId, schoolClassificationId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
