@@ -20,7 +20,7 @@ namespace Notification.API.Areas.SGP.v1
         /// <summary>
         /// Busca escolas por diretoria e uma lista de Classificação
         /// </summary>
-        /// <param name="schoolSuperiorId">Id DRE</param>
+        /// <param name="schoolSuperiorId">Repita este parâmetro para cada Id DRE que queira filtrar</param>
         /// <param name="schoolClassificationId">Repita este parâmetro para cada classificação que queira filtrar</param>
         /// <returns></returns>
         [HttpGet]

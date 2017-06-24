@@ -507,6 +507,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Notification.API.Areas.SGP.v1.SchoolController.GetByClassification(System.Collections.Generic.IEnumerable{System.Guid},System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Busca escolas por diretoria e uma lista de Classificação
+            </summary>
+            <param name="schoolSuperiorId">Repita este parâmetro para cada Id DRE que queira filtrar</param>
+            <param name="schoolClassificationId">Repita este parâmetro para cada classificação que queira filtrar</param>
+            <returns></returns>
+        </member>
         <member name="M:Notification.API.Areas.SGP.v1.SchoolController.GetBySuperior(System.Guid)">
             <summary>
             Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
