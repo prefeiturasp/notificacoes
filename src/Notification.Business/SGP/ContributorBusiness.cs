@@ -10,7 +10,7 @@ namespace Notification.Business.SGP
 {
     public class ContributorBusiness
     {
-        public static IEnumerable<Contributor> Get(Guid userId, Guid groupId, IEnumerable<int> listCalendar, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> listSchool, IEnumerable<int> listPosition)
+        public static IEnumerable<Contributor> Get(Guid userId, Guid groupId, IEnumerable<string> listCalendar, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> listSchool, IEnumerable<int> listPosition)
         {
             var repository = new ContributorRepository();
             return repository.Get(userId, groupId, listCalendar, listSchoolSuperior, listClassificationTypeSchool, listSchool, listPosition );
