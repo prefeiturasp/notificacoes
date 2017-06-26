@@ -12,14 +12,14 @@ namespace Notification.Repository.SGP
 {
     public class SchoolClassificationRepository : SGPRepository
     {
-        public IEnumerable<SchoolClassification> Get()
+        public IEnumerable<SchoolClassification> Get(Guid userId, Guid groupId, IEnumerable<Guid> listSchoolSuperior)
         {
             using (var context = new SqlConnection(stringConnection))
             {
-                var query = context.Query<SchoolClassification>(
-                    @"SELECT
-	                    tce.tce_id,
-	                    tce.tce_nome,
+                StringBuilder sb = new StringBuilder();
+                sb.Append(@"SELECT
+	                    tce.tce_id 'Id',
+	                    tce.tce_nome 'Name',
 	                    tce.tce_permiteQualquerCargoEscola
                     FROM
 	                    ESC_Escola esc WITH(NOLOCK)
@@ -38,8 +38,19 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_situacao <> 3
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                    AND uadSuperior.uad_id = @idsDRES");
+	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+
+                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                    sb.Append(" AND uadSuperior.uad_id in @idsDRE");
+
+                var query = context.Query<SchoolClassification>(
+                    sb.ToString(),
+                    new
+                    {
+                        usu_idLogado = userId,
+                        gru_idLogado = groupId,
+                        idDre = listSchoolSuperior
+                    });
                 return query;
             }
         }

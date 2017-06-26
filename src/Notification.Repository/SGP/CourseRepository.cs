@@ -12,32 +12,19 @@ namespace Notification.Repository.SGP
 {
     public class CourseRepository : SGPRepository
     {
-        public IEnumerable<Course> Get()
+        public IEnumerable<Course> Get(string calendarYear)
         {
             using (var context = new SqlConnection(stringConnection))
             {
                 var query = context.Query<Course>(
-                    @"SELECT 
-                        crg.crg_id,
-                        crg.crg_nome,
-                        crg.crg_descricao,
-                        crg.crg_codigo,
-                        crg.crg_cargoDocente,
-                        crg.crg_especialista,
-                        crg.crg_maxAulaDia,
-                        crg.crg_maxAulaSemana,
-                        crg.crg_tipo,
-                        crg.crg_situacao,
-                        crg.tvi_id,
-                        crg.crg_dataCriacao,
-                        crg.crg_dataAlteracao
-                    FROM 
-                        RHU_Cargo crg WITH(NOLOCK)
-                    WHERE 
-                        crg.crg_situacao <> 3");
+                    @"SELECT cur.cur_id AS Id, cur.cur_nome	AS Name
+                    FROM ACA_CalendarioCurso cac WITH(NOLOCK)
+                    INNER JOIN ACA_CalendarioAnual as cal with(nolock) ON cal.cal_id = cac.cal_id
+                    INNER JOIN ACA_Curso cur WITH(NOLOCK) ON cur.cur_id = cac.cur_id AND cur.cur_situacao <> 3
+                    WHERE cal.cal_ano = @calendarYear",
+                    new { calendarYear = calendarYear });
                 return query;
             }
         }
-
     }
 }

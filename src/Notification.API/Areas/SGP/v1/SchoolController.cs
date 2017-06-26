@@ -17,14 +17,21 @@ namespace Notification.API.Areas.SGP.v1
 {
     public class SchoolController : AuthUserGroupBaseController
     {
+        /// <summary>
+        /// Busca escolas por diretoria e uma lista de Classificação
+        /// </summary>
+        /// <param name="schoolSuperiorId">Opcional. Repita este parâmetro para cada Id DRE que queira filtrar</param>
+        /// <param name="schoolClassificationId">Opcional. Repita este parâmetro para cada classificação que queira filtrar</param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/SGP/v1/School")]
+        [Route("api/SGP/v1/SchoolByClassification")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage Get([ModelBinder(typeof(Guids))] IEnumerable<Guid> listSchools, Nullable<Guid> schoolSuperiorId = null, Nullable<int> schoolClassificationId = null)
+        public HttpResponseMessage GetByClassification([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null, [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null)
         {
             try
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId, schoolClassificationId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {
@@ -37,40 +44,24 @@ namespace Notification.API.Areas.SGP.v1
         /// Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
         /// Necessário enviar o id do grupo no Header (groupSid)
         /// </summary>
-        /// <param name="groupSid">ID Grupo usuário logado no sistema</param>
         /// <param name="schoolSuperiorId">ID Diretoria de ensino (DRE)</param>
         /// <returns></returns>
         [HttpGet]
         [Route("api/SGP/v1/School")]
         [ResponseType(typeof(IEnumerable<School>))]
-        public HttpResponseMessage GetBySuperior(Guid groupSid, Guid schoolSuperiorId)
+        public HttpResponseMessage GetBySuperior(Guid schoolSuperiorId)
         {
             try
             {
-                //if (Request.Headers.Contains(GroupBusiness.TYPE_GRU_ID))
-                //{
-                if(groupSid != Guid.Empty)
-                { 
-                    var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId);
-                    return Request.CreateResponse(HttpStatusCode.OK, result);
-                }
-                else
-                {
-                    MissingFieldException exc = new MissingFieldException("Parâmetro: " + GroupBusiness.TYPE_GRU_ID + " vazio.");
-                    LogBusiness.Warn(exc.Message);
-                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, exc.Message);
-                }
-                //}
-                //else
-                //{
-                //    MissingFieldException exc = new MissingFieldException("Header: " + GroupBusiness.TYPE_GRU_ID + " não encontrado.");
-                //    var logId = LogBusiness.Error(exc);
-                //    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, logId);
-                //}
+
+                var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
             }
         }
     }

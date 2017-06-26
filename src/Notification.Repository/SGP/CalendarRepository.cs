@@ -18,7 +18,7 @@ namespace Notification.Repository.SGP
             {
                 var query = context.Query<Calendar>(
                     @"SELECT
-	                    ACA.cal_ano
+	                    ACA.cal_ano 'Name'
                     FROM
 	                    ACA_CalendarioAnual AS ACA WITH(NOLOCK)
                     WHERE
