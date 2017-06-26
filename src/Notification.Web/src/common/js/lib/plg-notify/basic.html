@@ -1,302 +1,47 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <style>
+        * {
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+            -webkit-transition: all .3s ease;
+            -moz-transition: all .3s ease;
+            -ms-transition: all .3s ease;
+            -o-transition: all .3s ease;
+            transition: all .3s ease;
+        }
+    </style>
 
 
 </head>
 <body>
 
-<!--
+<!--<link href="css.css" rel="stylesheet">-->
 
-
-  <div class="draggable" draggable="true"  >
-    <div style="z-index:10;display: inline-grid">
-      <i class="resize_handle material-icons" role="presentation">all_out</i>
-      <i class="drag_handle material-icons" role="presentation">open_with</i>
-    </div>
-
-
-    &lt;!&ndash; Add your site or app content here &ndash;&gt;
-    <button  class="mdl-button mdl-js-button mdl-button&#45;&#45;fab mdl-js-ripple-effect mdl-button&#45;&#45;colored mdl-shadow&#45;&#45;4dp mdl-color&#45;&#45;accent" id="add">
-      <span class="incrementor"></span>
-    </button>
-  </div>
-
--->
-
-<!--
-
-<div class="plg">
-
-  <div draggable="true" class="hide float-menu plg-notify">
-    <div class="circulo ">
-      <div class="lateral">
-        <a class="mover plg-notify-move">
-          <svg class="hitbox" enable-background="new 0 0 96 96" height="17" version="1.1" viewBox="0 0 96 96" width="17" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" ><path d="M94.828,45.171L80.687,31.029c-1.562-1.562-4.095-1.562-5.657,0c-1.562,1.562-1.562,4.095,0,5.657L82.344,44H52V13.657  l7.313,7.313c1.562,1.562,4.095,1.562,5.657,0c1.562-1.562,1.562-4.095,0-5.657L50.828,1.171c-1.562-1.562-4.095-1.562-5.657,0  L31.029,15.314c-1.562,1.562-1.562,4.095,0,5.657s4.095,1.562,5.657,0L44,13.657V44H13.657l7.313-7.313  c1.562-1.562,1.562-4.095,0-5.657s-4.095-1.562-5.657,0L1.171,45.171c-1.562,1.562-1.562,4.095,0,5.657l14.143,14.143  c1.562,1.562,4.095,1.562,5.657,0c1.562-1.562,1.562-4.095,0-5.657L13.657,52H44v30.344l-7.313-7.314  c-1.562-1.562-4.095-1.562-5.657,0c-1.562,1.562-1.562,4.095,0,5.657l14.142,14.142c1.562,1.562,4.095,1.562,5.657,0l14.143-14.142  c1.562-1.562,1.562-4.095,0-5.657c-1.562-1.562-4.095-1.562-5.657,0L52,82.343V52h30.343l-7.313,7.313  c-1.562,1.562-1.562,4.095,0,5.657c1.562,1.562,4.095,1.562,5.657,0l14.142-14.143C96.391,49.267,96.391,46.733,94.828,45.171z"/></svg>
-        </a>
-        <a class="esconder plg-notify-hide">
-          <svg class="hitbox" height="20" viewBox="0 0 48 48" width="20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0h48v48h-48z" fill="none"/>
-            <path
-              d="M24 9c-10 0-18.54 6.22-22 15 3.46 8.78 12 15 22 15s18.54-6.22 22-15c-3.46-8.78-11.99-15-22-15zm0 25c-5.52 0-10-4.48-10-10s4.48-10 10-10 10 4.48 10 10-4.48 10-10 10zm0-16c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>
-          </svg>
-        </a>
-      </div>
-
-      <div class="sino plg-notify-bell">
-        <svg class="hitbox" height="40" viewBox="0 0 1792 1792" width="35" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M912 1696q0-16-16-16-59 0-101.5-42.5t-42.5-101.5q0-16-16-16t-16 16q0 73 51.5 124.5t124.5 51.5q16 0 16-16zm816-288q0 52-38 90t-90 38h-448q0 106-75 181t-181 75-181-75-75-181h-448q-52 0-90-38t-38-90q50-42 91-88t85-119.5 74.5-158.5 50-206 19.5-260q0-152 117-282.5t307-158.5q-8-19-8-39 0-40 28-68t68-28 68 28 28 68q0 20-8 39 190 28 307 158.5t117 282.5q0 139 19.5 260t50 206 74.5 158.5 85 119.5 91 88z"/>
-        </svg>
-      </div>
-    </div>
-    <a class="numeracao hitbox">
-      <span class="plg-notify-counter">0</span></a>
-  </div>
-
-  <div class="hide notificacoes plg-notify-list">
-    <ul class="hitbox">
-      <li class="urgente">
-        <span>20/06/2017</span>
-        <div>Essa mensagem é urgente !</div></li>
-      <li class="lida">
-        <span>15/06/2017</span>
-        <div>Esta mensagem já foi lida.</div></li>
-      <li class="lida urgente">
-        <span>20/06/2017</span>
-        <div>Essa mensagem é urgente e já foi lida!</div></li>
-      <li>
-        <span>12/06/2017</span>
-        <div>Uma mensagem muito muito muito muito muito muito
-          longa mesmo ...</div></li>
-
-    </ul>
-  </div>
-
-  <div class="hide plg-notify-template">
-    <li class="hitbox">
-
-    </li>
-  </div>
-</div>
-
-<section>
-
-  <style>
-    [draggable] {
-      -moz-user-select: none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
-      user-select: none;
-      -khtml-user-drag: element;
-      -webkit-user-drag: element
-    }
-
-    .draggable {
-      position: absolute
-    }
-
-    .draggable, .draggable > *, .notificacoes li {
-      display: inline-block
-    }
-
-    .draggable > i {
-      cursor: move
-    }
-
-    .dragging {
-      border: 1px solid #000
-    }
-
-    .hide {
-      display: none !important
-    }
-
-    .hitbox {
-      pointer-events: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .notificacoes {
-      position: fixed;
-      background: #fff;
-      width: 320px;
-      display: inline-block;
-      border: 1px solid #ddd;
-      box-shadow: 0 0 10px 4px rgba(0, 0, 0, .1);
-      border-radius: 10px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      height: 420px
-    }
-
-    .notificacoes li {
-      width: 100%;
-      padding: 8px 0 8px 8px;
-      border-bottom: 1px solid rgba(235, 238, 240, .31);
-      font-size: 1rem;
-      overflow: hidden;
-      height: 42px
-    }
-
-    .notificacoes p, .notificacoes span {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      max-width: 90%;
-      min-width: 30%
-    }
-
-    .notificacoes li.lida {
-      opacity: .5
-    }
-
-    .notificacoes li:last-child {
-      border-bottom: 0
-    }
-
-    .notificacoes li:nth-child(odd) {
-      background: #fafbfb
-    }
-
-    .notificacoes li.urgente {
-      background: #d11d1d;
-      color: #fff
-    }
-
-    .notificacoes li.urgente * {
-      color: #fff
-    }
-
-    .notificacoes li span {
-      font-size: 1.2rem;
-      display: block;
-      font-weight: 900;
-      color: #768e99
-    }
-
-    .circulo, .float-menu {
-      border-radius: 100%;
-      width: 80px;
-      height: 80px
-    }
-
-    .circulo {
-      box-sizing: border-box;
-      overflow: hidden
-    }
-
-    .float-menu {
-      display: block;
-      position: fixed;
-      user-select: none;
-      color: #fff;
-      box-shadow: 4px 4px 4px rgba(0, 0, 0, .3);
-      font-family: sans-serif
-    }
-
-    .float-menu .lateral {
-      width: 38px;
-      position: absolute;
-      height: 40px
-    }
-
-    .float-menu .lateral a {
-      display: inline-block;
-      width: 100%;
-      text-align: center;
-      padding: 7px;
-      border-bottom: 1px solid #a91b1b;
-      box-sizing: border-box;
-      background: #f32f2f;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      border-radius: 100% 0 0 0;
-      height: 40px
-    }
-
-    .float-menu a.numeracao {
-      background: #ff9800;
-      cursor: default;
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 16px;
-      width: 16px;
-      padding: 5px;
-      margin: auto;
-      border-radius: 100%;
-      font-weight: 700;
-      z-index: 5
-    }
-
-    .float-menu a.numeracao:hover {
-      background: #ffd200;
-      color: #000
-    }
-
-    .float-menu .lateral a.esconder svg {
-      margin-top: 0
-    }
-
-    .float-menu .lateral a:hover {
-      background: #a91b1b
-    }
-
-    .float-menu .lateral a svg {
-      fill: #fff;
-      margin-top: 7px
-    }
-
-    .float-menu .lateral a:last-child {
-      border-bottom: 0;
-      border-radius: 0 0 0 100%
-    }
-
-    .sino {
-      width: 50px;
-      left: 30px;
-      height: 80px;
-      cursor: pointer;
-      padding: 17px 10px 0 5px;
-      box-sizing: border-box;
-      position: relative;
-      background-color: #232b38
-    }
-
-    .sino svg {
-      fill: #fff
-    }
-
-    .sino:hover {
-      background: #3d4d60
-    }
-  </style>
-
-
-</section>
-
--->
 
 <!-- build:js scripts/main.min.js -->
-<script src="node_modules/socket.io-client/dist/socket.io.slim.js"></script>
+<script src="../jquery.min.js"></script>
+<script src="../jquery.signalR.min.js"></script>
 <!--<script src="plugin.js"></script>-->
 <script src="../plg-notify.min.js"></script>
-<script>
-  new plgnotify();
 
-//  new plgnotify({
-//    ws: {
-//      url: 'localhost:2200'
-//    }
-//  });
+<script type="text/javascript">
+    //    new plgnotify();
+
+    new plgnotify(
+        {
+            ws:{
+                url:'http://10.10.10.37:5020/signalr/'
+            }
+        }
+    );
 
 </script>
 <!-- endbuild -->
