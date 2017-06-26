@@ -20,7 +20,7 @@ using Notification.API.Extensions;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
-    public class GroupController : AuthUserGroupBaseController
+    public class GroupController : AuthBaseController
     {
         private const string CHAVE_ID_SISTEMA = "SystemID";
 
