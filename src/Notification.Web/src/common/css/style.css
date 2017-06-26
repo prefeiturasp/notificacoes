@@ -611,8 +611,6 @@ li.sistemas .sub-menu-sistemas li a:hover {
 li.sistemas .sub-menu-sistemas li:last-child a {
   border-bottom: 0;
 }
-
-.filtro-por-usuario{display: none}
 .admUnit{display: none}
 .dre{display: none}
 
@@ -675,4 +673,14 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   line-height: inherit;
   outline: none;
   padding: 10px 15px;
+}
+
+.panel-block{display: block !important;}
+
+.remove-transiton{
+ -webkit-transition: all 0s ease !important;
+  -moz-transition: all 0s ease !important;
+  -ms-transition: all 0s ease !important;
+  -o-transition: all 0s ease !important;
+ transition: all 0s ease !important;
 }

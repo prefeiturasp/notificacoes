@@ -15,15 +15,17 @@
     //angular.module('services').factory('HttpServices', ['Model', 'toastr', '$http', '$window',
         function HttpRegisterService(Model, toastr, $http, $window) {
 
-            function getLists(model, callback){
+            function httpModel(model, callback){
 
                 $http(model).then(function successCallback(response) {
                     callback && callback(response.data);
                 }, function errorCallback(response) {
                     if(response.data)
                         toastr.error(response.data.Message, 'Error');
+                    else
+                        toastr.error(response.statusText, 'Error');
 
-                    callback && callback([]);
+                    callback && callback(null);
                 });
             }
 
@@ -33,9 +35,9 @@
                     callback( JSON.parse(atob($window.sessionStorage.listSystem)));
                 }else {
 
-                    getLists(Model.getSystem(visionGroupId), function (res) {
+                    httpModel(Model.getSystem(visionGroupId), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if(res && res.length > 0)
                             $window.sessionStorage.listSystem = btoa(JSON.stringify(res));
                     });
                 }
@@ -47,9 +49,9 @@
                     callback( JSON.parse(atob($window.sessionStorage.listVisionSystem)));
                 }else {
 
-                    getLists(Model.getVisionSytem(), function (res) {
+                    httpModel(Model.getVisionSytem(), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if(res && res.length > 0)
                             $window.sessionStorage.listVisionSystem = btoa(JSON.stringify(res));
                     });
                 }
@@ -57,16 +59,11 @@
 
             function getListGroups(id, callback){
 
-                if($window.sessionStorage.listGroups){
-                    callback(JSON.parse(atob($window.sessionStorage.listGroups)));
-                }else {
-
-                    getLists(Model.getGroupsAU(id), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listGroups = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getGroupsAU(id), function (res) {
+                    callback(res);
+                    if(res && res.length > 0)
+                        $window.sessionStorage.listGroups = btoa(JSON.stringify(res));
+                });
             }
 
             /*-----------------------------FILTROS POR USUÁRIO------------------------------------*/
@@ -77,9 +74,9 @@
                     callback(JSON.parse(atob($window.sessionStorage.listCalendar)));
                 }else {
 
-                    getLists(Model.getCalendar(), function (res) {
+                    httpModel(Model.getCalendar(), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if(res && res.length > 0)
                             $window.sessionStorage.listCalendar = btoa(JSON.stringify(res));
                     });
                 }
@@ -91,9 +88,9 @@
                     callback(JSON.parse(atob($window.sessionStorage.listSchoolSuperior)));
                 }else {
 
-                    getLists(Model.getSchoolSuperior(visionGroupId), function (res) {
+                    httpModel(Model.getSchoolSuperior(visionGroupId), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if(res && res.length > 0)
                             $window.sessionStorage.listSchoolSuperior = btoa(JSON.stringify(res));
                     });
                 }
@@ -105,7 +102,7 @@
                     callback(JSON.parse(atob($window.sessionStorage.listSchoolClassification)));
                 }else {
 
-                    getLists(Model.getSchoolClassification(id), function (res) {
+                    httpModel(Model.getSchoolClassification(id), function (res) {
                         callback(res);
                         if(res.length > 1)
                             $window.sessionStorage.listSchoolClassification = btoa(JSON.stringify(res));
@@ -114,7 +111,7 @@
             }
 
             function getListSchool(params, callback){
-                getLists(Model.getSchool(params), function (res) {callback(res);});
+                httpModel(Model.getSchool(params), function (res) {callback(res);});
             }
 
             function getListPosition(callback){
@@ -123,9 +120,9 @@
                     callback(JSON.parse(atob($window.sessionStorage.listPosition)));
                 }else {
 
-                    getLists(Model.getPosition(), function (res) {
+                    httpModel(Model.getPosition(), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if( res && res.length > 1)
                             $window.sessionStorage.listPosition = btoa(JSON.stringify(res));
                     });
                 }
@@ -137,9 +134,9 @@
                     callback(JSON.parse(atob($window.sessionStorage.listCorse)));
                 }else {
 
-                    getLists(Model.getCorse(id), function (res) {
+                    httpModel(Model.getCorse(id), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if( res && res.length > 1)
                             $window.sessionStorage.listCorse = btoa(JSON.stringify(res));
                     });
                 }
@@ -151,9 +148,9 @@
                     callback(JSON.parse(atob($window.sessionStorage.listCorsePeriod)));
                 }else {
 
-                    getLists(Model.getCoursePeriod(params), function (res) {
+                    httpModel(Model.getCoursePeriod(params), function (res) {
                         callback(res);
-                        if(res.length > 1)
+                        if(res && res.length > 1)
                             $window.sessionStorage.listCorsePeriod = btoa(JSON.stringify(res));
                     });
                 }
@@ -165,7 +162,7 @@
                     callback(JSON.parse(atob($window.sessionStorage.listDiscipline)));
                 }else {
 
-                    getLists(Model.getDiscipline(params), function (res) {
+                    httpModel(Model.getDiscipline(params), function (res) {
                         callback(res);
                         if(res.length > 1)
                             $window.sessionStorage.listDiscipline = btoa(JSON.stringify(res));
@@ -179,12 +176,20 @@
                     callback(JSON.parse(atob($window.sessionStorage.listTeam)));
                 }else {
 
-                    getLists(Model.getTeam(params), function (res) {
+                    httpModel(Model.getTeam(params), function (res) {
                         callback(res);
                         if(res.length > 1)
                             $window.sessionStorage.listTeam = btoa(JSON.stringify(res));
                     });
                 }
+            }
+
+    /*-------------------------------------------POST----------------------------------------------------*/
+
+            function postSave(data, callback){
+                httpModel(Model.postSave(data), function (res) {
+                    callback(res);
+                });
             }
 
             return {
@@ -199,7 +204,8 @@
                 getListCorse: getListCorse,
                 getListCoursePeriod: getListCoursePeriod,
                 getListDiscipline: getListDiscipline,
-                getListTeam: getListTeam
+                getListTeam: getListTeam,
+                postSave: postSave
             }
 
         };
