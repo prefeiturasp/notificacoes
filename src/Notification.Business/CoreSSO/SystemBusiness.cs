@@ -9,10 +9,10 @@ namespace Notification.Business.CoreSSO
 {
     public class SystemBusiness
     {
-        public static IEnumerable<Notification.Entity.API.CoreSSO.System> Get(Guid userId)
+        public static IEnumerable<Notification.Entity.API.CoreSSO.System> Get(Guid userId, string temaCoreSSO)
         {
             var repository = new SystemRepository();
-            return repository.Get(userId);
+            return repository.Get(userId, temaCoreSSO);
         }
     }
 }
