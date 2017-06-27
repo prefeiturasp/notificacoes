@@ -61,6 +61,7 @@
     <Compile Include="API\CoreSSO\GroupAU.cs" />
     <Compile Include="API\CoreSSO\System.cs" />
     <Compile Include="API\CoreSSO\TypeAU.cs" />
+    <Compile Include="API\NotificationPlugin.cs" />
     <Compile Include="API\Notification.cs" />
     <Compile Include="API\Recipient.cs" />
     <Compile Include="API\SGP\Calendar.cs" />

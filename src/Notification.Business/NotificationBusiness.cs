@@ -1,4 +1,5 @@
-﻿using Notification.Repository;
+﻿using Notification.Entity.API;
+using Notification.Repository;
 using Notification.Repository.CoreSSO;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,18 @@ namespace Notification.Business
             var Id = notRep.InsertOne(entityNotification);
 
             return Id;
+        }
+
+        public static NotificationPlugin GetById(Guid id)
+        {
+            var repository = new NotificationRepository();
+            return repository.GetById(id);
+        }
+
+        public static IEnumerable<NotificationPlugin> GetByUserId(Guid userId)
+        {
+            var repository = new NotificationRepository();
+            return repository.GetByUserId(userId);
         }
     }
 }

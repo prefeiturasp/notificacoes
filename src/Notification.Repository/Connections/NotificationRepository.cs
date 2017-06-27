@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,13 @@ namespace Notification.Repository.Connections
         public NotificationRepository()
         {
             stringConnection = Connection.Get("Notification");
+            BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
 
             var database = new MongoUrlBuilder(stringConnection).DatabaseName;            
-            var client = new MongoClient(stringConnection);
+            var client = new MongoClient(stringConnection);            
             
-            var db = client.GetDatabase(database);
-            Collection = db.GetCollection<T>(typeof(T).Name.ToLower());
+            var db = client.GetDatabase(database);            
+            Collection = db.GetCollection<T>(typeof(T).Name.ToLower());            
         }        
     }
 }
