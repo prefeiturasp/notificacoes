@@ -77,6 +77,8 @@
     <Compile Include="API\SGP\Team.cs" />
     <Compile Include="API\SystemRecipient.cs" />
     <Compile Include="API\TeacherRecipient.cs" />
+    <Compile Include="Database\DelayTime.cs" />
+    <Compile Include="Database\DisturbTime.cs" />
     <Compile Include="Database\Log.cs" />
     <Compile Include="Database\LogException.cs" />
     <Compile Include="Database\Notification.cs" />
