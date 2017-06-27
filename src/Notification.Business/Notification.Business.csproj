@@ -71,6 +71,8 @@
     <Compile Include="CoreSSO\GroupAUBusiness.cs" />
     <Compile Include="CoreSSO\GroupBusiness.cs" />
     <Compile Include="CoreSSO\SystemBusiness.cs" />
+    <Compile Include="DelayTimeBusiness.cs" />
+    <Compile Include="DisturbTimeBusiness.cs" />
     <Compile Include="LogBusiness.cs" />
     <Compile Include="NotificationBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
