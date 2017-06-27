@@ -1,6 +1,7 @@
 ﻿using Notification.Business;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,6 +19,7 @@ namespace Notification.API.Areas.v1
         {
             try
             {
+                string urlImgLogoCore = ConfigurationManager.AppSettings["IdentityServer"];
                 NotificationBusiness.Save(claimData.UserId, claimData.GroupId, entity);
                 return Request.CreateResponse(HttpStatusCode.Created);
             }

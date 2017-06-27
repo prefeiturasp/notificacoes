@@ -24,6 +24,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
+
                 var result = SystemBusiness.Get(claimData.UserId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
