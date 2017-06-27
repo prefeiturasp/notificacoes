@@ -81,6 +81,11 @@
             return Config.API + Config.APISGP + url;
         };
 
+        app.base_url_APINotification = function __base_url(url) {
+            url = url || "";
+            return Config.API + Config.APINotification + url;
+        };
+
         /**
          * @function retorna window.origin com path concatenado
          * @name windowLocation

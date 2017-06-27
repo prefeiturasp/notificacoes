@@ -16,7 +16,7 @@ namespace Notification.Repository.SGP
         /// Retorna docentes baseados em filtros.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Teacher> Get(Guid userId, Guid groupId, IEnumerable<int> listCalendar,  IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> listSchool, IEnumerable<int> listPosition)
+        public IEnumerable<Teacher> Get(Guid userId, Guid groupId, IEnumerable<string> listCalendar,  IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> listSchool, IEnumerable<int> listPosition)
         {
             using (var context = new SqlConnection(stringConnection))
             {
@@ -125,7 +125,7 @@ namespace Notification.Repository.SGP
                             ON pes.pes_id= usu.pes_id
                     WHERE
 	                    col.col_situacao <> 3
-	                    AND esc.uad_id IN Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)");
+	                    AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (listCalendar != null && listCalendar.Any())
                     sb.Append(" AND cal.cal_id IN @idsCalendario");

@@ -6,6 +6,7 @@ var Config = {
     IDENTITY: 'http://localhost:5001/identity',
     API: "http://10.10.10.37:5019/",
     APICoreSSO: "api/CoreSSO/v1",
+    APINotification: 'api/v1/Notification',
     APISGP: "api/SGP/v1",
     OIDCCLIENT: {
         authority: "http://10.10.10.37:5000",
