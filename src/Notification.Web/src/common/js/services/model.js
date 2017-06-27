@@ -36,7 +36,7 @@
             }
 
             function getSchoolSuperior(visionGroupId) {
-                return getheaders('GET', visionGroupId, $util.base_url_APISGP('/SchoolSuperior?groupSid=' + visionGroupId));
+                return getheaders('GET', visionGroupId, $util.base_url_APISGP('/SchoolSuperior'));
             }
 
             function getSchoolClassification(id) {
@@ -44,7 +44,7 @@
             }
 
             function getSchool(params) {
-                return getheaders('GET', null, $util.base_url_APISGP('/School?groupSid='+ params.groupSid +'&schoolSuperiorId=' + params.schoolSuperior));
+                return getheaders('GET', params.groupSid, $util.base_url_APISGP('/School?schoolSuperiorId=' + params.schoolSuperior ));
             }
 
             function getPosition() {
@@ -67,14 +67,19 @@
                 return getheaders('GET', null, $util.base_url_APISGP('/Team?calendarId='+ params +'&schoolSuperiorId='+ params +'&schoolClassificationId='+ params +'&schoolId='+ params +'&courseId='+ params +'&coursePeriodId='+ params +'&disciplineId='+ params));
             }
 
-            function getheaders(_method, visionGroupId,  _url) {
+            function postSave(data) {
+                return getheaders('POST', null, $util.base_url_APINotification(), data);
+            }
+
+            function getheaders(_method, visionGroupId,  _url, data) {
 
                 var method = {
                                 method: _method,
                                 url: _url,
                                 "headers": {"Authorization": $util.getKey() + " " + $util.getAccessToken() }
                             };
-                //if(visionGroupId) {method.headers.groupSid = visionGroupId;}
+                if(visionGroupId) {method.headers.groupSid = visionGroupId;}
+                if(data) {method.data = data;}
 
                 return method;
             }
@@ -91,7 +96,8 @@
             getCorse: getCorse,
             getCoursePeriod: getCoursePeriod,
             getDiscipline: getDiscipline,
-            getTeam: getTeam
+            getTeam: getTeam,
+            postSave: postSave
         }
 
     }

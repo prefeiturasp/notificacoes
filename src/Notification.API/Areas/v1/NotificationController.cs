@@ -1,4 +1,5 @@
 ﻿using Notification.Business;
+using Notification.Entity.API;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,13 +16,55 @@ namespace Notification.API.Areas.v1
         [HttpPost]
         [Route("api/v1/Notification")]
         [ResponseType(typeof(Notification.Entity.API.Notification))]
-        public HttpResponseMessage Get(Notification.Entity.API.Notification entity)
+        public HttpResponseMessage Save(Notification.Entity.API.Notification entity)
         {
             try
             {
                 string urlImgLogoCore = ConfigurationManager.AppSettings["IdentityServer"];
                 NotificationBusiness.Save(claimData.UserId, claimData.GroupId, entity);
                 return Request.CreateResponse(HttpStatusCode.Created);
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/Notification/{id:guid}")]
+        [ResponseType(typeof(Notification.Entity.API.NotificationPlugin))]
+        public HttpResponseMessage GetById(Guid id)
+        {
+            try
+            {
+                var result = NotificationBusiness.GetById(id);
+
+                if (result == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                else
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/v1/Notification/")]
+        [ResponseType(typeof(IEnumerable<NotificationPlugin>))]
+        public HttpResponseMessage GetByUserId(Guid Userid)
+        {
+            try
+            {
+                var result = NotificationBusiness.GetByUserId(Userid);
+
+                if (result == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+                else
+                    return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
             {

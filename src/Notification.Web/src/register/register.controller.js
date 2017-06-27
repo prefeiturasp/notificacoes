@@ -10,19 +10,20 @@
         .controller("RegisterController", RegisterController);
 
     //Injectors
-    RegisterController.$inject = ['$scope', 'toastr', '$util', 'HttpServices', '$window'];
+    RegisterController.$inject = ['$scope', 'toastr', '$util', 'HttpServices', '$window', '$timeout'];
 
     /**
      * @namespace RegisterController
      * @desc Controller da página Register
      * @memberOf Controller
      */
-    function RegisterController($scope, toastr, $util, HttpServices, $window) {
+    function RegisterController($scope, toastr, $util, HttpServices, $window, $timeout) {
 
         $scope.load = true;
         $scope.modalOpen = false;
         $scope.redirect = false;
-        var body = $('body')[0];
+        var body = $('body')[0], redactor;
+        $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
 
         /**
          * Contructor
@@ -30,19 +31,24 @@
         function initialize() {
 
             $scope.filters = {
-                filters:[],
-                sendersName: "",
-                messageType: "",
-                sendDate: "",
-                expirationDate: "",
-                message: "",
-                title: ""
+                Recipient:[],
+                SenderName: null,
+                MessageType: null,
+                DateStartNotification: null,
+                DateEndNotification: null,
+                Message: "",
+                Title: null
             };
 
+            $scope.listRecipient = [];
+
             $scope.showTypeFilter ={
-                typeVision: true,
+                typeVision: false,
                 typeSystem: false,
-                typeUser: false
+                typeUser: false,
+                typeAccordionSys: false,
+                typeAccordionUser: false,
+                typeModalTypeUser: false
             };
 
             $scope.typeFilter = {
@@ -53,7 +59,6 @@
             };
 
             $scope.listVisionSystem = [];
-            $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
 
             new plgnotify({
@@ -62,15 +67,15 @@
                 }
             });
 
-            declareVariables();
-            startRedactor();
-            accordion();
-
             //ve se o usúario já escolheu umtipo de grupo
             if($scope.VisionSystem.length == 0) {
                 getVisionSystem();
             }else{
                 $scope.showTypeFilter.typeVision = false;
+                $timeout(function(){
+                    declareVariables();
+                    startRedactor();
+                },0);
                 removeLoad();
             }
         }
@@ -88,26 +93,34 @@
             };
 
             $scope.limitCharRedactor = 300;
-            $scope.listSystem = [];
 
             //variaveis de lista de filtros por sistema
+            $scope.listSystem = [];
             $scope.listGroups = [];
             $scope.listDREs = [];
             $scope.AdministrativeUnits = [];
 
             //variaveis de lista de filtros por usuários
             $scope.listCalendar = [];
+            $scope.listCorse = [];
+            $scope.YearSelected = null;
+            $scope.typeUser = null;
 
+            $scope.SystemRecipientClone = {
+                SystemId: null,
+                GroupId: null,
+                AdministrativeUnitSuperior: null,
+                AdministrativeUnit: null
+            };
 
-            $scope.system = {
-                systemType: [],
-                Group:[],
-                DREs: [],
+            $scope.SystemRecipient = {
+                SystemId: [],
+                GroupId: [],
+                AdministrativeUnitSuperior: [],
                 AdministrativeUnit: []
             };
 
-            $scope.User = {
-                UserType: null,
+            $scope.TeacherRecipient = {
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -116,6 +129,13 @@
                 CoursePeriod:[],
                 Discipline:[],
                 Team:[]
+            };
+
+            $scope.ContributorRecipient = {
+                SchoolSuperior:[],
+                SchoolClassification:[],
+                School:[],
+                Position:[]
             };
 
         }
@@ -163,6 +183,8 @@
                 $(".redactor-dropdown-orderedlist").text('Lista ordenada');
             });
 
+            redactor = $(".redactor-layer-img-edit");
+
 
             //limita a quantidade de  caracteras usando cltr+v
             //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
@@ -200,6 +222,7 @@
          *
          */
         $scope.closeVisionGroupSystem = function __closeVisionGroupSystem(){
+            startRedactor();
             closeModal();
             $scope.showTypeFilter.typeVision = false;
         };
@@ -209,14 +232,15 @@
          * @param {Int} id - id da posição do registro dentro do objeto - $scope.filters.filters
          */
         $scope.removeFilterSelected = function __removeFilterSelected(id){
-            $scope.filters.filters.splice(id, 1);
+            $scope.filters.Recipient.splice(id, 1);
+            $scope.listRecipient.splice(id, 1);
         };
 
         /**
          * Seleciona tipo da mensagem ex: baixa, média, alta ou urgente
          * @param {Event} e
          */
-        $scope.selectMessageType = function __selectMessageType(e){
+        $scope.selectMessageType = function __selectMessageType(e, Id){
 
             var p = document.getElementsByClassName('type-message'),
                 checkSelected = document.getElementsByClassName('fa-check'),
@@ -225,7 +249,11 @@
             angular.element(p).addClass('off');
             angular.element(checkSelected).remove();
             angular.element(e.currentTarget).append(check).removeClass('off');
-            $scope.filters.messageType = angular.element(e.currentTarget).text();
+            $scope.filters.MessageType = Id;
+        };
+
+        $scope.selectedTtypeUser = function __selectedTtypeUser(type){
+            $scope.typeUser = type;
         };
 
         /**
@@ -233,8 +261,8 @@
          * @param {Event} e
          */
         $scope.openFilterTypeUser = function __openFilterTypeUser(e){
-            if($scope.User.UserType) {
-                getCalendar();
+            if($scope.typeUser) {
+                $scope.showTypeFilter.typeModalTypeUser = false;
             }else{
                 toastr.warning("Selecione um tipo de usuário!");
             }
@@ -245,6 +273,9 @@
          * @param {Event} e
          */
         $scope.openModalUser = function __openModalUser(e){
+            getCalendar();
+            $scope.showTypeFilter.typeUser = true;
+            $scope.showTypeFilter.typeModalTypeUser = true;
 
         };
 
@@ -281,15 +312,14 @@
 
         };
 
-        $scope.checkVisionUser = function checkVisionUser( arr, type){
+        $scope.checkVisionUser = function checkVisionUser(arr, type){
 
-            if( arr && arr.Name && ($scope.VisionSystem.VisionId != type) ){
+            if( arr && arr.length > 0 && ($scope.VisionSystem.VisionId != type) ){
                 return true;
             }else{
                 return false;
             }
-
-        }
+        };
 
         /*--------------------------------------FILTROS POR SISTEMA----------------------------------------*/
 
@@ -300,8 +330,16 @@
 
             HttpServices.getListVisionSystem(function(data){
                 $scope.listVisionSystem = data;
-                openModal();
-                removeLoad();
+                if(data.length > 1) {
+
+                    $scope.showTypeFilter.typeVision = true;
+                    declareVariables();
+                    getCalendar();
+                    removeLoad();
+                    openModal();
+                }else{
+                    $scope.VisionSystem = $scope.listVisionSystem[0]
+                }
             });
         }
 
@@ -317,10 +355,10 @@
                     $scope.showFilter.showSystem = true;
                     $scope.showTypeFilter.typeSystem = true;
                     openModal();
+                   // getDREs();
                 }else{
                     toastr.warning("Não existe uma lista de sistemas cadastrada!");
                 }
-                removeLoad();
             });
         }
 
@@ -329,14 +367,14 @@
          */
         function getGroups(){
             addLoad();
-            HttpServices.getListGroups($scope.system.systemType.Id,
+            HttpServices.getListGroups($scope.SystemRecipient.SystemId[0],
                 function(data){
                     $scope.listGroups = data;
 
-                    if($scope.listGroups.length > 1) {
+                    if($scope.listGroups && $scope.listGroups.length > 1) {
                         $scope.showFilter.showSystem = false;
                         $scope.showFilter.showGroup = true;
-                    }else{
+                    }else if($scope.listGroups && $scope.listDREs.listGroups ==  0){
                         toastr.warning("Não existe uma lista de grupo cadastrada!");
                     }
                     removeLoad();
@@ -345,15 +383,15 @@
         }
 
         function getDREs(){
-            addLoad();
             HttpServices.getListSchoolSuperior($scope.VisionSystem.Id,
                 function(data){
                     $scope.listDREs = data;
 
-                    if($scope.listDREs.length > 1) {
-                        $scope.showFilter.showGroup = false;
-                        $scope.showFilter.showDRE = true;
-                    }else{
+                    //if($scope.listDREs && $scope.listDREs.length > 1) {
+                    //    $scope.showFilter.showGroup = false;
+                    //    $scope.showFilter.showDRE = true;
+                    //}else
+                    if($scope.listDREs && $scope.listDREs.length ==  0){
                         toastr.warning("Não existe uma lista de DREs cadastrada!");
                     }
                     removeLoad();
@@ -367,17 +405,17 @@
             addLoad();
 
             var params = {
-                schoolSuperior: $scope.system.DREs.Id,
+                schoolSuperior: $scope.SystemRecipient.AdministrativeUnitSuperior[0],
                 groupSid: $scope.VisionSystem.Id
             };
 
             HttpServices.getListSchool( params,
                 function(data){
                     $scope.AdministrativeUnits = data;
-                    if($scope.AdministrativeUnits.length > 1) {
+                    if($scope.AdministrativeUnits && $scope.AdministrativeUnits.length > 0) {
                         $scope.showFilter.showDRE = false;
-                        openNextFilterModal(admUnit);
-                    }else{
+                        $scope.showFilter.showShool = true;
+                    }else if($scope.AdministrativeUnits && $scope.AdministrativeUnits.listGroups ==  0){
                         toastr.warning("Não existe nem uma lista de unidades administrativas cadastrada!");
                     }
                     removeLoad();
@@ -390,6 +428,16 @@
             addLoad();
             HttpServices.getListCalendar(function(data){
                 $scope.listCalendar = data;
+
+                if($scope.listCalendar && $scope.listCalendar.length ==  0){
+                    toastr.warning("Não existe uma lista de de datas!");
+                }else{
+                    $scope.YearSelected = $scope.listCalendar[$scope.listCalendar.length - 1];
+                    getCorse();
+                }
+
+
+
                 removeLoad();
             });
         }
@@ -410,6 +458,14 @@
             });
         }
 
+        function getCorse(){
+            addLoad();
+            HttpServices.getListCorse($scope.YearSelected.Name, function(data){
+                $scope.listCorse = data;
+                removeLoad();
+            });
+        }
+
         /*--------------------------------------FIM DOS FILTROS POR USUÁRIO----------------------------------------*/
 
         /**
@@ -419,11 +475,17 @@
         $scope.selectedSystemGroup = function __selectedSystemGroup(type, obj){
 
             if(type =='system') {
-                $scope.system.systemType = obj;
+                $scope.SystemRecipient.SystemId.push(obj.Id);
+                $scope.SystemRecipientClone.SystemId = obj;
             }else if(type =='group') {
-                $scope.system.Group = obj;
+                $scope.SystemRecipient.GroupId.push(obj.Id);
+                $scope.SystemRecipientClone.GroupId = obj;
             }else if(type == 'dre'){
-                $scope.system.DREs = obj;
+                $scope.SystemRecipient.AdministrativeUnitSuperior.push(obj.Id);
+                $scope.SystemRecipientClone.AdministrativeUnitSuperior = obj;
+            }else{
+                $scope.SystemRecipient.AdministrativeUnit.push(obj.Id);
+                $scope.SystemRecipientClone.AdministrativeUnit = obj;
             }
         };
 
@@ -464,6 +526,57 @@
             declareVariables();
         };
 
+        $scope.sendNotification = function __sendNotification(){
+
+            if(!$scope.filters.SenderName){
+                toastr.warning("Digite seu nome!");
+                return;
+            }else if($scope.filters.Recipient.length == 0){
+                toastr.warning("Não existe filtros selecionados!");
+                return;
+            }else if(!$scope.filters.MessageType){
+                toastr.warning("Selecione o tipo da mensagem!");
+                return;
+            }else if(!$scope.filters.DateStartNotification){
+                toastr.warning("Informe a data de envio da notificação!");
+                return;
+            }else if(!$scope.filters.DateEndNotification){
+                toastr.warning("Informe a data de validade da notificação!");
+                return;
+            }else if(!$scope.filters.Title){
+                toastr.warning("Digite o titulo da notificação!");
+                return;
+            }else if(getMessage()){
+                toastr.warning("Digite a mensagem!");
+                return;
+            }else{
+                saveNotification();
+            }
+
+        };
+
+        function getMessage(){
+            var redactorChildren = $(redactor.children());
+            if(redactorChildren.text().length > 0){
+                redactorChildren.each(function( index ) {
+                    $scope.filters.Message += '<p>' + $( this ).html() + '</p>'
+                });
+                return false;
+            }else{
+                return true;
+            }
+
+        }
+
+        function saveNotification(){
+
+            addLoad();
+            HttpServices.postSave($scope.filters, function(data){
+                console.log(data);
+                removeLoad();
+            });
+        }
+
         /**
          *
          * @param {Event} e -
@@ -471,7 +584,7 @@
          */
         $scope.emitFilters = function __emitFilters(e, isfilter, type){
 
-            var arr = $scope.filters.filters;
+            var arr = $scope.filters.Recipient;
 
             for(var index in arr) {
                 if (angular.equals(isfilter, arr[index][type])){
@@ -480,34 +593,33 @@
                     return;
                 }
             }
-
-            $scope.filters.filters.push(angular.copy($scope.system));
+            $scope.showTypeFilter.typeAccordionSys = true;
+            $scope.filters.Recipient.push(angular.copy($scope.SystemRecipient));
+            $scope.listRecipient.push(angular.copy($scope.SystemRecipientClone));
             $scope.closeModal(null, "system");
 
         };
 
-        function accordion(){
+        $scope.openCloseAccordion = function __openCloseAccordion(typeAccordion){
 
-            var i, acc = document.getElementsByClassName("accordion");
-            for (i = 0; i < acc.length; i++) {
-                acc[i].onclick = function(){
-                    /* Toggle between adding and removing the "active" class,
-                     to highlight the button that controls the panel */
-                    this.classList.toggle("active");
+            var i, label, flag = false, max = $scope.filters.Recipient.length;
 
-                    /* Toggle between hiding and showing the active panel */
-                    var panel = this.nextElementSibling;
-                    if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                    } else if(angular.element(panel).children().length > 0) {
-                        panel.style.display = "block";
-                    }else{
-                        toastr.warning("Nem um filtro foi selecionado!");
-                    }
-                }
+            typeAccordion == 'typeAccordionSys' ? label = 'sistema' :label = 'usuário'
+
+            for(i = 0; i < max; i++){
+               if($scope.filters.Recipient[i].SystemId && typeAccordion == 'typeAccordionSys'){
+                   flag = true;
+               }else if($scope.filters.Recipient[i] && typeAccordion == 'typeAccordionUser'){
+                   flag = true;
+               }
             }
 
-        }
+            if(!flag) {
+                toastr.warning("Nem um filtro por "+ label +" foi selecionado!");
+            }else{
+                $scope.showTypeFilter[typeAccordion] = !$scope.showTypeFilter[typeAccordion];
+            }
+        };
 
         addLoad();
         /**

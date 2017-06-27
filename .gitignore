@@ -250,3 +250,8 @@ ModelManifest.xml
 # Plugin notificação
 /src/Notification.Web/src/common/js/lib/plg-notify/basic.html
 /src/Notification.Web/src/common/js/lib/plg-notify/package-lock.json
+/src/Notification.Web/src/common/js/lib/plg-notify/css.css
+/src/Notification.Web/src/common/js/lib/plg-notify/html.templates.html
+/src/Notification.Web/src/common/js/lib/plg-notify/html.min.html
+/src/Notification.Web/src/common/js/lib/plg-notify/css.min.css
+!/src/Notification.Web/src/common/js/lib/plg-notify.min.js
