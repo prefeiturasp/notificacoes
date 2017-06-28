@@ -86,6 +86,11 @@
             return Config.API + Config.APINotification + url;
         };
 
+        app.base_url = function __base_url(url) {
+            url = url || "";
+            return Config.API + url;
+        };
+
         /**
          * @function retorna window.origin com path concatenado
          * @name windowLocation

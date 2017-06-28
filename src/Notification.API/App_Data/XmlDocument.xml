@@ -537,6 +537,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Notification.API.Areas.v1.ConfigurationController.GetTimeStamp">
+            <summary>
+            Retorna data no formato timestamp unixTime (quantos segundos houveram de 1/1/1970 até o dia de hoje)
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Notification.API.Extensions.UserIdentityExtension">
             <summary>
             classe extendendo o Identity. Por hora não está sendo utilizada. Avaliar quando houver persistência do identity no BD para API.

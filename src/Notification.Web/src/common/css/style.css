@@ -12,11 +12,12 @@ body {
   /*box-sizing: border-box;*/
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
-  -webkit-transition: all .3s ease;
-  -moz-transition: all .3s ease;
-  -ms-transition: all .3s ease;
-  -o-transition: all .3s ease;
-  transition: all .3s ease; }
+  /*-webkit-transition: all .3s ease;*/
+  /*-moz-transition: all .3s ease;*/
+  /*-ms-transition: all .3s ease;*/
+  /*-o-transition: all .3s ease;*/
+  /*transition: all .3s ease; */
+}
 
 p {
   color: #93a6af;
@@ -669,7 +670,7 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   border-top: 0;
   vertical-align: middle;
   display: inline-block;
-  width: 100%;
+  width: 101.2%;
   line-height: inherit;
   outline: none;
   padding: 10px 15px;
@@ -683,4 +684,22 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   -ms-transition: all 0s ease !important;
   -o-transition: all 0s ease !important;
  transition: all 0s ease !important;
+}
+
+.accordion-filters-selected{
+  vertical-align: middle;
+  padding: 8px 20px;
+  display: inline-block;
+  background: #f4f6f7;
+  border: 1px solid #93a6af;
+  border-radius: 30px;
+  position: relative;
+  margin-right: 25px;
+  font-size: 1.4rem;
+}
+
+.lista-destinatarios{
+  text-align: center;
+  background-color: #e4e4e4;
+  color: black;
 }

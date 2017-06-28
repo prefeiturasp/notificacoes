@@ -58,12 +58,15 @@
             }
 
             function getListGroups(id, callback){
-
                 httpModel(Model.getGroupsAU(id), function (res) {
                     callback(res);
                     if(res && res.length > 0)
                         $window.sessionStorage.listGroups = btoa(JSON.stringify(res));
                 });
+            }
+
+            function getListUnitAdministrative(params, callback){
+                httpModel(Model.getUnitAdministrative(params), function (res) {callback(res);});
             }
 
             /*-----------------------------FILTROS POR USUÁRIO------------------------------------*/
@@ -96,18 +99,11 @@
                 }
             }
 
-            function getListSchoolClassification(id, callback){
+            function getListSchoolClassification(params, callback){
 
-                if($window.sessionStorage.listSchoolClassification){
-                    callback(JSON.parse(atob($window.sessionStorage.listSchoolClassification)));
-                }else {
-
-                    httpModel(Model.getSchoolClassification(id), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listSchoolClassification = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getSchoolClassification(params), function (res) {
+                    callback(res);
+                });
             }
 
             function getListSchool(params, callback){
@@ -184,6 +180,12 @@
                 }
             }
 
+            function getTimeStamp(callback){
+                httpModel(Model.getTimeStamp(), function (res) {
+                    callback(res);
+                });
+            }
+
     /*-------------------------------------------POST----------------------------------------------------*/
 
             function postSave(data, callback){
@@ -205,7 +207,9 @@
                 getListCoursePeriod: getListCoursePeriod,
                 getListDiscipline: getListDiscipline,
                 getListTeam: getListTeam,
-                postSave: postSave
+                postSave: postSave,
+                getListUnitAdministrative: getListUnitAdministrative,
+                getTimeStamp: getTimeStamp
             }
 
         };
