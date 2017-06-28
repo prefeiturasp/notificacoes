@@ -1,7 +1,15 @@
     <div class="loading" ng-if="load"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></div>
     <menu ng-show="redirect"></menu>
 
-    <section class="body-content" ng-show="redirect">
+    <section class="body-content"  ng-if="VisionSystem.VisionId == 4">
+        <div class="headerCustom">
+            <div class="max-width-menor">
+                <h4><i class="fa fa-bell-o" aria-hidden="true"></i> CADASTRO DE NOTIFICAÇÃO<span> <strong>Usuários do tipo individual não tem permissão para acessar o sistema de notificação!</strong></span></h4>
+            </div>
+        </div>
+    </section>
+
+    <section class="body-content" ng-show="redirect" ng-if="VisionSystem.VisionId != 4">
         <alert></alert>
 
         <div class="headerCustom">
@@ -12,49 +20,44 @@
 
         <div class="remetente">
             <div class="max-width-menor">
-                <input type="text" placeholder="Digite o nome do remetente" ng-model="filters.sendersName" maxlength="150">
+                <input type="text" placeholder="Digite o nome do remetente" ng-model="filters.SenderName" maxlength="150">
             </div>
         </div>
         <!--filtro por usuario-->
-        <div class="filtro-modal filtro-user">
+        <div class="filtro-modal" ng-class="{'abre': showTypeFilter.typeUser, 'some': !showTypeFilter.typeUser}">
           <div class="setas">
             <span class="seta"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
             <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
           </div>
 
-          <div class="filtro-conteudo user-modal">
+          <div class="filtro-conteudo" ng-class="{'aparece': showTypeFilter.typeModalTypeUser, 'some': !showTypeFilter.typeModalTypeUser}">
             <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
             <h2>Escolha o tipo de usuário</h2>
             <ul>
-              <li><input type="radio" class="primeiro" name="sistemas" value="Docente" ng-model="User.UserType">Docente</li>
-              <li><input type="radio" class="primeiro" name="sistemas" value="Colaborador" ng-model="User.UserType">Colaborador</li>
+                <li><input type="radio" class="primeiro" name="sistemas" value="Docente" ng-click="selectedTtypeUser('Docente')">Docente</li>
+                <li><input type="radio" class="primeiro" name="sistemas" value="Colaborador" ng-click="selectedTtypeUser('Colaborador')">Colaborador</li>
             </ul>
             <a class="continuar" ng-click="openFilterTypeUser($event)">Continuar filtro</a>
-          </div>
-
-          <div class="filtro-conteudo filtro-por-usuario">
+        </div>
+            <!--usuário docente-->
+          <div class="filtro-conteudo filtro-por-usuario" ng-class="{'aparece': showTypeFilter.typeUserTeacher, 'some': !showTypeFilter.typeUserTeacher}">
               <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
             <h2>Filtro por tipo de usuário: Docente</h2>
-              <!--<select ng-options="item as item.label for item in listCalendar track by item.Id" ng-model="selected"></select>-->
-            <!--<select>-->
-              <!--<option value="2017">2017</option>-->
-              <!--<option value="2016">2016</option>-->
-            <!--</select>-->
+              <select ng-options="item as item.Name for item in listCalendar track by item.Id" ng-model="YearSelected"></select>
             <div class="por-usuario">
                 <div class="divisao-filtro">
                   <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">DRE</h3>
                   <ul>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="DRE" checked>DRE</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="dre1">dre1</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="dre2">dre2</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="dre3">dre3</li>
+                    <li ng-repeat="item in listDREs">
+                        <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(item)">{{item.Name}}
+                    </li>
                   </ul>
                 </div>
 
                 <div class="divisao-filtro">
                   <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Classificação</h3>
                   <ul>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação1">classificação1</li>
+                    <li><input type="checkbox" class="primeiro" name="Classificação" value="classificação1">classificação1</li>
                     <li><input type="checkbox" class="primeiro" name="grupos" value="classificação2">classificação2</li>
                     <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
                     <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
@@ -79,10 +82,9 @@
                 <div class="divisao-filtro">
                   <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Cargo</h3>
                   <ul>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="Cargo">Cargo</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="cargo1">cargo1</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="cargo2">cargo2</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="cargo3">cargo3</li>
+                    <li ng-repeat="item in listPosition">
+                        <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}">{{item.Name}}
+                    </li>
                   </ul>
                 </div>
             </div>
@@ -90,10 +92,9 @@
                   <div class="divisao-filtro">
                       <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Curso</h3>
                       <ul>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="DRE" checked>DRE</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="dre1">dre1</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="dre2">dre2</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="dre3">dre3</li>
+                          <li ng-repeat="item in listCorse">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}">{{item.Name}}
+                          </li>
                       </ul>
                   </div>
 
@@ -132,10 +133,74 @@
                       </ul>
                   </div>
               </div>
-            <a class="continuar">Continuar filtro</a>
+              <a class="enviar" ng-click="emitFiltersUser(TeacherRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
           </div>
+
+            <!--usuário colaborador-->
+          <div class="filtro-conteudo filtro-por-usuario" ng-class="{'aparece': showTypeFilter.typeUserContributor, 'some': !showTypeFilter.typeUserContributor}">
+                <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>Filtro por tipo de usuário: Colaborador</h2>
+                <div class="por-usuario">
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="DRE" value="DRE" ng-checked="change.checkedDRE" ng-click="searchDREs()">DRE</h3>
+                        <ul>
+                            <li ng-repeat="item in listDREs" ng-if="!change.checkedDRE">
+                                <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolSuperior, item); reloadListClassification()">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedDRE">
+                                <input type="checkbox" class="primeiro" name="DRE" value="todas" checked disabled>Todas DREs
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="Classificação" value="Classificação" ng-checked="change.checkedClassification" ng-click="searchSchoolClassification();">Classificação</h3>
+                        <ul>
+                            <li ng-repeat="item in listListSchoolClassification" ng-if="!change.checkedClassification">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolClassification, item); reloadListSchool()">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedClassification">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas Classificações
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="por-usuario">
+
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool" ng-click="searchSchool()">Escola</h3>
+                        <ul>
+                            <li  ng-repeat="item in listSchool" ng-if="!change.checkedSchool">
+                                <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.School, item)">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedSchool">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas as Escolas
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getPosition()">Cargo</h3>
+                        <ul>
+                            <li ng-repeat="item in listPosition" ng-if="!change.checkedPosition">
+                                <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedPosition">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todos os Cargo
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <a class="enviar" ng-click="emitFiltersUser('ContributorRecipient', ContributorRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i>Enviar</a>
+            </div>
         </div>
 
+        <!--filtro por tipo de usuario-->
         <div class="filtro-modal" ng-class="{'abre': showTypeFilter.typeVision, 'some': !showTypeFilter.typeVision}">
             <div class="setas">
                 <span class="seta"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
@@ -145,11 +210,11 @@
             <div class="filtro-conteudo aparece">
                 <h2>Grupos de Sistemas</h2>
                 <ul>
-                    <li ng-repeat="vision in listVisionSystem">
+                    <li ng-repeat="vision in listVisionSystem" ng-if="vision.VisionId != 4">
                         <input type="radio" class="primeiro" name="sistemas" value="{{vision}}" ng-click="selectedVisionGroupSystem(vision)">{{vision.Name}}
                     </li>
                 </ul>
-                <a class="continuar" ng-if="VisionSystem.Name" ng-click="closeVisionGroupSystem()">Continuar filtro</a>
+                <a class="continuar" ng-if="VisionSystem.Name" ng-click="closeVisionGroupSystem()">Ferchar</a>
             </div>
         </div>
 
@@ -167,10 +232,10 @@
                         <input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystemGroup('system', systemType)">{{systemType.Name}}
                     </li>
                 </ul>
-                <a class="enviar" ng-if="system.systemType.Name" ng-click="emitFilters($event, system.systemType, 'systemType')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-if="checkVisionUser(system.systemType)" ng-click="nextFilterSytem(typeFilter.system)">Continuar filtro</a>
+                <a class="enviar" ng-if="SystemRecipient.SystemId.length > 0" ng-click="emitFilters($event, SystemRecipient.SystemId, 'systemType')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipient.SystemId)" ng-click="nextFilterSytem(typeFilter.system)">Continuar filtro</a>
             </div>
-            <div class="filtro-conteudo grup" ng-class="{'aparece': showFilter.showGroup, 'some': !showFilter.showGroup}">
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showGroup, 'some': !showFilter.showGroup}">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Grupos</h2>
                 <ul>
@@ -178,11 +243,11 @@
                         <input type="radio" class="primeiro" name="grupos" value="{{keyGroup.Name}}" ng-click="selectedSystemGroup('group', keyGroup)" >{{keyGroup.Name}}
                     </li>
                 </ul>
-                <a class="enviar" ng-if="system.Group.Name" ng-click="emitFilters($event, system.Group, 'Group')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-if="checkVisionUser(system.Group, 1)" ng-click="nextFilterSytem(typeFilter.group)">Continuar filtro</a>
+                <a class="enviar" ng-if="SystemRecipient.GroupId.length > 0" ng-click="emitFilters($event, SystemRecipient.GroupId, 'Group')"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipient.GroupId, 1)" ng-click="nextFilterSytem(typeFilter.group)">Continuar filtro</a>
             </div>
 
-            <div class="filtro-conteudo dre" ng-class="{'aparece': showFilter.showDRE, 'some': !showFilter.showDRE}">
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showDRE, 'some': !showFilter.showDRE}">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>DREs</h2>
                 <ul>
@@ -190,19 +255,19 @@
                         <input type="radio" class="primeiro" name="grupos" value="{{dre.Name}}" ng-click="selectedSystemGroup('dre', dre)">{{dre.Name}}
                     </li>
                 </ul>
-                <a class="enviar" ng-click="emitFilters($event, system.DREs)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-if="checkVisionUser(system.DREs, 2)" ng-click="nextFilterSytem(typeFilter.dre)">Continuar filtro</a>
+                <a class="enviar" ng-if="SystemRecipient.AdministrativeUnitSuperior.length > 0" ng-click="emitFilters($event, SystemRecipient.AdministrativeUnitSuperior)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipient.AdministrativeUnitSuperior, 2)" ng-click="nextFilterSytem(typeFilter.dre)">Continuar filtro</a>
             </div>
 
-            <div class="filtro-conteudo admUnit">
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showShool, 'some': !showFilter.showShool}">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <h2>Unidade administrativa</h2>
                 <ul>
                     <li ng-repeat="adm in AdministrativeUnits">
-                        <input type="checkbox" class="primeiro" name="grupos" value="{{adm.Name}}" ng-click="selectTypeFilter($event, system.AdministrativeUnit, adm)">{{adm.Name}}
+                        <input type="radio" class="primeiro" name="grupos" value="{{adm.Name}}" ng-click="selectedSystemGroup('school', adm)">{{adm.Name}}
                     </li>
                 </ul>
-                <a class="enviar" ng-click="emitFilters($event, system.AdministrativeUnit)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="enviar" ng-if="SystemRecipient.AdministrativeUnit.length > 0" ng-click="emitFilters($event, SystemRecipient.AdministrativeUnit)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
             </div>
         </div>
 
@@ -214,49 +279,94 @@
 
         <form class="maxWidthNotf">
             <div class="card selecionados">
-                <label class="accordion" ng-click="accordion($event)">Filtros por sistema:</label>
-                <div class="panel" style="display: none">
-                  <div ng-repeat="filter in filters.filters" class="bloco-panel">
+                <label class="accordion" ng-click="openCloseAccordion('typeAccordionSys')" ng-class="{'active': showTypeFilter.typeAccordionSys}">
+                    <i class="fa fa-chevron-down remove-transiton" aria-hidden="true" ng-if="showTypeFilter.typeAccordionSys"></i>
+                    <i class="fa fa-chevron-right remove-transiton" aria-hidden="true" ng-if="!showTypeFilter.typeAccordionSys"></i>
+                    Filtros por sistema:</label>
+                <div class="panel" style="display: none" ng-class="{'panel-block': showTypeFilter.typeAccordionSys}">
+                  <div ng-repeat="Recipient in listRecipient" class="bloco-panel">
                     <p>
-                      {{filter.systemType.Name}} <span ng-if="filter.Group.Name">-</span> 
-                      {{filter.Group.Name}} <span ng-if="filter.DREs.Name">-</span>
-                      {{filter.DREs.Name}} <span ng-if="filter.AdministrativeUnit.Name">-</span> 
-                      {{filter.AdministrativeUnit.Name}}
-                      <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>
+                      {{Recipient.SystemId.Name}} <span ng-if="Recipient.GroupId.Name">/</span>
+                      {{Recipient.GroupId.Name}} <span ng-if="Recipient.AdministrativeUnitSuperior.Name">/</span>
+                      {{Recipient.AdministrativeUnitSuperior.Name}} <span ng-if="Recipient.AdministrativeUnit.Name">/</span>
+                      {{Recipient.AdministrativeUnit.Name}}
+                      <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('SystemRecipient', $index)"></i>
                     </p>
                   </div>
                 </div>
-                <label class="accordion">Filtros por usuário:</label>
-                <div class="panel" style="display: none">
-                    <!--<div ng-repeat="filter in filters.filters" class="bloco-panel">-->
-                        <!--<p>-->
-                            <!--{{filter.systemType.Name}} <span ng-if="filter.Group.Name">-</span>-->
-                            <!--{{filter.Group.Name}} <span ng-if="filter.DREs.Name">-</span>-->
-                            <!--{{filter.DREs.Name}} <span ng-if="filter.AdministrativeUnit.Name">-</span>-->
-                            <!--{{filter.AdministrativeUnit.Name}}-->
-                            <!--<i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>-->
-                        <!--</p>-->
-                    <!--</div>-->
+                <label class="accordion" ng-click="openCloseAccordion('typeAccordionUser')" ng-class="{'active': showTypeFilter.typeAccordionUser}">
+                    <i class="fa fa-chevron-down remove-transiton" aria-hidden="true" ng-if="showTypeFilter.typeAccordionUser"></i>
+                    <i class="fa fa-chevron-right remove-transiton" aria-hidden="true" ng-if="!showTypeFilter.typeAccordionUser"></i>
+                    Filtros por usuário:
+                </label>
+                <div class="panel" style="display: none" ng-class="{'panel-block': showTypeFilter.typeAccordionUser}">
+                    <div ng-repeat="filter in listRecipientUser" class="bloco-panel">
+
+                        <p>
+                            <span ng-if="filter.SchoolSuperior.length == 0">Todas as DREs</span>
+                            <span ng-if="filter.SchoolSuperior.length > 0">Total de DREs {{filter.SchoolSuperior.length}}</span>/
+
+                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>
+                            <span ng-if="filter.SchoolClassification.length > 0">Total das Classificações {{filter.SchoolClassification.length}}</span>/
+
+                            <span ng-if="filter.School.length == 0">Todas as Escola</span>
+                            <span ng-if="filter.School.length > 0">Total de Escola {{filter.SchoolSuperior.length}}</span>/
+
+                            <span ng-if="filter.Position.length == 0">Todos os Cargos</span>
+                            <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>
+                            <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>
+                        </p>
+
+                        <div class="accordion-filters-selected">
+                            <div ng-repeat="schoolSuperior in filter.SchoolSuperior" style="float: left">
+                                {{schoolSuperior.Name}} <span>/</span>
+                            </div>
+
+                            <div ng-repeat="schoolClassification in filter.SchoolClassification" style="float: left">
+                                {{schoolClassification.Name}} <span>/</span>
+                            </div>
+
+                            <div ng-repeat="school in filter.School" style="float: left">
+                                {{school.Name}} <span>/</span>
+                            </div>
+
+                            <div ng-repeat="position in filter.Position" style="float: left">
+                                {{position.Name}} <span>/</span>
+                            </div>
+
+                                <!--{{filter.SchoolClassification[$index].Name}} <span ng-if="filter.School[$index].Name">/</span>-->
+                                <!--{{filter.School[$index].Name}} <span ng-if="filter.Position[$index].Name">/</span>-->
+                                <!--{{filter.Position[$index].Name}} <span ng-if="filter.Course[$index].Name">/</span>-->
+
+                                <!--{{filter.Course[$index].Name}} <span ng-if="filter.CoursePeriod[$index].Name">/</span>-->
+                                <!--{{filter.CoursePeriod[$index].Name}} <span ng-if="filter.Discipline[$index].Name">/</span>-->
+                                <!--{{filter.Discipline[$index].Name}} <span ng-if="filter.Team[$index].Name">/</span>-->
+                                <!--{{filter.Team[$index].Name}}-->
+
+                                <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected($index)"></i>
+                            <!--</p>-->
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="card tipo-mensagem">
                 <label>Tipo da mensagem: </label>
-                <p class="off baixa type-message" ng-click="selectMessageType($event)">Baixa</p>
-                <p class="off media type-message" ng-click="selectMessageType($event)">Média</p>
-                <p class="off alta type-message" ng-click="selectMessageType($event)">Alta</p>
-                <p class="off urgente type-message" ng-click="selectMessageType($event)">Urgente</p>
+                <p class="off baixa type-message" ng-click="selectMessageType($event, 1)">Baixa</p>
+                <p class="off media type-message" ng-click="selectMessageType($event, 2)">Média</p>
+                <p class="off alta type-message" ng-click="selectMessageType($event, 3)">Alta</p>
+                <p class="off urgente type-message" ng-click="selectMessageType($event, 4)">Urgente</p>
 
             </div>
             <div class="card">
                 <div class="divisao">
                     <div>
                         <label>Data de envio da notificação</label>
-                        <input type="date" ng-model="filters.sendDate">
+                        <input type="date" ng-model="filters.DateStartNotification">
                     </div>
                     <div>
                         <label>Data de validade da notificação</label>
-                        <input type="date" ng-model="filters.expirationDate">
+                        <input type="date" ng-model="filters.DateEndNotification">
                     </div>
                 </div>
             </div>
@@ -264,7 +374,7 @@
                 <div class="divisao">
                     <div>
                         <label>Titulo</label>
-                        <input type="text" ng-model="filters.title" maxlength="100">
+                        <input type="text" ng-model="filters.Title" maxlength="100">
                     </div>
                 </div>
             </div>
@@ -272,11 +382,11 @@
                 <label>Mensagem </label>
                 <textarea id="content" name="content" rows="9" placeholder="Digite aqui sua mensagem" ></textarea>
             </div>
-            <button class="enviar">Enviar</button>
+            <button class="enviar" ng-click="sendNotification()">Enviar</button>
         </form>
     </section>
 
-    <footer class="footer" ng-show="redirect">
+    <footer class="footer" ng-show="redirect" ng-if="VisionSystem.VisionId != 4">
         <div class="max-width">
             <p>Sistema para cadastro de notificação<span>Todos os direitos reservados.</span></p>
         </div>

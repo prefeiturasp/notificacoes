@@ -72,6 +72,8 @@
     <Compile Include="CoreSSO\GroupRepository.cs" />
     <Compile Include="CoreSSO\SystemRepository.cs" />
     <Compile Include="CoreSSO\UserRepository.cs" />
+    <Compile Include="DelayTimeRepository.cs" />
+    <Compile Include="DisturbTimeRepository.cs" />
     <Compile Include="LogRepository.cs" />
     <Compile Include="NotificationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

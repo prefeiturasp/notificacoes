@@ -3,6 +3,7 @@ using Notification.Business;
 using Notification.Business.CoreSSO;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,7 +25,9 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                var result = SystemBusiness.Get(claimData.UserId);
+                string temaCoreSSO = ConfigurationManager.AppSettings["TemaCoreSSO"];
+
+                var result = SystemBusiness.Get(claimData.UserId, temaCoreSSO);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)

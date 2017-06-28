@@ -10,40 +10,26 @@
         .controller("RegisterController", RegisterController);
 
     //Injectors
-    RegisterController.$inject = ['$scope', 'toastr', '$util', 'HttpServices', '$window'];
+    RegisterController.$inject = ['$scope', 'toastr', '$util', 'HttpServices', '$window', '$timeout'];
 
     /**
      * @namespace RegisterController
      * @desc Controller da página Register
      * @memberOf Controller
      */
-    function RegisterController($scope, toastr, $util, HttpServices, $window) {
+    function RegisterController($scope, toastr, $util, HttpServices, $window, $timeout) {
 
         $scope.load = true;
         $scope.modalOpen = false;
         $scope.redirect = false;
-        var body = $('body')[0];
+        var body = $('body')[0], redactor;
+        $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
 
         /**
          * Contructor
          */
         function initialize() {
-
-            $scope.filters = {
-                filters:[],
-                sendersName: "",
-                messageType: "",
-                sendDate: "",
-                expirationDate: "",
-                message: "",
-                title: ""
-            };
-
-            $scope.showTypeFilter ={
-                typeVision: true,
-                typeSystem: false,
-                typeUser: false
-            };
+            creatteFilters();
 
             $scope.typeFilter = {
                 system: 'system',
@@ -52,8 +38,9 @@
                 school: 'school'
             };
 
+            $scope.typeUser = null;
+            $scope.listDREs = [];
             $scope.listVisionSystem = [];
-            $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
 
             new plgnotify({
@@ -62,23 +49,54 @@
                 }
             });
 
-            declareVariables();
-            startRedactor();
-            accordion();
-
             //ve se o usúario já escolheu umtipo de grupo
             if($scope.VisionSystem.length == 0) {
                 getVisionSystem();
             }else{
                 $scope.showTypeFilter.typeVision = false;
+                $timeout(function(){
+                    declareVariables();
+                    startRedactor();
+                },0);
                 removeLoad();
             }
+        }
+
+        function creatteFilters(){
+            $scope.filters = {
+                Id: null,
+                Recipient: {},
+                SenderName: null,
+                MessageType: null,
+                DateStartNotification: null,
+                DateEndNotification: null,
+                Message: "",
+                Title: null
+            };
+
+            $scope.listRecipient = [];
+            $scope.listRecipientUser = [];
+
+            $scope.showTypeFilter ={
+                typeVision: false,
+                typeSystem: false,
+                typeUser: false,
+                typeAccordionSys: false,
+                typeAccordionUser: false,
+                typeUserTeacher: false,
+                typeUserContributor: false,
+                typeModalTypeUser: false
+            };
         }
 
         /**
          * Declara as variaveis utilizadas
          */
         function declareVariables(){
+
+            $scope.showTypeFilter.typeUserTeacher = false;
+            $scope.showTypeFilter.typeUserContributor = false;
+            $scope.showTypeFilter.typeModalTypeUser = false;
 
             $scope.showFilter ={
                 showSystem: false,
@@ -87,27 +105,43 @@
                 showShool: false
             };
 
+            $scope.change = {
+                checkedDRE: true,
+                checkedClassification: true,
+                checkedSchool: true,
+                checkedPosition: true
+            };
+
             $scope.limitCharRedactor = 300;
-            $scope.listSystem = [];
 
             //variaveis de lista de filtros por sistema
+            $scope.listSystem = [];
             $scope.listGroups = [];
-            $scope.listDREs = [];
             $scope.AdministrativeUnits = [];
 
             //variaveis de lista de filtros por usuários
             $scope.listCalendar = [];
+            $scope.listCorse = [];
+            $scope.listPosition = [];
+            $scope.listSchool = [];
+            $scope.listListSchoolClassification = [];
+            $scope.YearSelected = null;
 
+            $scope.SystemRecipientClone = {
+                SystemId: null,
+                GroupId: null,
+                AdministrativeUnitSuperior: null,
+                AdministrativeUnit: null
+            };
 
-            $scope.system = {
-                systemType: [],
-                Group:[],
-                DREs: [],
+            $scope.SystemRecipient = {
+                SystemId: [],
+                GroupId: [],
+                AdministrativeUnitSuperior: [],
                 AdministrativeUnit: []
             };
 
-            $scope.User = {
-                UserType: null,
+            $scope.TeacherRecipient = {
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -116,6 +150,13 @@
                 CoursePeriod:[],
                 Discipline:[],
                 Team:[]
+            };
+
+            $scope.ContributorRecipient = {
+                SchoolSuperior:[],
+                SchoolClassification:[],
+                School:[],
+                Position:[]
             };
 
         }
@@ -163,6 +204,8 @@
                 $(".redactor-dropdown-orderedlist").text('Lista ordenada');
             });
 
+            redactor = $(".redactor-layer-img-edit");
+
 
             //limita a quantidade de  caracteras usando cltr+v
             //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
@@ -200,6 +243,7 @@
          *
          */
         $scope.closeVisionGroupSystem = function __closeVisionGroupSystem(){
+            startRedactor();
             closeModal();
             $scope.showTypeFilter.typeVision = false;
         };
@@ -208,24 +252,43 @@
          * Remove registro de filtro selecionado
          * @param {Int} id - id da posição do registro dentro do objeto - $scope.filters.filters
          */
-        $scope.removeFilterSelected = function __removeFilterSelected(id){
-            $scope.filters.filters.splice(id, 1);
+        $scope.removeFilterSelected = function __removeFilterSelected(type, id){
+
+            console.log($scope.filters.Recipient);
+            $scope.filters.Recipient[type].splice(id, 1);
+            $scope.listRecipient.splice(id, 1);
+            console.log($scope.filters.Recipient);
+
+            if($scope.listRecipient.length == 0){
+                $scope.showTypeFilter.typeAccordionSys = false;
+            }
+
         };
 
         /**
          * Seleciona tipo da mensagem ex: baixa, média, alta ou urgente
          * @param {Event} e
          */
-        $scope.selectMessageType = function __selectMessageType(e){
+        $scope.selectMessageType = function __selectMessageType(e, Id){
 
+            removeCheckInTypeMessage();
+            var check = '<i class="fa fa-check" aria-hidden="true"></i>';
+            angular.element(e.currentTarget).append(check).removeClass('off');
+            $scope.filters.MessageType = Id;
+        };
+
+        function removeCheckInTypeMessage(){
+
+            $scope.filters.MessageType = "";
             var p = document.getElementsByClassName('type-message'),
-                checkSelected = document.getElementsByClassName('fa-check'),
-                check = '<i class="fa fa-check" aria-hidden="true"></i>';
+                checkSelected = document.getElementsByClassName('fa-check');
 
             angular.element(p).addClass('off');
             angular.element(checkSelected).remove();
-            angular.element(e.currentTarget).append(check).removeClass('off');
-            $scope.filters.messageType = angular.element(e.currentTarget).text();
+        }
+
+        $scope.selectedTtypeUser = function __selectedTtypeUser(type){
+            $scope.typeUser = type;
         };
 
         /**
@@ -233,8 +296,10 @@
          * @param {Event} e
          */
         $scope.openFilterTypeUser = function __openFilterTypeUser(e){
-            if($scope.User.UserType) {
-                getCalendar();
+            if($scope.typeUser) {
+                $scope.showTypeFilter.typeModalTypeUser = false;
+                if( $scope.typeUser == 'Docente' ) $scope.showTypeFilter.typeUserTeacher = true;
+                else $scope.showTypeFilter.typeUserContributor = true;
             }else{
                 toastr.warning("Selecione um tipo de usuário!");
             }
@@ -245,6 +310,9 @@
          * @param {Event} e
          */
         $scope.openModalUser = function __openModalUser(e){
+            getCalendar();
+            $scope.showTypeFilter.typeUser = true;
+            $scope.showTypeFilter.typeModalTypeUser = true;
 
         };
 
@@ -281,15 +349,14 @@
 
         };
 
-        $scope.checkVisionUser = function checkVisionUser( arr, type){
+        $scope.checkVisionUser = function checkVisionUser(arr, type){
 
-            if( arr && arr.Name && ($scope.VisionSystem.VisionId != type) ){
+            if( arr && arr.length > 0 && ($scope.VisionSystem.VisionId != type) ){
                 return true;
             }else{
                 return false;
             }
-
-        }
+        };
 
         /*--------------------------------------FILTROS POR SISTEMA----------------------------------------*/
 
@@ -300,8 +367,16 @@
 
             HttpServices.getListVisionSystem(function(data){
                 $scope.listVisionSystem = data;
-                openModal();
-                removeLoad();
+                if(data.length > 1) {
+
+                    $scope.showTypeFilter.typeVision = true;
+                    declareVariables();
+                    getCalendar();
+                    removeLoad();
+                    openModal();
+                }else{
+                    $scope.VisionSystem = $scope.listVisionSystem[0]
+                }
             });
         }
 
@@ -320,7 +395,6 @@
                 }else{
                     toastr.warning("Não existe uma lista de sistemas cadastrada!");
                 }
-                removeLoad();
             });
         }
 
@@ -329,14 +403,14 @@
          */
         function getGroups(){
             addLoad();
-            HttpServices.getListGroups($scope.system.systemType.Id,
+            HttpServices.getListGroups($scope.SystemRecipient.SystemId[0],
                 function(data){
                     $scope.listGroups = data;
 
-                    if($scope.listGroups.length > 1) {
+                    if($scope.listGroups && $scope.listGroups.length > 1) {
                         $scope.showFilter.showSystem = false;
                         $scope.showFilter.showGroup = true;
-                    }else{
+                    }else if($scope.listGroups && $scope.listDREs.listGroups ==  0){
                         toastr.warning("Não existe uma lista de grupo cadastrada!");
                     }
                     removeLoad();
@@ -350,10 +424,10 @@
                 function(data){
                     $scope.listDREs = data;
 
-                    if($scope.listDREs.length > 1) {
+                    if($scope.listDREs && $scope.listDREs.length > 1) {
                         $scope.showFilter.showGroup = false;
                         $scope.showFilter.showDRE = true;
-                    }else{
+                    }else if($scope.listDREs && $scope.listDREs.length ==  0){
                         toastr.warning("Não existe uma lista de DREs cadastrada!");
                     }
                     removeLoad();
@@ -367,17 +441,17 @@
             addLoad();
 
             var params = {
-                schoolSuperior: $scope.system.DREs.Id,
+                schoolSuperior: $scope.SystemRecipient.AdministrativeUnitSuperior[0],
                 groupSid: $scope.VisionSystem.Id
             };
 
-            HttpServices.getListSchool( params,
+            HttpServices.getListUnitAdministrative(params,
                 function(data){
                     $scope.AdministrativeUnits = data;
-                    if($scope.AdministrativeUnits.length > 1) {
+                    if($scope.AdministrativeUnits && $scope.AdministrativeUnits.length > 0) {
                         $scope.showFilter.showDRE = false;
-                        openNextFilterModal(admUnit);
-                    }else{
+                        $scope.showFilter.showShool = true;
+                    }else if($scope.AdministrativeUnits && $scope.AdministrativeUnits.listGroups ==  0){
                         toastr.warning("Não existe nem uma lista de unidades administrativas cadastrada!");
                     }
                     removeLoad();
@@ -390,27 +464,91 @@
             addLoad();
             HttpServices.getListCalendar(function(data){
                 $scope.listCalendar = data;
+
+                if($scope.listCalendar && $scope.listCalendar.length ==  0){
+                    toastr.warning("Não existe uma lista de de datas!");
+                }else{
+                    $scope.YearSelected = $scope.listCalendar[$scope.listCalendar.length - 1];
+                    getCorse();
+                }
+
+
+
                 removeLoad();
             });
         }
 
-        function getSchoolSuperior(){
+        $scope.getSchoolClassification = function __getSchoolClassification(){
+            if(!$scope.change.checkedClassification) {
+                addLoad();
+                var params = {
+                    groupSid: $scope.VisionSystem.Id,
+                    SchoolSuperior: $scope.ContributorRecipient.SchoolSuperior
+                };
+
+                HttpServices.getListSchoolClassification(params, function (data) {
+                    $scope.listListSchoolClassification = data;
+                    removeLoad();
+                });
+            }
+        }
+
+        function getCorse(){
             addLoad();
-            HttpServices.getListSchoolSuperior(function(data){
-                $scope.listCalendar = data;
-                removeLoad();
+            HttpServices.getListCorse($scope.YearSelected.Name, function(data){
+                $scope.listCorse = data;
             });
         }
 
-        function getSchoolClassification(){
-            addLoad();
-            HttpServices.getListSchoolClassification(id, function(data){
-                $scope.listCalendar = data;
-                removeLoad();
-            });
+        $scope.getPosition = function __getPosition(){
+            $scope.change.checkedPosition = !$scope.change.checkedPosition;
+
+            if(!$scope.change.checkedPosition) {
+                addLoad();
+                HttpServices.getListPosition(function (data) {
+                    $scope.listPosition = data;
+                    removeLoad();
+                });
+            }
+        };
+
+        $scope.getSchool = function __getSchool(){
+
+            if(!$scope.change.checkedSchool) {
+
+                var params = {
+                    groupSid: $scope.VisionSystem.Id,
+                    SchoolSuperior: $scope.ContributorRecipient.SchoolSuperior,
+                    schoolClassification: $scope.ContributorRecipient.SchoolClassification
+                };
+
+                addLoad();
+                HttpServices.getListSchool(params, function (data) {
+                    $scope.listSchool = data;
+                    removeLoad();
+                });
+            }
         }
 
         /*--------------------------------------FIM DOS FILTROS POR USUÁRIO----------------------------------------*/
+
+        $scope.searchDREs = function __searchDREs(){
+            $scope.change.checkedDRE = !$scope.change.checkedDRE;
+            if(!$scope.change.checkedDRE)
+                getDREs();
+        };
+
+        $scope.searchSchoolClassification = function __searchSchoolClassification(){
+            $scope.change.checkedClassification = !$scope.change.checkedClassification;
+            if(!$scope.change.checkedClassification)
+                $scope.getSchoolClassification();
+        };
+
+        $scope.searchSchool = function __searchSchool(){
+            $scope.change.checkedSchool = !$scope.change.checkedSchool;
+            if(!$scope.change.checkedSchool)
+                $scope.getSchool();
+        };
 
         /**
          * Salva o sistema selecionado
@@ -419,12 +557,30 @@
         $scope.selectedSystemGroup = function __selectedSystemGroup(type, obj){
 
             if(type =='system') {
-                $scope.system.systemType = obj;
+                $scope.SystemRecipient.SystemId.push(obj.Id);
+                $scope.SystemRecipientClone.SystemId = obj;
             }else if(type =='group') {
-                $scope.system.Group = obj;
+                $scope.SystemRecipient.GroupId.push(obj.Id);
+                $scope.SystemRecipientClone.GroupId = obj;
             }else if(type == 'dre'){
-                $scope.system.DREs = obj;
+                $scope.SystemRecipient.AdministrativeUnitSuperior.push(obj.Id);
+                $scope.SystemRecipientClone.AdministrativeUnitSuperior = obj;
+            }else{
+                $scope.SystemRecipient.AdministrativeUnit.push(obj.Id);
+                $scope.SystemRecipientClone.AdministrativeUnit = obj;
             }
+        };
+
+        $scope.reloadListClassification = function __reloadListClassification(){
+            $scope.change.checkedClassification = true;
+            $scope.change.checkedSchool = true;
+            $scope.getSchoolClassification();
+            $scope.getSchool();
+        };
+
+        $scope.reloadListSchool = function __reloadListSchool(){
+            $scope.change.checkedSchool = true;
+            $scope.getSchool();
         };
 
         /**
@@ -433,7 +589,7 @@
          * @param {Object} arr - arry do filtro
          * @param {Object}obj - opção seleciona
          */
-        $scope.selectTypeFilter = function __selectTypeFilter(e, arr, obj){
+        $scope.selectTypeFilter = function __selectTypeFilter(arr, obj){
 
             //procura se já existe um obj salvo no arr
             for(var index in arr) {
@@ -464,6 +620,74 @@
             declareVariables();
         };
 
+        $scope.sendNotification = function __sendNotification(){
+
+            if(!$scope.filters.SenderName){
+                toastr.warning("Digite seu nome!");
+                return;
+            }else if($scope.filters.Recipient.length == 0){
+                toastr.warning("Não existe filtros selecionados!");
+                return;
+            }else if(!$scope.filters.MessageType){
+                toastr.warning("Selecione o tipo da mensagem!");
+                return;
+            }else if(!$scope.filters.DateStartNotification){
+                toastr.warning("Informe a data de envio da notificação!");
+                return;
+            }else if(!$scope.filters.DateEndNotification){
+                toastr.warning("Informe a data de validade da notificação!");
+                return;
+            }else if(!$scope.filters.Title){
+                toastr.warning("Digite o titulo da notificação!");
+                return;
+            }else if(getMessage()){
+                toastr.warning("Digite a mensagem!");
+                return;
+            }else{
+                saveNotification();
+            }
+
+        };
+
+        function getMessage(){
+
+            $scope.filters.Message = "";
+
+            var redactorChildren = $(redactor.children());
+            if(redactorChildren.text().length > 0){
+                redactorChildren.each(function( index ) {
+                    $scope.filters.Message += '<p>' + $( this ).html() + '</p>'
+                });
+                return false;
+            }else{
+                return true;
+            }
+
+        }
+
+        function saveNotification(){
+
+            var params = {
+                data: angular.copy($scope.filters),
+                groupSid: $scope.VisionSystem.Id
+            };
+
+            params.data.DateStartNotification = $scope.filters.DateStartNotification.toString();
+            params.data.DateEndNotification = $scope.filters.DateEndNotification.toString();
+
+            addLoad();
+            HttpServices.postSave(params, function(data){
+
+                if(data != null) {
+                    toastr.success("Notificação salva com sucesso!");
+                    creatteFilters();
+                    $(redactor).children().html("");
+                    removeCheckInTypeMessage();
+                }
+                removeLoad();
+            });
+        }
+
         /**
          *
          * @param {Event} e -
@@ -471,7 +695,7 @@
          */
         $scope.emitFilters = function __emitFilters(e, isfilter, type){
 
-            var arr = $scope.filters.filters;
+            var arr = $scope.filters.Recipient;
 
             for(var index in arr) {
                 if (angular.equals(isfilter, arr[index][type])){
@@ -481,33 +705,55 @@
                 }
             }
 
-            $scope.filters.filters.push(angular.copy($scope.system));
+            if(!$scope.filters.Recipient.SystemRecipient)  $scope.filters.Recipient.SystemRecipient = [];
+
+            $scope.showTypeFilter.typeAccordionSys = true;
+            $scope.filters.Recipient.SystemRecipient.push(angular.copy($scope.SystemRecipient));
+            $scope.listRecipient.push(angular.copy($scope.SystemRecipientClone));
             $scope.closeModal(null, "system");
 
         };
 
-        function accordion(){
+        $scope.emitFiltersUser = function __emitFiltersUser(type, filtersUser ){
 
-            var i, acc = document.getElementsByClassName("accordion");
-            for (i = 0; i < acc.length; i++) {
-                acc[i].onclick = function(){
-                    /* Toggle between adding and removing the "active" class,
-                     to highlight the button that controls the panel */
-                    this.classList.toggle("active");
+            var arr = $scope.filters.Recipient;
 
-                    /* Toggle between hiding and showing the active panel */
-                    var panel = this.nextElementSibling;
-                    if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                    } else if(angular.element(panel).children().length > 0) {
-                        panel.style.display = "block";
-                    }else{
-                        toastr.warning("Nem um filtro foi selecionado!");
-                    }
+            for(var index in arr) {
+                if (angular.equals(arr[index], filtersUser)){
+                    toastr.warning("Você já enviou esse filtro!");
+                    $scope.closeModal(null, "user");
+                    return;
                 }
             }
 
-        }
+            if(!$scope.filters.Recipient[type]) $scope.filters.Recipient[type] = [];
+
+            $scope.filters.Recipient[type].push(angular.copy(filtersUser));
+            $scope.listRecipientUser.push(angular.copy(filtersUser));
+            $scope.closeModal(null, "user");
+
+        };
+
+        $scope.openCloseAccordion = function __openCloseAccordion(typeAccordion){
+
+            var i, label, flag = false, max = $scope.filters.Recipient.length;
+
+            typeAccordion == 'typeAccordionSys' ? label = 'sistema' :label = 'usuário'
+
+            for(i = 0; i < max; i++){
+               if($scope.filters.Recipient[i].SystemId && typeAccordion == 'typeAccordionSys'){
+                   flag = true;
+               }else if($scope.filters.Recipient[i] && typeAccordion == 'typeAccordionUser'){
+                   flag = true;
+               }
+            }
+
+            if(!flag) {
+                toastr.warning("Nem um filtro por "+ label +" foi selecionado!");
+            }else{
+                $scope.showTypeFilter[typeAccordion] = !$scope.showTypeFilter[typeAccordion];
+            }
+        };
 
         addLoad();
         /**
