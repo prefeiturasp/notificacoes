@@ -75,6 +75,10 @@
                 return getheaders('POST', params.groupSid, $util.base_url_APINotification(), params.data);
             }
 
+            function getTimeStamp() {
+                return getheaders('GET', null, $util.base_url('/api/v1/TimeStamp'));
+            }
+
             function getConcatUrl(concat, type, params){
                 var url = '';
                 for(var i = 0; i < params.length; i++){
@@ -118,7 +122,8 @@
             getCoursePeriod: getCoursePeriod,
             getDiscipline: getDiscipline,
             getTeam: getTeam,
-            postSave: postSave
+            postSave: postSave,
+            getTimeStamp: getTimeStamp
         }
 
     }

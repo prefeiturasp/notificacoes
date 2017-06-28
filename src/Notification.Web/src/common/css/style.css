@@ -670,7 +670,7 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   border-top: 0;
   vertical-align: middle;
   display: inline-block;
-  width: 100%;
+  width: 101.2%;
   line-height: inherit;
   outline: none;
   padding: 10px 15px;
@@ -696,4 +696,10 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   position: relative;
   margin-right: 25px;
   font-size: 1.4rem;
+}
+
+.lista-destinatarios{
+  text-align: center;
+  background-color: #e4e4e4;
+  color: black;
 }

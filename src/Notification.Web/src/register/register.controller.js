@@ -60,6 +60,8 @@
                 },0);
                 removeLoad();
             }
+
+            getTimeStamp();
         }
 
         function creatteFilters(){
@@ -81,6 +83,7 @@
                 typeVision: false,
                 typeSystem: false,
                 typeUser: false,
+                typeViewRegisters: false,
                 typeAccordionSys: false,
                 typeAccordionUser: false,
                 typeUserTeacher: false,
@@ -97,6 +100,8 @@
             $scope.showTypeFilter.typeUserTeacher = false;
             $scope.showTypeFilter.typeUserContributor = false;
             $scope.showTypeFilter.typeModalTypeUser = false;
+
+            $scope.registresSelected = [];
 
             $scope.showFilter ={
                 showSystem: false,
@@ -246,6 +251,7 @@
             startRedactor();
             closeModal();
             $scope.showTypeFilter.typeVision = false;
+            window.sessionStorage.VisionSystem = btoa(JSON.stringify($scope.VisionSystem));
         };
 
         /**
@@ -254,14 +260,23 @@
          */
         $scope.removeFilterSelected = function __removeFilterSelected(type, id){
 
-            console.log($scope.filters.Recipient);
             $scope.filters.Recipient[type].splice(id, 1);
-            $scope.listRecipient.splice(id, 1);
-            console.log($scope.filters.Recipient);
 
-            if($scope.listRecipient.length == 0){
-                $scope.showTypeFilter.typeAccordionSys = false;
+            if(type == 'SystemRecipient') {
+                $scope.listRecipient.splice(id, 1);
+
+                if ($scope.listRecipient.length == 0) {
+                    $scope.showTypeFilter.typeAccordionSys = false;
+                }
+
+            }else{
+                $scope.listRecipientUser.splice(id, 1);
+
+                if($scope.listRecipientUser.length == 0){
+                    $scope.showTypeFilter.typeAccordionUser = false;
+                }
             }
+
 
         };
 
@@ -550,6 +565,21 @@
                 $scope.getSchool();
         };
 
+        $scope.checkDateSelected = function __checkDateSelected(type){
+
+            var dateCurrent = new Date($scope.currentDate * 1000);
+            var dateSelected = new Date($scope.filters[type]);
+
+            var msDateA = Date.UTC(dateCurrent.getFullYear(), dateCurrent.getMonth()+1, dateCurrent.getDate());
+            var msDateB = Date.UTC(dateSelected.getFullYear(), dateSelected.getMonth()+1, dateSelected.getDate());
+
+            if (parseFloat(msDateA) > parseFloat(msDateB)) {
+                toastr.warning("Data selecionada não pode ser menor que o data atual!");
+                $scope.filters[type] = null;
+            }
+        };
+
+
         /**
          * Salva o sistema selecionado
          * @param {Object} obj
@@ -599,7 +629,7 @@
                 }
             }
             //salva obj dentro do arr
-            arr.push(obj);
+            arr.push(obj.Id);
         };
 
         /**
@@ -646,7 +676,6 @@
             }else{
                 saveNotification();
             }
-
         };
 
         function getMessage(){
@@ -690,63 +719,53 @@
 
         /**
          *
-         * @param {Event} e -
-         * @param {Object} isfilter - usado para validar  se foi selecionado ao menos um tipo filtro da tela
+         * @param type
+         * @param filters
          */
-        $scope.emitFilters = function __emitFilters(e, isfilter, type){
+        $scope.emitFilters = function __emitFiltersUser(type, filters ){
 
-            var arr = $scope.filters.Recipient;
+            var arr = $scope.filters.Recipient, typeModal;
 
-            for(var index in arr) {
-                if (angular.equals(isfilter, arr[index][type])){
-                    //toastr.warning("Você já enviou esse filtro!");
-                    $scope.closeModal(null, "system");
-                    return;
-                }
-            }
-
-            if(!$scope.filters.Recipient.SystemRecipient)  $scope.filters.Recipient.SystemRecipient = [];
-
-            $scope.showTypeFilter.typeAccordionSys = true;
-            $scope.filters.Recipient.SystemRecipient.push(angular.copy($scope.SystemRecipient));
-            $scope.listRecipient.push(angular.copy($scope.SystemRecipientClone));
-            $scope.closeModal(null, "system");
-
-        };
-
-        $scope.emitFiltersUser = function __emitFiltersUser(type, filtersUser ){
-
-            var arr = $scope.filters.Recipient;
+            if(type == "SystemRecipient") typeModal = "system";
+            else typeModal = "user";
 
             for(var index in arr) {
-                if (angular.equals(arr[index], filtersUser)){
-                    toastr.warning("Você já enviou esse filtro!");
-                    $scope.closeModal(null, "user");
-                    return;
-                }
-            }
+                for(var indexJ in arr[index]) {
+                    if (angular.equals(arr[index][indexJ], filters)){
+                        toastr.warning("Você já enviou esse filtro!");
+                        $scope.closeModal(null, typeModal);
+                        return;
+                    }//if
+                }//for
+            }//for
 
             if(!$scope.filters.Recipient[type]) $scope.filters.Recipient[type] = [];
 
-            $scope.filters.Recipient[type].push(angular.copy(filtersUser));
-            $scope.listRecipientUser.push(angular.copy(filtersUser));
-            $scope.closeModal(null, "user");
+            $scope.filters.Recipient[type].push(angular.copy(filters));
+
+            if(type == "SystemRecipient"){
+                $scope.showTypeFilter.typeAccordionSys = true;
+                $scope.listRecipient.push(angular.copy($scope.SystemRecipientClone));
+            }else {
+                $scope.showTypeFilter.typeAccordionUser = true;
+                $scope.listRecipientUser.push(angular.copy(filters));
+            }
+            console.log($scope.filters.Recipient);
+            $scope.closeModal(null, typeModal);
 
         };
 
         $scope.openCloseAccordion = function __openCloseAccordion(typeAccordion){
 
-            var i, label, flag = false, max = $scope.filters.Recipient.length;
+            var label, flag = false;
+            typeAccordion == 'typeAccordionSys' ? label = 'sistema' :label = 'usuário';
 
-            typeAccordion == 'typeAccordionSys' ? label = 'sistema' :label = 'usuário'
-
-            for(i = 0; i < max; i++){
-               if($scope.filters.Recipient[i].SystemId && typeAccordion == 'typeAccordionSys'){
-                   flag = true;
-               }else if($scope.filters.Recipient[i] && typeAccordion == 'typeAccordionUser'){
-                   flag = true;
-               }
-            }
+           if($scope.filters.Recipient.SystemRecipient && typeAccordion == 'typeAccordionSys'){
+               flag = true;
+           }else if((($scope.filters.Recipient.ContributorRecipient && $scope.filters.Recipient.ContributorRecipient.length > 0 ) ||
+               ($scope.filters.Recipient.TeacherRecipient && $scope.filters.Recipient.TeacherRecipient.length > 0 )) && typeAccordion == 'typeAccordionUser'){
+               flag = true;
+           }
 
             if(!flag) {
                 toastr.warning("Nem um filtro por "+ label +" foi selecionado!");
@@ -754,6 +773,28 @@
                 $scope.showTypeFilter[typeAccordion] = !$scope.showTypeFilter[typeAccordion];
             }
         };
+
+        $scope.openModalViewRegisters = function __openModalViewRegisters(registers){
+            $scope.showTypeFilter.typeViewRegisters = true;
+            $scope.registresSelected = registers;
+            angular.element(body).addClass('hidden-body');
+        };
+
+        $scope.closeModalViewRegisters = function __closeModalViewRegisters(){
+            $scope.showTypeFilter.typeViewRegisters = false;
+            angular.element(body).removeClass('hidden-body');
+        };
+
+        $scope.checkTypeRegisterUser = function (registers, len){
+            if(Object.keys(registers).length == len)return true;
+            else return false;
+        }
+
+        function getTimeStamp(){
+            HttpServices.getTimeStamp( function (data) {
+                $scope.currentDate = data;
+            });
+        }
 
         addLoad();
         /**
