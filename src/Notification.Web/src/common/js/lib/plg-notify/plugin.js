@@ -93,20 +93,20 @@ var plgnotify = function ( sysconfig ) {
 	function showLaterOptions( e, onclick, onblur ) {
 		var html, pai;
 
-		html = '<div class="plg-panel unselectable">';
 
+		//Valida se tem dados no local storage.
+		if ( !_config.later ){
+			_config.later = getLaterOptionsList(function(){
+				if(html.onblur){
+					html.onblur();
+				}
+				showLaterOptions(e,onclick,onblur);
+			});
+		}
+
+		html = '<div class="plg-panel unselectable">';
 		if ( _config.later ) {
 			html += _config.later;
-		}
-		else {
-			html += '<li value="15*60">Adiar 15 minutos</li>' +
-					'<li value="30*60">Adiar 30 minutos</li>' +
-					'<li value="1*60*60 ">Adiar 1 hora</li>' +
-					'<li value="2*60*60 ">Adiar 2 horas</li>' +
-					'<li value="4*60*60 ">Adiar 4 horas</li>' +
-					'<li value="8*60*60 ">Adiar 8 horas</li>' +
-					'<li value="1*60*24 ">Adiar 1 dia</li>' +
-					'<li value="2*60*24 ">Adiar 2 dias</li>';
 		}
 		html += '</div>';
 
@@ -118,11 +118,13 @@ var plgnotify = function ( sysconfig ) {
 		_config.onblur.push( html );
 
 		html.onclick = function ( e ) {
-			console.log( e.target.value || e.target.parentNode.value );
-			if ( onclick ) {
+			html.onblur();
+
+			//se tiver 'value' e 'onclick' executa onclick
+			if (!isNaN(parseInt(e.target.value || e.target.parentNode.value)) && onclick ) {
 				onclick();
 			}
-			html.onblur();
+
 		};
 
 		/**
@@ -149,7 +151,7 @@ var plgnotify = function ( sysconfig ) {
 			}
 		};
 
-		pai = e.currentTarget.parentNode;
+		pai = e.target.parentNode;
 
 		pai.appendChild( html );
 
@@ -773,24 +775,81 @@ var plgnotify = function ( sysconfig ) {
 	}
 
 	/**
+	 * Pega tempos para 'adiar' da API.
+	 * @param success
+	 * @param error
+	 */
+	function getLaterOptionsList( success, error){
+		return getTimeList('later', success, error);
+	}
+	/**
+	 * Pega tempos para 'não perturbe' da API.
+	 * @param success
+	 * @param error
+	 */
+	function getDisturbOptionsList( success, error){
+		return getTimeList('disturb', success, error);
+	}
+
+	/**
+	 * Tratamento para pegar tempos da api
+	 */
+	function getTimeList( type, success, error ) {
+		var _local = localStorage.getItem( type );
+
+		if( !_local ){
+			localStorage.setItem( type, '<div class="plgloader></div>"' );
+
+			http.get(
+				api[type],
+				{
+					header :{
+						'Content-Type' :'application/json;charset=UTF-8',
+						'Authorization': token
+					},
+					success:function cachaTime( data ) {
+						if ( data ) {
+
+							if ( typeof data === 'string' ) {
+								_config[type] = arrayTimeToHTML( JSON.parse( data ) );
+							}
+
+							localStorage.setItem( type, _config[type] );
+
+							if(success){
+								success();
+							}
+						}
+					},
+					error  : function errorCallback( r, s, x ) {
+						if(error){
+							error();
+						}
+					}
+				}
+			);
+		}
+		return _config[type] = _local;
+	}
+
+	/**
 	 * Configura endereço e métodos.
 	 */
 	function setAPI() {
 		// pega token
-		token = _config.token;
+		token = 'Bearer '+_config.token;
 
 		// pega dados da api
 		api = _config.api;
 
-		if ( !api && _config.url ) {
+		if (!api && _config.url ) {
 			_config.url += (_config.url[_config.url.length] === '/' ? 'api/v1/' : '/api/v1/');
 
 			api = {
-				adiar   :_config.url + 'DelayTime',
-				perturbe:_config.url + 'DisturbTime'
+				'later'   :_config.url + 'DelayTime',
+				'disturb':_config.url + 'DisturbTime'
 			};
 		}
-
 	}
 
 	/**
@@ -1046,51 +1105,6 @@ var plgnotify = function ( sysconfig ) {
 	function publish() {
 		//Exibe plugin quanto todos os outros métodos tiver terminados.
 		layout.domplugin.classList.remove( 'hide' );
-
-		var disturbe = localStorage.getItem( 'disturbe' ), later = localStorage.getItem( 'later' );
-		//if( later || disturbe ){
-		//	_config.disturbe=disturbe;
-		//	_config.later=later;
-		//
-		//	return;
-		//}
-
-		http.get(
-			api.perturbe, {
-				header :{
-					'Content-Type' :'application/json;charset=UTF-8',
-					'Authorization':'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyN0ExREZGMzgzM0E3NzM0MTQwRkUxRjVEMDEwODQ4NEUxNjgwMjciLCJ0eXAiOiJKV1QiLCJ4NXQiOiJFbm9kX3pnenAzTkJRUDRmWFFFSVNFNFdnQ2MifQ.eyJuYmYiOjE0OTg1OTA0NDUsImV4cCI6MTQ5ODU5NDA0NSwiaXNzIjoiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAiLCJhdWQiOlsiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAvcmVzb3VyY2VzIiwiYXBpMSJdLCJjbGllbnRfaWQiOiJtc3RlY2hqcyIsInN1YiI6ImI4OGM2ZmY4LWY3MjEtZTIxMS1hNThkLTAwMTU1ZDAyZTcxNiIsImF1dGhfdGltZSI6MTQ5ODU5MDM3MSwiaWRwIjoibG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlzaWQiOiI2Y2Y0MjRkYy04ZWMzLWUwMTEtOWIzNi0wMDE1NWQwMzMyMDYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXN1YXJpby5zcWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c3Vhcmlvc3FhQG1zdGVjaC5jb20uYnIxMTEiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiYXBpMSJdLCJhbXIiOlsicHdkIl19.t8qQYFDftCR5PhQmobzcc6X31v4-tJSP6wy_p_kKheLrErtigPwgCogCzUOfTMJGr87YkhUfYLFd9KCCRqTmU1J4vFlYg42YqR2dDfRIs87TVctAB3DjSmv-xqBXPP4UjhxHJm9JKbxVyvLu-7swoQ0k4N5f8V-EdlS75kUrIDFAnI4HSYIoBwEqOV3mcqPbnBSXy13StLRvSkVEORSiS4C16dUp9EaI1X9PUegLPGpXVaqA5ZdDnIw-dl-EFBAqHBU5eBpz-01C2_Uvyi-fQ5q5tYHxnWptU8t-kafo1UtT0amaf-eYUR8U2sHJv6r97gJS2xBb7mzXJj22YLYmvA'
-				},
-				success:cachaTime.bind( {}, 'disturbe' ),
-				error  :errorCallback
-			}
-		);
-
-		http.get(
-			api.adiar, {
-				header :{
-					'Content-Type' :'application/json;charset=UTF-8',
-					'Authorization':'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyN0ExREZGMzgzM0E3NzM0MTQwRkUxRjVEMDEwODQ4NEUxNjgwMjciLCJ0eXAiOiJKV1QiLCJ4NXQiOiJFbm9kX3pnenAzTkJRUDRmWFFFSVNFNFdnQ2MifQ.eyJuYmYiOjE0OTg1OTA0NDUsImV4cCI6MTQ5ODU5NDA0NSwiaXNzIjoiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAiLCJhdWQiOlsiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAvcmVzb3VyY2VzIiwiYXBpMSJdLCJjbGllbnRfaWQiOiJtc3RlY2hqcyIsInN1YiI6ImI4OGM2ZmY4LWY3MjEtZTIxMS1hNThkLTAwMTU1ZDAyZTcxNiIsImF1dGhfdGltZSI6MTQ5ODU5MDM3MSwiaWRwIjoibG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlzaWQiOiI2Y2Y0MjRkYy04ZWMzLWUwMTEtOWIzNi0wMDE1NWQwMzMyMDYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXN1YXJpby5zcWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c3Vhcmlvc3FhQG1zdGVjaC5jb20uYnIxMTEiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiYXBpMSJdLCJhbXIiOlsicHdkIl19.t8qQYFDftCR5PhQmobzcc6X31v4-tJSP6wy_p_kKheLrErtigPwgCogCzUOfTMJGr87YkhUfYLFd9KCCRqTmU1J4vFlYg42YqR2dDfRIs87TVctAB3DjSmv-xqBXPP4UjhxHJm9JKbxVyvLu-7swoQ0k4N5f8V-EdlS75kUrIDFAnI4HSYIoBwEqOV3mcqPbnBSXy13StLRvSkVEORSiS4C16dUp9EaI1X9PUegLPGpXVaqA5ZdDnIw-dl-EFBAqHBU5eBpz-01C2_Uvyi-fQ5q5tYHxnWptU8t-kafo1UtT0amaf-eYUR8U2sHJv6r97gJS2xBb7mzXJj22YLYmvA'
-				},
-				success:cachaTime.bind( {}, 'later' ),
-				error  :errorCallback
-			}
-		);
-
-		function errorCallback( r, s, x ) {
-			console.error( r );
-		};
-		function cachaTime( string, data ) {
-			if ( string && data ) {
-
-				if ( typeof data === 'string' ) {
-					_config[string] = arrayTimeToHTML( JSON.parse( data ) );
-					data            = ( data );
-				}
-
-				localStorage.setItem( string, data );
-			}
-		}
 	}
 
 	/**
