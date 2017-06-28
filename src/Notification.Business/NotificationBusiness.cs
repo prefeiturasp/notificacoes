@@ -74,10 +74,31 @@ namespace Notification.Business
             return repository.GetById(id);
         }
 
-        public static IEnumerable<NotificationPlugin> GetByUserId(Guid userId)
+        public static IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId)
         {
             var repository = new NotificationRepository();
-            return repository.GetByUserId(userId);
+            return repository.GetNotReadByUserId(userId);
+        }
+
+        public static IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId)
+        {
+            var repository = new NotificationRepository();
+            return repository.GetReadByUserId(userId);
+        }
+
+        public static void Action(Guid userId, NotificationAction entity)
+        {
+            var repository = new NotificationRepository();
+
+            if (entity.DelayId.HasValue)
+            {
+                //TODO: Configrar a data a ser gravada
+                repository.UpdateDelayDate(entity.NotificationId, userId, new DateTime());
+            }
+            else if (entity.Read.HasValue)
+            {
+                repository.UpdateRead(entity.NotificationId, userId, entity.Read.Value);
+            }
         }
     }
 }
