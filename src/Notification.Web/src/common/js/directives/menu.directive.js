@@ -23,16 +23,23 @@
 
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
+            $scope.getListMenu = false;
 
             $scope.openMenuSytem = function __openMenuSytem() {
-                $scope.showListMenu = !$scope.showListMenu;
 
-                if($scope.listMenuSystem.length == 0 && $scope.showListMenu) {
-                    HttpServices.getListSystem("", function (data) {
+                if($scope.listMenuSystem.length == 0 && !$scope.showListMenu && !$scope.getListMenu) {
+                    var vision = JSON.parse(atob(window.sessionStorage.VisionSystem));
+
+                    HttpServices.getListSystem(vision.VisionId, function (data) {
                         $scope.listMenuSystem = data;
+                        $scope.showListMenu = !$scope.showListMenu;
+                        $scope.getListMenu = true;
                     });
+                }else if($scope.getListMenu){
+                    $scope.showListMenu = !$scope.showListMenu;
                 }
             };
+
             $scope.mouseOver = function __mouseOver() {
                 $scope.showListMenu = false;
             };

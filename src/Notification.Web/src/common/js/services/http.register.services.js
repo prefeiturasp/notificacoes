@@ -180,6 +180,12 @@
                 }
             }
 
+            function getTimeStamp(callback){
+                httpModel(Model.getTimeStamp(), function (res) {
+                    callback(res);
+                });
+            }
+
     /*-------------------------------------------POST----------------------------------------------------*/
 
             function postSave(data, callback){
@@ -202,7 +208,8 @@
                 getListDiscipline: getListDiscipline,
                 getListTeam: getListTeam,
                 postSave: postSave,
-                getListUnitAdministrative: getListUnitAdministrative
+                getListUnitAdministrative: getListUnitAdministrative,
+                getTimeStamp: getTimeStamp
             }
 
         };
