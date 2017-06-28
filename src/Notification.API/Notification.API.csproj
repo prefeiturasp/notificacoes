@@ -275,6 +275,7 @@
     <Compile Include="Areas\SGP\v1\UserController.cs" />
     <Compile Include="Areas\v1\AuthBaseController.cs" />
     <Compile Include="Areas\v1\AuthUserGroupBaseController.cs" />
+    <Compile Include="Areas\v1\ConfigurationController.cs" />
     <Compile Include="Areas\v1\DelayTimeController.cs" />
     <Compile Include="Areas\v1\DisturbTimeController.cs" />
     <Compile Include="Areas\v1\LogController.cs" />
