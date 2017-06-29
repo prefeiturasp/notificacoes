@@ -131,7 +131,6 @@
     <Content Include="src\common\js\lib\plg-notify.min.js" />
     <Content Include="src\common\js\lib\redactor.js" />
     <Content Include="src\common\js\module\app.module.js" />
-    <Content Include="src\common\js\services\config.js" />
     <Content Include="src\common\js\services\http.register.services.js" />
     <Content Include="src\common\js\services\model.js" />
     <Content Include="src\common\js\services\notification.js" />
