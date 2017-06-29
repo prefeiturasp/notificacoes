@@ -1,4 +1,4 @@
-﻿using Notification.API.App_Start;
+﻿using Notification.API.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,15 @@ namespace Notification.API.Areas.v1
             {
                 return (UserGroupActionFilterAttribute)ControllerContext.ControllerDescriptor.GetFilters()
                     .Where(f => f.GetType() == typeof(UserGroupActionFilterAttribute)).Single();
+            }
+        }
+
+        public PaginateActionFilterAttribute paginate
+        {
+            get
+            {
+                return (PaginateActionFilterAttribute)ActionContext.ActionDescriptor.GetFilters()
+                    .Where(f => f.GetType() == typeof(PaginateActionFilterAttribute)).Single();
             }
         }
     }

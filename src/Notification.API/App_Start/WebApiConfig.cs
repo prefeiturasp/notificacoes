@@ -45,7 +45,7 @@ namespace Notification.API
             string urlNotificationSite = ConfigurationManager.AppSettings["NotificationSite"];
 
             //config.EnableCors(new EnableCorsAttribute("http://localhost:5000, http://localhost:5003, http://localhost:5010, http://localhost:5020", "accept, authorization", "GET", "WWW-Authenticate"));
-            config.EnableCors(new EnableCorsAttribute(urlIdentityServer + ", " + urlNotificationSite, "accept, authorization, groupSid, Content-Type", "GET, POST", "WWW-Authenticate"));
+            config.EnableCors(new EnableCorsAttribute(urlIdentityServer + ", " + urlNotificationSite, "accept, authorization, groupSid, Content-Type, page, size", "GET, POST", "WWW-Authenticate"));
 
             //config.Routes.MapHttpRoute(
             //    name: "DefaultApi",
