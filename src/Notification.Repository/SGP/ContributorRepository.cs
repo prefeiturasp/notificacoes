@@ -23,8 +23,9 @@ namespace Notification.Repository.SGP
                 StringBuilder sb = new StringBuilder();
                 sb.Append(
                     @"SELECT
-                    usu.usu_id 'Id',
-                    pes.pes_nome 'Name'
+                    DISTINCT
+                    usu.usu_id 'Id'
+                    
                     FROM
                     RHU_Colaborador col WITH(NOLOCK)
                     INNER JOIN Synonym_SYS_Usuario usu WITH(NOLOCK)
@@ -86,8 +87,8 @@ namespace Notification.Repository.SGP
                 sb.Append(@"UNION
 
                     SELECT
-                        usu.usu_id 'Id',
-                    pes.pes_nome 'Name'
+                        DISTINCT
+                        usu.usu_id 'Id'
                     FROM
                         RHU_Colaborador col WITH(NOLOCK)
                         INNER JOIN Synonym_SYS_Usuario usu WITH(NOLOCK)

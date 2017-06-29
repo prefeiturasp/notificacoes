@@ -131,7 +131,6 @@
     <Content Include="src\common\js\lib\plg-notify.min.js" />
     <Content Include="src\common\js\lib\redactor.js" />
     <Content Include="src\common\js\module\app.module.js" />
-    <Content Include="src\common\js\services\config.js" />
     <Content Include="src\common\js\services\http.register.services.js" />
     <Content Include="src\common\js\services\model.js" />
     <Content Include="src\common\js\services\notification.js" />
@@ -139,6 +138,7 @@
     <Content Include="src\common\js\services\utils.js" />
     <Content Include="src\common\view\login.directive.html" />
     <Content Include="src\common\view\menu.directive.html" />
+    <Content Include="src\config.js" />
     <Content Include="src\index.html" />
     <Content Include="src\login\login.html" />
     <Content Include="src\register\register.controller.js" />
