@@ -81,8 +81,8 @@
     <Content Include="node_modules\angular\angular.min.js" />
     <Content Include="node_modules\angular\index.js" />
     <Content Include="packages.config" />
-    <Content Include="src\common\css\style.scss" />
-    <Content Include="src\common\font\fontawesome-webfont.woff2" />
+    <Content Include="common\css\style.scss" />
+    <Content Include="common\font\fontawesome-webfont.woff2" />
     <Content Include="node_modules\angular-resource\angular-resource.min.js.map" />
     <Content Include="node_modules\angular-resource\bower.json" />
     <Content Include="node_modules\angular-resource\LICENSE.md" />
@@ -106,7 +106,7 @@
     <Content Include="node_modules\angular\README.md" />
     <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
-    <Content Include="src\common\js\lib\plg-notify.min.js.map" />
+    <Content Include="common\js\lib\plg-notify.min.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -115,36 +115,36 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\callback.html" />
-    <Content Include="src\common\css\font-awesome.css" />
-    <Content Include="src\common\css\font.css" />
-    <Content Include="src\common\css\style.css" />
-    <Content Include="src\common\img\pattern.png" />
-    <Content Include="src\common\js\directives\directive.js" />
-    <Content Include="src\common\js\directives\login.directive.js" />
-    <Content Include="src\common\js\directives\menu.directive.js" />
-    <Content Include="src\common\js\factorys\factory.js" />
-    <Content Include="src\common\js\factorys\route.factory.js" />
-    <Content Include="src\common\js\filters\filter.js" />
-    <Content Include="src\common\js\lib\jquery.min.js" />
-    <Content Include="src\common\js\lib\jquery.signalR.min.js" />
-    <Content Include="src\common\js\lib\limiter.js" />
-    <Content Include="src\common\js\lib\oidc-client.js" />
-    <Content Include="src\common\js\lib\plg-notify.min.js" />
-    <Content Include="src\common\js\lib\redactor.js" />
-    <Content Include="src\common\js\module\app.module.js" />
-    <Content Include="src\common\js\services\http.register.services.js" />
-    <Content Include="src\common\js\services\model.js" />
-    <Content Include="src\common\js\services\notification.js" />
-    <Content Include="src\common\js\services\services.js" />
-    <Content Include="src\common\js\services\utils.js" />
-    <Content Include="src\common\view\login.directive.html" />
-    <Content Include="src\common\view\menu.directive.html" />
-    <Content Include="src\config.js" />
-    <Content Include="src\index.html" />
-    <Content Include="src\login\login.html" />
-    <Content Include="src\register\register.controller.js" />
-    <Content Include="src\register\register.view.html" />
+    <Content Include="callback.html" />
+    <Content Include="common\css\font-awesome.css" />
+    <Content Include="common\css\font.css" />
+    <Content Include="common\css\style.css" />
+    <Content Include="common\img\pattern.png" />
+    <Content Include="common\js\directives\directive.js" />
+    <Content Include="common\js\directives\login.directive.js" />
+    <Content Include="common\js\directives\menu.directive.js" />
+    <Content Include="common\js\factorys\factory.js" />
+    <Content Include="common\js\factorys\route.factory.js" />
+    <Content Include="common\js\filters\filter.js" />
+    <Content Include="common\js\lib\jquery.min.js" />
+    <Content Include="common\js\lib\jquery.signalR.min.js" />
+    <Content Include="common\js\lib\limiter.js" />
+    <Content Include="common\js\lib\oidc-client.js" />
+    <Content Include="common\js\lib\plg-notify.min.js" />
+    <Content Include="common\js\lib\redactor.js" />
+    <Content Include="common\js\module\app.module.js" />
+    <Content Include="common\js\services\http.register.services.js" />
+    <Content Include="common\js\services\model.js" />
+    <Content Include="common\js\services\notification.js" />
+    <Content Include="common\js\services\services.js" />
+    <Content Include="common\js\services\utils.js" />
+    <Content Include="common\view\login.directive.html" />
+    <Content Include="common\view\menu.directive.html" />
+    <Content Include="config.js" />
+    <Content Include="index.html" />
+    <Content Include="login\login.html" />
+    <Content Include="register\register.controller.js" />
+    <Content Include="register\register.view.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
