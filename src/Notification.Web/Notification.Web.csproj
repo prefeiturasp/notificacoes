@@ -66,6 +66,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="common\css\redactor.css" />
+    <Content Include="common\fonts\fontawesome-webfont.svg" />
     <Content Include="Gruntfile.js" />
     <Content Include="node_modules\angular-resource\angular-resource.js" />
     <Content Include="node_modules\angular-resource\angular-resource.min.js" />
@@ -105,6 +107,11 @@
     <Content Include="node_modules\angular\package.json" />
     <Content Include="node_modules\angular\README.md" />
     <Content Include="package.json" />
+    <Content Include="common\fonts\fontawesome-webfont.eot" />
+    <Content Include="common\fonts\fontawesome-webfont.ttf" />
+    <Content Include="common\fonts\fontawesome-webfont.woff" />
+    <Content Include="common\fonts\fontawesome-webfont.woff2" />
+    <Content Include="common\fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
     <Content Include="common\js\lib\plg-notify.min.js.map" />
     <None Include="Web.Debug.config">
