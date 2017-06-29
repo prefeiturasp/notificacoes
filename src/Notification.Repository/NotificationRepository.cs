@@ -57,16 +57,18 @@ namespace Notification.Repository
         public IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId)
         {
             var builder = Builders<Notification.Entity.Database.Notification>.Filter;
-            var filter = builder.ElemMatch(n => n.Recipient, 
-                nr => nr.UserId == userId && nr.Read == false && nr.DelayDate > DateTime.Now.Date);
+            var filter = builder.Lte(n => n.DateStartNotification, DateTime.Now.Date) &
+                builder.ElemMatch(n => n.Recipient, nr => nr.UserId == userId && nr.Read == false);
             var project = Builders<Notification.Entity.Database.Notification>.Projection
-                .ElemMatch(n => n.Recipient, nr => nr.UserId == userId);
+                .Exclude(n => n.Recipient);
+            var sort = Builders<Notification.Entity.Database.Notification>.Sort
+                .Descending(n => n.MessageType)
+                .Ascending(n => n.DateStartNotification);
                         
             var result = Collection
                 .Find(filter)
-                .Project<NotificationPlugin>(project)
-                .SortByDescending(n => n.MessageType)
-                .SortBy(n => n.DateStartNotification);
+                .Project<Notification.Entity.API.NotificationPlugin>(project)
+                .Sort(sort);
 
             return result.ToList();
         }
@@ -74,16 +76,18 @@ namespace Notification.Repository
         public IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId)
         {
             var builder = Builders<Notification.Entity.Database.Notification>.Filter;
-            var filter = builder.ElemMatch(n => n.Recipient, 
-                nr => nr.UserId == userId && nr.Read == true && nr.DelayDate > DateTime.Now.Date);
+            var filter = builder.Lte(n => n.DateStartNotification, DateTime.Now.Date) &
+                builder.ElemMatch(n => n.Recipient, nr => nr.UserId == userId && nr.Read == true);
             var project = Builders<Notification.Entity.Database.Notification>.Projection
-                .ElemMatch(n => n.Recipient, nr => nr.UserId == userId);
+                .Exclude(n => n.Recipient);
+            var sort = Builders<Notification.Entity.Database.Notification>.Sort
+                .Descending(n => n.MessageType)
+                .Ascending(n => n.DateStartNotification);
 
             var result = Collection
                 .Find(filter)
-                .Project<NotificationPlugin>(project)
-                .SortByDescending(n => n.MessageType)
-                .SortBy(n => n.DateStartNotification);
+                .Project<Notification.Entity.API.NotificationPlugin>(project)
+                .Sort(sort);
 
             return result.ToList();
         }
