@@ -17,40 +17,79 @@ namespace Notification.Repository
             return entity.Id;
         }
 
-        public NotificationPlugin GetById(Guid id)
+        public void UpdateRead(Guid id, Guid userId, bool read)
         {
-            var result = Collection.Find(n => n.Id == id).FirstOrDefault();
+            var builder = Builders<Notification.Entity.Database.Notification>.Filter;
+            var filter = builder.Eq(n => n.Id, id) & builder.ElemMatch(n => n.Recipient, nr => nr.UserId == userId);
+            var update = Builders<Notification.Entity.Database.Notification>.Update.Set(n => n.Recipient.ElementAt(-1).Read , read);
 
-            if (result == null)
-                return null;
-
-            return new NotificationPlugin()
-            {
-                Id = result.Id,
-                SenderName = result.SenderName,
-                DateStartNotification = result.DateStartNotification,
-                DateEndNotification = result.DateEndNotification,
-                MessageType = result.MessageType,
-                Title = result.Title,
-                Message = result.Message
-            };
+            //var sfilter = filter.Render(Collection.DocumentSerializer, Collection.Settings.SerializerRegistry).ToString();
+            //var sUpdate = update.Render(Collection.DocumentSerializer, Collection.Settings.SerializerRegistry).ToString();
+            
+            var result = Collection.UpdateOne(filter, update);
         }
 
-        public IEnumerable<NotificationPlugin> GetByUserId(Guid userId)
+        public void UpdateDelayDate(Guid id, Guid userId, DateTime delayDate)
         {
+            var builder = Builders<Notification.Entity.Database.Notification>.Filter;
+            var filter = builder.Eq(n => n.Id, id) & builder.ElemMatch(n => n.Recipient, nr => nr.UserId == userId);
+            var update = Builders<Notification.Entity.Database.Notification>.Update
+                .Set(n => n.Recipient.ElementAt(-1).Read, false)
+                .Set(n => n.Recipient.ElementAt(-1).DelayDate, delayDate);
+
+            //var sfilter = filter.Render(Collection.DocumentSerializer, Collection.Settings.SerializerRegistry).ToString();
+            //var sUpdate = update.Render(Collection.DocumentSerializer, Collection.Settings.SerializerRegistry).ToString();
+
+            var result = Collection.UpdateOne(filter, update);
+        }
+        
+        public NotificationPlugin GetById(Guid id)
+        {
+            var builder = Builders<Notification.Entity.Database.Notification>.Filter;
+            var projection = Builders<Notification.Entity.Database.Notification>.Projection
+                .Exclude(n => n.Recipient);
+
+            var result = Collection.Find(n => n.Id == id).Project<NotificationPlugin>(projection).FirstOrDefault();
+
+            return result;
+        }
+
+        public IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId)
+        {
+            var builder = Builders<Notification.Entity.Database.Notification>.Filter;
+            var filter = builder.Lte(n => n.DateStartNotification, DateTime.Now.Date) &
+                builder.ElemMatch(n => n.Recipient, nr => nr.UserId == userId && nr.Read == false);
+            var project = Builders<Notification.Entity.Database.Notification>.Projection
+                .Exclude(n => n.Recipient);
+            var sort = Builders<Notification.Entity.Database.Notification>.Sort
+                .Descending(n => n.MessageType)
+                .Ascending(n => n.DateStartNotification);
+                        
             var result = Collection
-                .Find(n => n.Recipient.Any(r => r.UserId == userId))
-                .Project(x => new NotificationPlugin() {
-                    Id = x.Id,
-                    SenderName = x.SenderName,
-                    DateStartNotification = x.DateStartNotification,
-                    DateEndNotification = x.DateEndNotification,
-                    MessageType = x.MessageType,
-                    Title = x.Title,
-                    Message = x.Message
-                });
-            
-            return result.ToList();            
+                .Find(filter)
+                .Project<Notification.Entity.API.NotificationPlugin>(project)
+                .Sort(sort);
+
+            return result.ToList();
+        }
+
+        public IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId)
+        {
+            var builder = Builders<Notification.Entity.Database.Notification>.Filter;
+            var filter = builder.Lte(n => n.DateStartNotification, DateTime.Now.Date) &
+                builder.ElemMatch(n => n.Recipient, nr => nr.UserId == userId && nr.Read == true);
+            var project = Builders<Notification.Entity.Database.Notification>.Projection
+                .Exclude(n => n.Recipient);
+            var sort = Builders<Notification.Entity.Database.Notification>.Sort
+                .Descending(n => n.MessageType)
+                .Ascending(n => n.DateStartNotification);
+
+            var result = Collection
+                .Find(filter)
+                .Project<Notification.Entity.API.NotificationPlugin>(project)
+                .Sort(sort);
+
+            return result.ToList();
         }
     }
 }

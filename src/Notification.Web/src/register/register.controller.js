@@ -44,6 +44,8 @@
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
 
             new plgnotify({
+                url: Config.API,
+                token: $util.getKey() + " " + $util.getAccessToken(),
                 ws: {
                   url: Config.URL_SIGGNALR
                 }
@@ -114,7 +116,11 @@
                 checkedDRE: true,
                 checkedClassification: true,
                 checkedSchool: true,
-                checkedPosition: true
+                checkedPosition: true,
+                checkedCourse: true,
+                checkedCoursePeriod: true,
+                checkedDiscipline: true,
+                checkedTeam: true
             };
 
             $scope.limitCharRedactor = 300;
@@ -129,6 +135,9 @@
             $scope.listCorse = [];
             $scope.listPosition = [];
             $scope.listSchool = [];
+            $scope.listCoursePeriod = [];
+            $scope.listDiscipline = [];
+            $scope.listTeam = [];
             $scope.listListSchoolClassification = [];
             $scope.YearSelected = null;
 
@@ -158,6 +167,24 @@
             };
 
             $scope.ContributorRecipient = {
+                SchoolSuperior:[],
+                SchoolClassification:[],
+                School:[],
+                Position:[]
+            };
+
+            $scope.TeacherRecipientClone = {
+                SchoolSuperior:[],
+                SchoolClassification:[],
+                School:[],
+                Position:[],
+                Course:[],
+                CoursePeriod:[],
+                Discipline:[],
+                Team:[]
+            };
+
+            $scope.ContributorRecipientClone = {
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -251,7 +278,7 @@
             startRedactor();
             closeModal();
             $scope.showTypeFilter.typeVision = false;
-            window.sessionStorage.VisionSystem = btoa(JSON.stringify($scope.VisionSystem));
+            window.sessionStorage.visionSelected = btoa(JSON.stringify($scope.VisionSystem));
         };
 
         /**
@@ -328,6 +355,7 @@
             getCalendar();
             $scope.showTypeFilter.typeUser = true;
             $scope.showTypeFilter.typeModalTypeUser = true;
+            angular.element(body).addClass('hidden-body');
 
         };
 
@@ -382,15 +410,17 @@
 
             HttpServices.getListVisionSystem(function(data){
                 $scope.listVisionSystem = data;
-                if(data.length > 1) {
+                if( data != null) {
+                    if (data.length > 1) {
 
-                    $scope.showTypeFilter.typeVision = true;
-                    declareVariables();
-                    getCalendar();
-                    removeLoad();
-                    openModal();
-                }else{
-                    $scope.VisionSystem = $scope.listVisionSystem[0]
+                        $scope.showTypeFilter.typeVision = true;
+                        declareVariables();
+                        getCalendar();
+                        removeLoad();
+                        openModal();
+                    } else {
+                        $scope.VisionSystem = $scope.listVisionSystem[0]
+                    }
                 }
             });
         }
@@ -484,36 +514,46 @@
                     toastr.warning("Não existe uma lista de de datas!");
                 }else{
                     $scope.YearSelected = $scope.listCalendar[$scope.listCalendar.length - 1];
-                    getCorse();
                 }
-
-
 
                 removeLoad();
             });
         }
 
-        $scope.getSchoolClassification = function __getSchoolClassification(){
+        $scope.getSchoolClassification = function __getSchoolClassification(SchoolSuperior){
+
+            $scope.change.checkedClassification = !$scope.change.checkedClassification;
+
             if(!$scope.change.checkedClassification) {
                 addLoad();
                 var params = {
                     groupSid: $scope.VisionSystem.Id,
-                    SchoolSuperior: $scope.ContributorRecipient.SchoolSuperior
+                    SchoolSuperior: SchoolSuperior
                 };
 
                 HttpServices.getListSchoolClassification(params, function (data) {
                     $scope.listListSchoolClassification = data;
                     removeLoad();
                 });
+            }else if($scope.change.checkedClassification){
+                $scope.TeacherRecipient.SchoolClassification = [];
+                $scope.ContributorRecipient.SchoolClassification = [];
             }
-        }
+        };
 
-        function getCorse(){
-            addLoad();
-            HttpServices.getListCorse($scope.YearSelected.Name, function(data){
-                $scope.listCorse = data;
-            });
-        }
+        $scope.getCorse =  function getCorse(){
+            $scope.change.checkedCourse = !$scope.change.checkedCourse;
+            if(!$scope.change.checkedCourse) {
+                addLoad();
+                HttpServices.getListCorse($scope.YearSelected.Name, function (data) {
+                    $scope.listCorse = data;
+                    removeLoad();
+                });
+            }else if($scope.change.checkedCourse){
+                $scope.TeacherRecipient.Course = [];
+                $scope.ContributorRecipient.Course = [];
+            }
+        };
 
         $scope.getPosition = function __getPosition(){
             $scope.change.checkedPosition = !$scope.change.checkedPosition;
@@ -524,17 +564,22 @@
                     $scope.listPosition = data;
                     removeLoad();
                 });
+            }else if($scope.change.checkedPosition){
+                $scope.TeacherRecipient.Position = [];
+                $scope.ContributorRecipient.Position = [];
             }
         };
 
-        $scope.getSchool = function __getSchool(){
+        $scope.getSchool = function __getSchool(SchoolSuperior, SchoolClassification){
+
+            $scope.change.checkedSchool = !$scope.change.checkedSchool;
 
             if(!$scope.change.checkedSchool) {
 
                 var params = {
                     groupSid: $scope.VisionSystem.Id,
-                    SchoolSuperior: $scope.ContributorRecipient.SchoolSuperior,
-                    schoolClassification: $scope.ContributorRecipient.SchoolClassification
+                    SchoolSuperior: SchoolSuperior,
+                    schoolClassification: SchoolClassification
                 };
 
                 addLoad();
@@ -542,27 +587,89 @@
                     $scope.listSchool = data;
                     removeLoad();
                 });
+            }else if($scope.change.checkedDiscipline){
+                $scope.TeacherRecipient.School = [];
+                $scope.ContributorRecipient.School = [];
             }
-        }
+        };
+
+        $scope.getCoursePeriod = function __getCoursePeriod(){
+            $scope.change.checkedCoursePeriod = !$scope.change.checkedCoursePeriod;
+
+            if(!$scope.change.checkedCoursePeriod) {
+                addLoad();
+
+                var params = {
+                    calendarYear: $scope.YearSelected.Name,
+                    courseId: $scope.TeacherRecipient.Course
+                };
+
+                HttpServices.getListCoursePeriod(params, function (data) {
+                    $scope.listCoursePeriod = data;
+                    removeLoad();
+                });
+            }else if($scope.change.checkedCoursePeriod){
+                $scope.TeacherRecipient.CoursePeriod = [];
+            }
+        };
+
+        $scope.getDiscipline = function __getDiscipline(){
+            $scope.change.checkedDiscipline = !$scope.change.checkedDiscipline;
+
+            if(!$scope.change.checkedDiscipline) {
+
+                var params = {
+                    calendarYear: $scope.YearSelected.Name,
+                    courseId: $scope.TeacherRecipient.Course,
+                    coursePeriodId: $scope.TeacherRecipient.CoursePeriod
+                };
+
+                addLoad();
+                HttpServices.getListDiscipline(params, function (data) {
+                    $scope.listDiscipline = data;
+                    removeLoad();
+                });
+            }else if($scope.change.checkedDiscipline){
+                $scope.TeacherRecipient.Discipline = [];
+            }
+        };
+
+        $scope.getTeam = function __getTeam(){
+            $scope.change.checkedTeam = !$scope.change.checkedTeam;
+
+            if(!$scope.change.checkedTeam) {
+
+                var params = {
+                    groupSid: $scope.VisionSystem.Id,
+                    calendarYear: $scope.YearSelected.Name,
+                    schoolSuperiorId: $scope.TeacherRecipient.SchoolSuperior,
+                    schoolClassificationId: $scope.TeacherRecipient.SchoolClassification,
+                    schoolId: $scope.TeacherRecipient.School,
+                    courseId: $scope.TeacherRecipient.Course,
+                    coursePeriodId: $scope.TeacherRecipient.CoursePeriod,
+                    disciplineId: $scope.TeacherRecipient.Discipline
+                };
+
+                addLoad();
+                HttpServices.getListTeam(params, function (data) {
+                    $scope.listTeam = data;
+                    removeLoad();
+                });
+            }else if($scope.change.checkedTeam){
+                $scope.TeacherRecipient.Team = [];
+            }
+        };
 
         /*--------------------------------------FIM DOS FILTROS POR USUÁRIO----------------------------------------*/
 
         $scope.searchDREs = function __searchDREs(){
             $scope.change.checkedDRE = !$scope.change.checkedDRE;
-            if(!$scope.change.checkedDRE)
+            if(!$scope.change.checkedDRE) {
                 getDREs();
-        };
-
-        $scope.searchSchoolClassification = function __searchSchoolClassification(){
-            $scope.change.checkedClassification = !$scope.change.checkedClassification;
-            if(!$scope.change.checkedClassification)
-                $scope.getSchoolClassification();
-        };
-
-        $scope.searchSchool = function __searchSchool(){
-            $scope.change.checkedSchool = !$scope.change.checkedSchool;
-            if(!$scope.change.checkedSchool)
-                $scope.getSchool();
+            }else{
+                $scope.ContributorRecipient.SchoolSuperior = [];
+                $scope.TeacherRecipient.SchoolSuperior = [];
+            }
         };
 
         $scope.checkDateSelected = function __checkDateSelected(type){
@@ -578,7 +685,6 @@
                 $scope.filters[type] = null;
             }
         };
-
 
         /**
          * Salva o sistema selecionado
@@ -601,16 +707,48 @@
             }
         };
 
-        $scope.reloadListClassification = function __reloadListClassification(){
-            $scope.change.checkedClassification = true;
+        $scope.resetListSchool = function __resetListSchool(){
             $scope.change.checkedSchool = true;
-            $scope.getSchoolClassification();
-            $scope.getSchool();
+            $scope.TeacherRecipient.School = [];
+            $scope.ContributorRecipient.School = [];
+
+            $scope.ContributorRecipient.Team = [];
+            $scope.change.checkedTeam=true;
         };
 
-        $scope.reloadListSchool = function __reloadListSchool(){
+        $scope.resetdListClassification = function __resetdListClassification(){
+            $scope.change.checkedClassification = true;
             $scope.change.checkedSchool = true;
-            $scope.getSchool();
+
+            $scope.TeacherRecipient.SchoolClassification = [];
+            $scope.TeacherRecipient.School = [];
+
+            $scope.ContributorRecipient.SchoolClassification = [];
+            $scope.ContributorRecipient.School = [];
+
+            $scope.ContributorRecipient.Team = [];
+            $scope.change.checkedTeam=true;
+
+        };
+
+        $scope.resetListCoursePeriod = function __resetListCoursePeriod(){
+            $scope.change.checkedCoursePeriod=true;
+            $scope.change.checkedTeam=true;
+            $scope.TeacherRecipient.CoursePeriod = [];
+            $scope.ContributorRecipient.CoursePeriod = [];
+            $scope.ContributorRecipient.Team = [];
+        };
+
+        $scope.resetListDiscipline = function __resetListDiscipline(){
+            $scope.change.checkedDiscipline=true;
+            $scope.change.checkedTeam=true;
+            $scope.TeacherRecipient.Discipline = [];
+            $scope.ContributorRecipient.Team = [];
+        };
+
+        $scope.resetListTeam = function __resetListTeam(){
+            $scope.change.checkedTeam=true;
+            $scope.ContributorRecipient.Team = [];
         };
 
         /**
@@ -619,7 +757,7 @@
          * @param {Object} arr - arry do filtro
          * @param {Object}obj - opção seleciona
          */
-        $scope.selectTypeFilter = function __selectTypeFilter(arr, obj){
+        $scope.selectTypeFilter = function __selectTypeFilter(arr, obj, clone){
 
             //procura se já existe um obj salvo no arr
             for(var index in arr) {
@@ -630,6 +768,8 @@
             }
             //salva obj dentro do arr
             arr.push(obj.Id);
+            if(clone)
+                clone.push(obj);
         };
 
         /**
@@ -748,9 +888,12 @@
                 $scope.listRecipient.push(angular.copy($scope.SystemRecipientClone));
             }else {
                 $scope.showTypeFilter.typeAccordionUser = true;
-                $scope.listRecipientUser.push(angular.copy(filters));
+                if(type == 'TeacherRecipient')
+                    $scope.listRecipientUser.push(angular.copy($scope.TeacherRecipientClone));
+                else
+                    $scope.listRecipientUser.push(angular.copy($scope.ContributorRecipientClone));
             }
-            console.log($scope.filters.Recipient);
+
             $scope.closeModal(null, typeModal);
 
         };
@@ -777,7 +920,7 @@
         $scope.openModalViewRegisters = function __openModalViewRegisters(registers){
             $scope.showTypeFilter.typeViewRegisters = true;
             $scope.registresSelected = registers;
-            angular.element(body).addClass('hidden-body');
+            angular.element(body).addClass('hidden-body'); console.log(registers)
         };
 
         $scope.closeModalViewRegisters = function __closeModalViewRegisters(){

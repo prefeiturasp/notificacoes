@@ -8,6 +8,10 @@ namespace Notification.Entity.Database
 {
     public class NotificationRecipient
     {
-        public Guid UserId { get; set; }        
+        public Guid UserId { get; set; }
+
+        public bool Read { get; set; }
+
+        public Nullable<DateTime> DelayDate { get; set; }
     }
 }
