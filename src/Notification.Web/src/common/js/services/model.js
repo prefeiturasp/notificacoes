@@ -60,16 +60,17 @@
             }
 
             function getCoursePeriod(params) {
-                return getheaders('GET', null, $util.base_url_APISGP('/CoursePeriod?calendarYear='+ params +'&courseId[0]='+ params +'&courseId[1]='+ params));
+                return getheaders('GET', null, $util.base_url_APISGP('/CoursePeriod?calendarYear='+ params.calendarYear + getConcatUrl('&','courseId', params.courseId)));
             }
 
             function getDiscipline(params) {
-                return getheaders('GET', null, $util.base_url_APISGP('/Discipline?calendarId='+ params +'&courseId='+ params +'&coursePeriodId='+ params));
+                return getheaders('GET', null, $util.base_url_APISGP('/Discipline?calendarYear='+ params.calendarYear + getConcatUrl('&','courseId', params.courseId) + getConcatUrl('&','coursePeriodId', params.coursePeriodId)));
             }
 
             function getTeam(params) {
-                return getheaders('GET', null, $util.base_url_APISGP('/Team?calendarId='+ params +'&schoolSuperiorId='+ params +'&schoolClassificationId='+ params +'&schoolId='+ params +'&courseId='+ params +'&coursePeriodId='+ params +'&disciplineId='+ params));
-            }
+                return getheaders('GET', params.groupSid, $util.base_url_APISGP('/Team?calendarYear='+ params.calendarYear + getConcatUrl('&','schoolSuperiorId', params.schoolSuperiorId) + getConcatUrl('&','schoolClassificationId', params.schoolClassificationId) +
+                    getConcatUrl('&','schoolId', params.schoolId) + getConcatUrl('&','courseId', params.courseId) + getConcatUrl('&','coursePeriodId', params.coursePeriodId) + getConcatUrl('&','disciplineId', params.disciplineId)));
+}
 
             function postSave(params) {
                 return getheaders('POST', params.groupSid, $util.base_url_APINotification(), params.data);
@@ -83,14 +84,14 @@
                 var url = '';
                 for(var i = 0; i < params.length; i++){
                     if(i == 0)
-                        url += concat + type + '[' + i + ']='+params[i].Id;
+                        url += concat + type + '[' + i + ']='+ (params[i].Id != undefined ? params[i].Id : params[i]);
                     else
-                        url += '&' + type + '[' + i + ']='+params[i].Id;
+                        url += '&' + type + '[' + i + ']='+ (params[i].Id != undefined ? params[i].Id : params[i]);
                 }
                 return url;
             }
 
-            function getheaders(_method, visionGroupId,  _url, data) {
+            function getheaders(_method, groupSid,  _url, data) {
 
                 var method = {
                                 method: _method,
@@ -100,7 +101,7 @@
                                     "Content-Type": "application/json"
                                 }
                             };
-                if(visionGroupId) {method.headers.groupSid = visionGroupId;}
+                if(groupSid) {method.headers.groupSid = groupSid;}
                 if(data) {
                     method.data = data;
                 }

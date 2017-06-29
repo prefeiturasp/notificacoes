@@ -46,90 +46,107 @@
               <select ng-options="item as item.Name for item in listCalendar track by item.Id" ng-model="YearSelected"></select>
             <div class="por-usuario">
                 <div class="divisao-filtro">
-                  <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">DRE</h3>
-                  <ul>
-                    <li ng-repeat="item in listDREs">
-                        <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(item)">{{item.Name}}
-                    </li>
-                  </ul>
+                    <h3><input type="checkbox" class="primeiro" name="DRE" value="DRE" ng-checked="change.checkedDRE" ng-click="searchDREs()">DRE</h3>
+                    <ul>
+                        <li ng-repeat="item in listDREs" ng-if="!change.checkedDRE">
+                            <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.SchoolSuperior, item, TeacherRecipientClone.SchoolSuperior); resetdListClassification()">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedDRE">
+                            <input type="checkbox" class="primeiro" name="DRE" value="todas" checked disabled>Todas DREs
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="divisao-filtro">
-                  <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Classificação</h3>
-                  <ul>
-                    <li><input type="checkbox" class="primeiro" name="Classificação" value="classificação1">classificação1</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação2">classificação2</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                  </ul>
+                    <h3><input type="checkbox" class="primeiro" name="Classificação" value="Classificação" ng-checked="change.checkedClassification" ng-click="getSchoolClassification(TeacherRecipient.SchoolSuperior);">Classificação</h3>
+                    <ul>
+                        <li ng-repeat="item in listListSchoolClassification" ng-if="!change.checkedClassification">
+                            <input type="checkbox" class="primeiro" name="Classificação" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.SchoolClassification, item, TeacherRecipientClone.SchoolClassification); resetListSchool()">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedClassification">
+                            <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas Classificações
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="divisao-filtro">
-                  <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Escola</h3>
-                  <ul>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="Escola">Escola</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="Escola1">Escola1</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="Escola2">Escola2</li>
-                    <li><input type="checkbox" class="primeiro" name="grupos" value="Escola3">Escola3</li>
-                  </ul>
+                    <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool" ng-click="getSchool(TeacherRecipient.SchoolSuperior, TeacherRecipientClone.SchoolClassification)">Escola</h3>
+                    <ul>
+                        <li  ng-repeat="item in listSchool" ng-if="!change.checkedSchool">
+                            <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.School, item, RecipientClone.School)">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedSchool">
+                            <input type="checkbox" class="primeiro" name="Escolas" value="todas" checked disabled>Todas as Escolas
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="divisao-filtro">
-                  <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Cargo</h3>
-                  <ul>
-                    <li ng-repeat="item in listPosition">
-                        <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}">{{item.Name}}
-                    </li>
-                  </ul>
+                    <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getPosition()">Cargo</h3>
+                    <ul>
+                        <li ng-repeat="item in listPosition" ng-if="!change.checkedPosition">
+                            <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Position, item, TeacherRecipientClone.Position)">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedPosition">
+                            <input type="checkbox" class="primeiro" name="Cargo" value="todas" checked disabled>Todos os Cargo
+                        </li>
+                    </ul>
                 </div>
             </div>
               <div class="por-usuario">
                   <div class="divisao-filtro">
-                      <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Curso</h3>
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Curso" ng-checked="change.checkedCourse" ng-click="getCorse()">Curso</h3>
                       <ul>
-                          <li ng-repeat="item in listCorse">
-                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}">{{item.Name}}
+                          <li ng-repeat="item in listCorse"  ng-if="!change.checkedCourse">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Course, item, TeacherRecipientClone.Course); resetListCoursePeriod()">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedCourse">
+                              <input type="checkbox" class="primeiro" name="Curso" value="todas" checked disabled>Todos os Curso
                           </li>
                       </ul>
                   </div>
 
                   <div class="divisao-filtro">
-                      <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Período</h3>
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Período" ng-checked="change.checkedCoursePeriod" ng-click="getCoursePeriod()">Período</h3>
                       <ul>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação1">classificação1</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação2">classificação2</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="classificação3">classificação3</li>
+                          <li ng-repeat="item in listCoursePeriod"  ng-if="!change.checkedCoursePeriod">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.CoursePeriod, item, TeacherRecipientClone.CoursePeriod); resetListDiscipline()">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedCoursePeriod">
+                              <input type="checkbox" class="primeiro" name="Período" value="todas" checked disabled>Todos os Período
+                          </li>
                       </ul>
                   </div>
 
                   <div class="divisao-filtro">
-                      <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Disciplina</h3>
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Disciplina" ng-checked="change.checkedDiscipline" ng-click="getDiscipline()">Disciplina</h3>
                       <ul>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="Escola">Escola</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="Escola1">Escola1</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="Escola2">Escola2</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="Escola3">Escola3</li>
+                          <li ng-repeat="item in listDiscipline"  ng-if="!change.checkedDiscipline">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Discipline, item, TeacherRecipientClone.Discipline); resetListTeam()">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedDiscipline">
+                              <input type="checkbox" class="primeiro" name="Disciplina" value="todas" checked disabled>Todas as Disciplina
+                          </li>
                       </ul>
                   </div>
 
                   <div class="divisao-filtro">
-                      <h3><input type="checkbox" class="primeiro" name="grupos" value="Classificação">Turma</h3>
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Turma" ng-checked="change.checkedTeam" ng-click="getTeam()">Turma</h3>
                       <ul>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="Cargo">Cargo</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="cargo1">cargo1</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="cargo2">cargo2</li>
-                          <li><input type="checkbox" class="primeiro" name="grupos" value="cargo3">cargo3</li>
+                          <li ng-repeat="item in listTeam"  ng-if="!change.checkedTeam">
+                                  <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Team, item, TeacherRecipientClone.Team);">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedTeam">
+                              <input type="checkbox" class="primeiro" name="Turma" value="todas" checked disabled>Todas as Turma
+                          </li>
                       </ul>
                   </div>
               </div>
@@ -145,7 +162,7 @@
                         <h3><input type="checkbox" class="primeiro" name="DRE" value="DRE" ng-checked="change.checkedDRE" ng-click="searchDREs()">DRE</h3>
                         <ul>
                             <li ng-repeat="item in listDREs" ng-if="!change.checkedDRE">
-                                <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolSuperior, item); reloadListClassification()">{{item.Name}}
+                                <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolSuperior, item, ContributorRecipientClone.SchoolSuperior); resetdListClassification()">{{item.Name}}
                             </li>
 
                             <li ng-if="change.checkedDRE">
@@ -155,10 +172,10 @@
                     </div>
 
                     <div class="divisao-filtro">
-                        <h3><input type="checkbox" class="primeiro" name="Classificação" value="Classificação" ng-checked="change.checkedClassification" ng-click="searchSchoolClassification();">Classificação</h3>
+                        <h3><input type="checkbox" class="primeiro" name="Classificação" value="Classificação" ng-checked="change.checkedClassification" ng-click="getSchoolClassification(ContributorRecipient.SchoolSuperior);">Classificação</h3>
                         <ul>
                             <li ng-repeat="item in listListSchoolClassification" ng-if="!change.checkedClassification">
-                                <input type="checkbox" class="primeiro" name="Classificação" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolClassification, item); reloadListSchool()">{{item.Name}}
+                                <input type="checkbox" class="primeiro" name="Classificação" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolClassification, item, ContributorRecipientClone.SchoolClassification ); resetListSchool()">{{item.Name}}
                             </li>
 
                             <li ng-if="change.checkedClassification">
@@ -171,10 +188,10 @@
                 <div class="por-usuario">
 
                     <div class="divisao-filtro">
-                        <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool" ng-click="searchSchool()">Escola</h3>
+                        <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool"  ng-click="getSchool(ContributorRecipient.SchoolSuperior, ContributorRecipient.SchoolClassification)">Escola</h3>
                         <ul>
                             <li  ng-repeat="item in listSchool" ng-if="!change.checkedSchool">
-                                <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.School, item)">{{item.Name}}
+                                <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.School, item, ContributorRecipientClone.School)">{{item.Name}}
                             </li>
 
                             <li ng-if="change.checkedSchool">
@@ -187,7 +204,7 @@
                         <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getPosition()">Cargo</h3>
                         <ul>
                             <li ng-repeat="item in listPosition" ng-if="!change.checkedPosition">
-                                <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.Position, item)">{{item.Name}}
+                                <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.Position, item, ContributorRecipientClone.Position)">{{item.Name}}
                             </li>
 
                             <li ng-if="change.checkedPosition">
@@ -282,35 +299,35 @@
                 <h2>Destinatarios selecionados</h2>
 
                 <ul>
-                    <li class="lista-destinatario"><strong>DREs</strong></li>
+                    <li class="lista-destinatarios"><strong>DREs</strong></li>
                     <li ng-repeat="item in registresSelected.SchoolSuperior" >{{item.Name}}</li>
                     <li ng-if="registresSelected.SchoolSuperior.length == 0" >Todas as DREs</li>
 
-                    <li class="lista-destinatario"><strong>Classificaçãoes</strong></li>
+                    <li class="lista-destinatarios"><strong>Classificaçãoes</strong></li>
                     <li ng-repeat="item in registresSelected.SchoolClassification">{{item.Name}}</li>
                     <li ng-if="registresSelected.SchoolClassification.length == 0">Todas as Classificações</li>
 
-                    <li class="lista-destinatario"><strong>Escolas</strong></li>
+                    <li class="lista-destinatarios"><strong>Escolas</strong></li>
                     <li ng-repeat="item in registresSelected.School">{{item.Name}}</li>
                     <li ng-if="registresSelected.School.length == 0">Todas as Escolas</li>
 
-                    <li class="lista-destinatario"><strong>Cargos</strong></li>
+                    <li class="lista-destinatarios"><strong>Cargos</strong></li>
                     <li ng-repeat="item in registresSelected.Position">{{item.Name}}</li>
                     <li ng-if="registresSelected.Position.length == 0">Todos os Cargos</li>
 
-                    <li class="lista-destinatario" ng-if="registresSelected.Course"><strong>Cursos</strong></li>
+                    <li class="lista-destinatarios" ng-if="registresSelected.Course"><strong>Cursos</strong></li>
                     <li ng-repeat="item in registresSelected.Course">{{item.Name}}</li>
                     <li ng-if="registresSelected.Course.length == 0">Todos os Cursos</li>
 
-                    <li class="lista-destinatario" ng-if="registresSelected.CoursePeriod"><strong>Periodos</strong></li>
+                    <li class="lista-destinatarios" ng-if="registresSelected.CoursePeriod"><strong>Periodos</strong></li>
                     <li ng-repeat="item in registresSelected.CoursePeriod">{{item.Name}}</li>
                     <li ng-if="registresSelected.CoursePeriod.length == 0">Todos os Periodos</li>
 
-                    <li class="lista-destinatario" ng-if="registresSelected.Discipline"><strong>Diciplinas</strong></li>
+                    <li class="lista-destinatarios" ng-if="registresSelected.Discipline"><strong>Diciplinas</strong></li>
                     <li ng-repeat="item in registresSelected.Discipline">{{item.Name}}</li>
                     <li ng-if="registresSelected.Discipline.length == 0">Todas as Diciplinas</li>
 
-                    <li class="lista-destinatario" ng-if="registresSelected.Team"><strong>Tumas</strong></li>
+                    <li class="lista-destinatarios" ng-if="registresSelected.Team"><strong>Tumas</strong></li>
                     <li ng-repeat="item in registresSelected.Team">{{item.Name}}</li>
                     <li ng-if="registresSelected.Team.length == 0">Todas as Tumas</li>
 
@@ -370,28 +387,28 @@
                             <span ng-if="filter.SchoolSuperior.length == 0">Todas as DREs</span>
                             <span ng-if="filter.SchoolSuperior.length > 0">Total de DREs {{filter.SchoolSuperior.length}}</span>/
 
-                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>
+                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>/
                             <span ng-if="filter.SchoolClassification.length > 0">Total das Classificações {{filter.SchoolClassification.length}}</span>/
 
                             <span ng-if="filter.School.length == 0">Todas as Escolas</span>
                             <span ng-if="filter.School.length > 0">Total de Escolas {{filter.SchoolSuperior.length}}</span>/
 
                             <span ng-if="filter.Position.length == 0">Todos os Cargos</span>
-                            <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>
+                            <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>/
 
                             <span ng-if="filter.Course.length == 0">Todos os Cursos</span>
-                            <span ng-if="filter.Course.length > 0">Total de Cursos {{filter.Course.length}}</span>
+                            <span ng-if="filter.Course.length > 0">Total de Cursos {{filter.Course.length}}</span>/
 
                             <span ng-if="filter.CoursePeriod.length == 0">Todos os Periodos</span>
-                            <span ng-if="filter.CoursePeriod.length > 0">Total de Periodos {{filter.CoursePeriod.length}}</span>
+                            <span ng-if="filter.CoursePeriod.length > 0">Total de Periodos {{filter.CoursePeriod.length}}</span>/
 
                             <span ng-if="filter.Discipline.length == 0">Todas as Disciplinas</span>
-                            <span ng-if="filter.Discipline.length > 0">Total de Disciplinas {{filter.Discipline.length}}</span>
+                            <span ng-if="filter.Discipline.length > 0">Total de Disciplinas {{filter.Discipline.length}}</span>/
 
                             <span ng-if="filter.Team.length == 0">Todas as Trumas</span>
                             <span ng-if="filter.Team.length > 0">Total de Trumas {{filter.Team.length}}</span>
 
-                            <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('ContributorRecipient', $index)"></i>
+                            <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('TeacherRecipient', $index)"></i>
                         </p>
 
                     </div>

@@ -140,44 +140,25 @@
 
             function getListCoursePeriod(params, callback){
 
-                if($window.sessionStorage.listCorsePeriod){
-                    callback(JSON.parse(atob($window.sessionStorage.listCorsePeriod)));
-                }else {
-
-                    httpModel(Model.getCoursePeriod(params), function (res) {
-                        callback(res);
-                        if(res && res.length > 1)
-                            $window.sessionStorage.listCorsePeriod = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getCoursePeriod(params), function (res) {
+                    callback(res);
+                });
             }
 
             function getListDiscipline(params, callback){
 
-                if($window.sessionStorage.listDiscipline){
-                    callback(JSON.parse(atob($window.sessionStorage.listDiscipline)));
-                }else {
-
-                    httpModel(Model.getDiscipline(params), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listDiscipline = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getDiscipline(params), function (res) {
+                    callback(res);
+                });
             }
 
             function getListTeam(params, callback){
 
-                if($window.sessionStorage.listTeam){
-                    callback(JSON.parse(atob($window.sessionStorage.listTeam)));
-                }else {
-
-                    httpModel(Model.getTeam(params), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listTeam = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getTeam(params), function (res) {
+                    callback(res);
+                    if(res.length > 1)
+                        $window.sessionStorage.listTeam = btoa(JSON.stringify(res));
+                });
             }
 
             function getTimeStamp(callback){
