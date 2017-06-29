@@ -229,8 +229,8 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\UserActionFilterAttribute.cs" />
-    <Compile Include="App_Start\UserGroupActionFilterAttribute.cs" />
+    <Compile Include="Attributes\UserActionFilterAttribute.cs" />
+    <Compile Include="Attributes\UserGroupActionFilterAttribute.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\CoreSSO\v1\GroupAUController.cs" />
     <Compile Include="Areas\CoreSSO\v1\GroupController.cs" />

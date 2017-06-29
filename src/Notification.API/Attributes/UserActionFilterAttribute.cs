@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
-namespace Notification.API.App_Start
+namespace Notification.API.Attributes
 {
     public class UserActionFilterAttribute : FilterAttribute, IActionFilter
     {

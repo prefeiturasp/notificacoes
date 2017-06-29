@@ -1,6 +1,4 @@
-﻿
-
-using Notification.API.App_Start;
+﻿using Notification.API.Attributes;
 using System.Linq;
 using System.Web.Http;
 
