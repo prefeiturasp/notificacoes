@@ -10,21 +10,33 @@
         .factory("HttpServices", HttpRegisterService);
 
     //Injectors
-    HttpRegisterService.$inject = ['Model', 'toastr', '$http', '$window'];
+    HttpRegisterService.$inject = ['Model', 'toastr', '$http', '$window', '$timeout', '$util'];
 
     //angular.module('services').factory('HttpServices', ['Model', 'toastr', '$http', '$window',
-        function HttpRegisterService(Model, toastr, $http, $window) {
+        function HttpRegisterService(Model, toastr, $http, $window, $timeout, $util) {
 
             function httpModel(model, callback){
 
                 $http(model).then(function successCallback(response) {
                     callback && callback(response.data);
                 }, function errorCallback(response) {
+
+                    if(response.status == 401){
+                        toastr.warning('Sua sessão expirou, refaça o login no sistema!', 'Sessão expirada');
+
+                        $timeout(function(){
+                            window.sessionStorage.clear();
+                            var mgr = $util.getMgr();
+                            mgr.signoutRedirect();
+                            $util.setLogout();
+                        },3000);
+                        return
+                    }
+
                     if(response.data)
                         toastr.error(response.data.Message, 'Error');
                     else
                         toastr.error(response.statusText, 'Error');
-
                     callback && callback(null);
                 });
             }
@@ -100,7 +112,6 @@
             }
 
             function getListSchoolClassification(params, callback){
-
                 httpModel(Model.getSchoolClassification(params), function (res) {
                     callback(res);
                 });
@@ -125,7 +136,6 @@
             }
 
             function getListCorse(id, callback){
-
                 if($window.sessionStorage.listCorse){
                     callback(JSON.parse(atob($window.sessionStorage.listCorse)));
                 }else {
@@ -139,45 +149,21 @@
             }
 
             function getListCoursePeriod(params, callback){
-
-                if($window.sessionStorage.listCorsePeriod){
-                    callback(JSON.parse(atob($window.sessionStorage.listCorsePeriod)));
-                }else {
-
-                    httpModel(Model.getCoursePeriod(params), function (res) {
-                        callback(res);
-                        if(res && res.length > 1)
-                            $window.sessionStorage.listCorsePeriod = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getCoursePeriod(params), function (res) {
+                    callback(res);
+                });
             }
 
             function getListDiscipline(params, callback){
-
-                if($window.sessionStorage.listDiscipline){
-                    callback(JSON.parse(atob($window.sessionStorage.listDiscipline)));
-                }else {
-
-                    httpModel(Model.getDiscipline(params), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listDiscipline = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getDiscipline(params), function (res) {
+                    callback(res);
+                });
             }
 
             function getListTeam(params, callback){
-
-                if($window.sessionStorage.listTeam){
-                    callback(JSON.parse(atob($window.sessionStorage.listTeam)));
-                }else {
-
-                    httpModel(Model.getTeam(params), function (res) {
-                        callback(res);
-                        if(res.length > 1)
-                            $window.sessionStorage.listTeam = btoa(JSON.stringify(res));
-                    });
-                }
+                httpModel(Model.getTeam(params), function (res) {
+                    callback(res);
+                });
             }
 
             function getTimeStamp(callback){

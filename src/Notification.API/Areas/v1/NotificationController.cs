@@ -1,4 +1,5 @@
-﻿using Notification.Business;
+﻿using Notification.API.Attributes;
+using Notification.Business;
 using Notification.Entity.API;
 using System;
 using System.Collections.Generic;
@@ -53,18 +54,37 @@ namespace Notification.API.Areas.v1
         }
 
         [HttpGet]
+        [PaginateActionFilter]
         [Route("api/v1/Notification/")]
         [ResponseType(typeof(IEnumerable<NotificationPlugin>))]
-        public HttpResponseMessage GetByUserId(Guid Userid)
+        public HttpResponseMessage GetByUserId(Guid userId, bool read)
         {
             try
             {
-                var result = NotificationBusiness.GetByUserId(Userid);
+                var result = 
+                    read ?
+                    NotificationBusiness.GetReadByUserId(userId, paginate.Page, paginate.Size) :
+                    NotificationBusiness.GetNotReadByUserId(userId, paginate.Page, paginate.Size);
 
-                if (result == null)
-                    return Request.CreateResponse(HttpStatusCode.NotFound);
-                else
-                    return Request.CreateResponse(HttpStatusCode.OK, result);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+            }
+        }
+
+        [HttpPost]
+        [PaginateActionFilter]
+        [Route("api/v1/Notification/{id:guid}/Action")]
+        [ResponseType(typeof(bool))]
+        public HttpResponseMessage SaveAction(NotificationAction entity)
+        {
+            try
+            {
+                NotificationBusiness.Action(claimData.UserId, entity);
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception exc)
             {
