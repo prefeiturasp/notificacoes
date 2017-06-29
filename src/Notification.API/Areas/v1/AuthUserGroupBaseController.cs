@@ -20,5 +20,14 @@ namespace Notification.API.Areas.v1
                     .Where(f => f.GetType() == typeof(UserGroupActionFilterAttribute)).Single();
             }
         }
+
+        public PaginateActionFilterAttribute paginate
+        {
+            get
+            {
+                return (PaginateActionFilterAttribute)ActionContext.ActionDescriptor.GetFilters()
+                    .Where(f => f.GetType() == typeof(PaginateActionFilterAttribute)).Single();
+            }
+        }
     }
 }
