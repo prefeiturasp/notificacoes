@@ -84,9 +84,9 @@
                 var url = '';
                 for(var i = 0; i < params.length; i++){
                     if(i == 0)
-                        url += concat + type + '[' + i + ']='+ (params[i].Id != undefined ? params[i].Id : params[i]);
+                        url += concat + type + '='+ (params[i].Id != undefined ? params[i].Id : params[i]);
                     else
-                        url += '&' + type + '[' + i + ']='+ (params[i].Id != undefined ? params[i].Id : params[i]);
+                        url += '&' + type + '='+ (params[i].Id != undefined ? params[i].Id : params[i]);
                 }
                 return url;
             }
