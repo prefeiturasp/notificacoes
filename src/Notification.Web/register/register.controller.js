@@ -417,10 +417,10 @@
          * busca a lista de sistema
          */
         function getSystem(){
-
+            $scope.load = true;
             HttpServices.getListSystem($scope.VisionSystem.Id, function(data){
                 $scope.listSystem = data;
-
+                $scope.load = false;
                 if(data != null) {
                     if ($scope.listSystem.length > 1) {
                         $scope.showFilter.showSystem = true;
