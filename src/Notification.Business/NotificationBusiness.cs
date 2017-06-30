@@ -57,7 +57,7 @@ namespace Notification.Business
 
             foreach (var item in entity.Recipient.TeacherRecipient)
             {
-                ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
+                ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
             }
 
             if (ltUser.Count() > 0)
