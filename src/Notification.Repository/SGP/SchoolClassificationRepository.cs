@@ -17,9 +17,10 @@ namespace Notification.Repository.SGP
             using (var context = new SqlConnection(stringConnection))
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(@"SELECT
+                sb.Append(@"SELECT 
+                        DISTINCT
 	                    tce.tce_id 'Id',
-	                    tce.tce_nome 'Name',
+	                    tce.tce_nome 'Name'
                     FROM
 	                    ESC_Escola esc WITH(NOLOCK)
 	                    INNER JOIN ESC_EscolaClassificacao ecl WITH(NOLOCK)
