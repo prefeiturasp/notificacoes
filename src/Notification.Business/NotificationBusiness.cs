@@ -66,6 +66,7 @@ namespace Notification.Business
 
                 var entityNotification = new Notification.Entity.Database.Notification()
                 {
+                    SenderId = userId,
                     SenderName = entity.SenderName,
                     DateStartNotification = entity.DateStartNotification,
                     DateEndNotification = entity.DateEndNotification,
