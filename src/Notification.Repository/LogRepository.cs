@@ -16,18 +16,18 @@ namespace Notification.Repository
             return Collection.Find(new BsonDocument()).Skip(page * size).Limit(size).ToList();
         }
 
-        public IEnumerable<Log> GetById(string id)
+        public IEnumerable<Log> GetById(Guid id)
         {
-            return Collection.Find(l => l.id == new ObjectId(id)).ToList();
+            return Collection.Find(l => l.id == id).ToList();
         }
 
-        public ObjectId InsertOne(Log entity)
+        public Guid InsertOne(Log entity)
         {
             Collection.InsertOne(entity);
             return entity.id;
         }
 
-        public async Task<ObjectId> InsertOneAsync(Log entity)
+        public async Task<Guid> InsertOneAsync(Log entity)
         {
             await Collection.InsertOneAsync(entity);
             return entity.id;
