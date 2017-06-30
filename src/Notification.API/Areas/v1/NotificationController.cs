@@ -1,4 +1,5 @@
-﻿using Notification.Business;
+﻿using Notification.API.Attributes;
+using Notification.Business;
 using Notification.Entity.API;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,7 @@ namespace Notification.API.Areas.v1
         }
 
         [HttpGet]
+        [PaginateActionFilter]
         [Route("api/v1/Notification/")]
         [ResponseType(typeof(IEnumerable<NotificationPlugin>))]
         public HttpResponseMessage GetByUserId(Guid userId, bool read)
@@ -61,8 +63,8 @@ namespace Notification.API.Areas.v1
             {
                 var result = 
                     read ?
-                    NotificationBusiness.GetReadByUserId(userId) :
-                    NotificationBusiness.GetNotReadByUserId(userId);
+                    NotificationBusiness.GetReadByUserId(userId, paginate.Page, paginate.Size) :
+                    NotificationBusiness.GetNotReadByUserId(userId, paginate.Page, paginate.Size);
 
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
@@ -74,6 +76,7 @@ namespace Notification.API.Areas.v1
         }
 
         [HttpPost]
+        [PaginateActionFilter]
         [Route("api/v1/Notification/{id:guid}/Action")]
         [ResponseType(typeof(bool))]
         public HttpResponseMessage SaveAction(NotificationAction entity)

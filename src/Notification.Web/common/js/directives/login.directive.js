@@ -21,7 +21,7 @@
 
         function LoginController($scope, $util, $location, $timeout, $window) {
 
-            var mgr = null;
+            $scope.mgr = null;
             $scope.load = false;
             $scope.redirect = false;
 
@@ -55,45 +55,6 @@
             $scope.login = function __login() {
                 $scope.mgr.signinRedirect();
             };
-
-            $scope.api = function __api() {
-                if (!$scope.user) {
-
-                    $util.getUserToken(function(user){
-                        if (user) {
-                            $scope.user = user;
-                            Authorization(user);
-                        }
-                    });
-                }else{
-                    Authorization($scope.user);
-                }
-            };
-
-            function Authorization(){
-
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET",Config.IDENTITY);
-                xhr.onload = function () {
-                    log(xhr.status, JSON.parse(xhr.responseText));
-                };
-                xhr.setRequestHeader("Authorization", "Bearer " + $scope.user.access_token);
-                xhr.send();
-            }
-
-            //function api45() {
-            //    mgr.getUser().then(function (user) {
-            //        var url = "http://localhost:6454/identity";
-            //
-            //        var xhr = new XMLHttpRequest();
-            //        xhr.open("GET", url);
-            //        xhr.onload = function () {
-            //            log(xhr.status, JSON.parse(xhr.responseText));
-            //        };
-            //        xhr.setRequestHeader("Authorization", "Bearer " + user.access_token);
-            //        xhr.send();
-            //    });
-            //}
 
             init();
 
