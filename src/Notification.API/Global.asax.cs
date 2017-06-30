@@ -1,4 +1,5 @@
 ﻿using Notification.Business;
+using Notification.Business.Signal;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -22,6 +23,8 @@ namespace Notification.API
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             LoadLogConfiguration();
+
+            LoadSignalRServerHubConfiguration();
         }
 
         private void LoadLogConfiguration()
@@ -43,6 +46,23 @@ namespace Notification.API
 
                 if (config != null && bool.TryParse(config, out value))
                     LogBusiness.IsEnabledError = value;
+            }
+            catch (Exception exc)
+            {
+                LogBusiness.Error(exc);
+            }
+        }
+
+        private void LoadSignalRServerHubConfiguration()
+        {
+            try
+            {
+                var config = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_URLSIGNALRSERVERHUB];
+
+                if (config != null)
+                    SignalRClientBusiness.UrlSignalRServer = config;
+                else
+                    LogBusiness.Warn("Configuração de UrlSignalRServerHub não encontrada.");
             }
             catch (Exception exc)
             {
