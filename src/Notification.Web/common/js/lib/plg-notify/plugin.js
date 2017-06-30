@@ -13,7 +13,7 @@ var plgnotify = function ( sysconfig ) {
 	var offX, offY, dragging;
 
 	// Visibilidade do plugin e lista de notificações
-	var hidden, listOpened;
+	var hideSnackbar, hidden, listOpened;
 
 	//Contador de total de notificações.
 	var counter = 0;
@@ -77,6 +77,85 @@ var plgnotify = function ( sysconfig ) {
 	/**
 	 * Métodos específicos.
 	 * **/
+
+	/**
+	 * Aciona temporizador
+	 */
+	function updater(){
+		window.requestAnimationFrame = window.requestAnimationFrame
+									   || window.mozRequestAnimationFrame
+									   || window.webkitRequestAnimationFrame
+									   || window.msRequestAnimationFrame
+									   || function(f){return setTimeout(f, 1000*60*60)}; // a cada minuto
+
+		window.cancelAnimationFrame = window.cancelAnimationFrame
+									  || window.mozCancelAnimationFrame
+									  || function(requestID){clearTimeout(requestID)}; //fall back
+	}
+
+	/**
+	 * Cancela não perturbe.
+	 */
+	function disturbCancel(e) {
+
+		hideSnackbar=false;
+		localStorage.removeItem(events.disturbTime);
+		events.disturbId=undefined;
+
+		if(e){
+			layout.domdisturbcancel.classList.add('hide');
+		}
+			//tratamento para quando 'não perturbe' for cancelado naturalmente.
+		else{
+			layout.domplugin.classList.add( 'shake-anime' );
+		}
+	}
+
+	/**
+	 * Valida se já acabou o tempo de 'não perturbe'.
+	 */
+	function disturbValidator() {
+
+		var timeout, _local;
+		_local=localStorage.getItem(events.disturbTime);
+		_local = parseInt(_local);
+
+		if(_local){
+			timeout = (_local-Date.now()) >0;
+		}
+
+		//Se o tempo do 'não perturbe' estiver ativo.
+		if(timeout){
+			hideSnackbar=true;
+			if(events.disturbId)
+				return;
+			//cancelAnimationFrame(localStorage.getItem(events.disturbId));
+
+
+			requestAnimationFrame = setTimeout(disturbValidator,(_local-Date.now()|0));
+
+			//localStorage.setItem(events.disturbId, requestAnimationFrame(disturbValidator) );
+			events.disturbId = requestAnimationFrame;
+			document.queySelector('.disturb.cancelar' ).classList.remove('hide');
+		}
+		else if(_local){
+			console.info('Acabou não perturbe');
+			disturbCancel();
+		}
+	}
+
+	/**
+	 * Tratamento para quando seleciona um opção do não perturbe.
+	 */
+	function selectedDisturbOption( target ) {
+		hidePlugin();
+		hideList();
+		disturbValidator();
+		var texto = document.querySelector('.disturb p');
+		texto.innerHTML = target.innerHTML;		localStorage.setItem(events.disturbTime,Date.now());
+
+	}
+
 	/**
 	 * Exibie opções de 'não perturbe'.
 	 * @param {event} e - evento do objeto clicado.
@@ -121,7 +200,7 @@ var plgnotify = function ( sysconfig ) {
 
 			//se tiver 'value' e 'onclick' executa onclick
 			if ( !isNaN( parseInt( e.target && e.target.value  ) ) && onclick ) {
-				onclick();
+				onclick(e.target.value );
 			}
 		};
 
@@ -154,7 +233,6 @@ var plgnotify = function ( sysconfig ) {
 		pai = pai.parentNode;
 		pai.appendChild( html );
 
-
 		_config.onblur.push(html) ;
 
 		html.style.zIndex = 190;
@@ -168,8 +246,8 @@ var plgnotify = function ( sysconfig ) {
 	 */
 	function showTabContent( tab ) {
 
-		if(tab === document.querySelector('.configuracao')){
-			console.log(1);
+		if(tab === document.querySelector('.plgtablink-setting')){
+			_config.onblur.push(layout.domdisturbcancel);
 		}
 		//Pegar tab selecionada
 		// ocultar conteúdo
@@ -210,6 +288,13 @@ var plgnotify = function ( sysconfig ) {
 	function arrayTimeToHTML( array ) {
 		//itera em nos elementos convertendo-os,gera novo array e remove ',' por espaço.
 		return array.map( timeToHTML ).join( ' ' );
+	}
+
+	/**
+	 * Tratamento para quando seleciona um opção do não perturbe.
+	 */
+	function selectedLaterOption(){
+		// todo: fazer requisição para adiar mensagem.
 	}
 
 	/**
@@ -362,7 +447,6 @@ var plgnotify = function ( sysconfig ) {
 		};
 
 		function _onClick( e ) {
-			//showSnackbar( { header:'Voçê adiou a mensagem modal !' } );
 			modal.classList.add( 'hitbot' );
 			fecharX.onclick();
 		}
@@ -510,7 +594,7 @@ var plgnotify = function ( sysconfig ) {
 	 * Tratamento para quando pressiona o sino.
 	 * @param {Event} e - evento de mousedown.
 	 */
-	function bellMouseDown( e ) {
+	function toggleList( e ) {
 		e.stopPropagation();
 
 		layout.domlist.classList.remove( 'hide' );
@@ -530,7 +614,7 @@ var plgnotify = function ( sysconfig ) {
 	 * Tratamneto para esconder plugin.
 	 * @param {event} e - evento de mousedown.
 	 */
-	function hideMouseDown( e ) {
+	function hidePlugin( e ) {
 		hidden = !hidden;
 		setPosition( 0 );
 	}
@@ -574,10 +658,10 @@ var plgnotify = function ( sysconfig ) {
 				moveMouseDown( e );
 				break;
 			case layout.domhide:
-				hideMouseDown( e );
+				hidePlugin( e );
 				break;
 			case layout.dombell:
-				bellMouseDown( e );
+				toggleList( e );
 				break;
 		}
 	}
@@ -754,7 +838,12 @@ var plgnotify = function ( sysconfig ) {
 	 * @param {number} delay - tempo de esperar para abrir o toaster.
 	 */
 	function showSnackbar( msg, y, time, delay ) {
-		var uid, i, dom, html, openSnackbar, hideSnackbar, destroySnackbar, cancelHide, restoreHide;
+		var uid, i, dom, html, open, hide, destroy, cancelHide, restoreHide;
+
+		if(hideSnackbar) {
+			console.info('Não perturbe está ativado, snackbar escondidas.');
+			return;
+		}
 
 		//Verifica se tem mais de um toaster
 		if ( !_config.snackbar ) {
@@ -806,7 +895,7 @@ var plgnotify = function ( sysconfig ) {
 		}
 
 		function onClick() {
-			hideSnackbar();
+			hide();
 			setTimeout(
 				function () {
 					showSnackbar( { header:'adiou a mensagem da snackbar!.' } );
@@ -815,19 +904,19 @@ var plgnotify = function ( sysconfig ) {
 		}
 
 		// deixa snackbar visivel
-		layout.domsnackbar.openSnackbar = openSnackbar = function () {
+		layout.domsnackbar.openSnackbar = open = function () {
 			//Deixa toaster visivel
 			dom.style.opacity    = 0.85;
 			dom.style.bottom     = y + 'px';
 			dom.style.visibility = 'visible';
 
 			uid[2] = setTimeout(
-				hideSnackbar, time * 1000 // tempo de exibição
+				hide, time * 1000 // tempo de exibição
 			);
 		};
 
 		// esconde snackbar
-		layout.domsnackbar.hideSnackbar = hideSnackbar = function () {
+		layout.domsnackbar.hideSnackbar = hide = function () {
 			html.onmouseout = html.onmouseover = undefined;
 
 			//esconde toaster
@@ -836,11 +925,11 @@ var plgnotify = function ( sysconfig ) {
 			dom.style.visibility = 'hidden';
 
 			uid[3] = setTimeout(
-				destroySnackbar, layout.animationTime //tempo até remover da tela e animação
+				destroy, layout.animationTime //tempo até remover da tela e animação
 			);
 		};
 		//destroi snackbar
-		layout.domsnackbar.destroySnackbar = destroySnackbar = function () {
+		layout.domsnackbar.destroySnackbar = destroy = function () {
 			cancelHide();
 			//remove da tela toaster
 			dom.parentNode.removeChild( dom );
@@ -861,7 +950,7 @@ var plgnotify = function ( sysconfig ) {
 		//restora snackabar função de esconder
 		layout.domsnackbar.restoreHide = restoreHide = function ( e ) {
 			uid[2] = setTimeout(
-				hideSnackbar, time * 1000 // tempo de exibição
+				hide, time * 1000 // tempo de exibição
 			);
 		};
 
@@ -873,7 +962,7 @@ var plgnotify = function ( sysconfig ) {
 		//salva referencia dos setTimeout, para poder cancelar , se necessário.
 		_config.snackbar.push( uid );
 		uid[1] = setTimeout(
-			openSnackbar,
+			open,
 			delay * 1000 // delay inicial
 		);
 	}
@@ -981,6 +1070,11 @@ var plgnotify = function ( sysconfig ) {
 				notification:'refresh',
 				refresh     :'refresh'
 			};
+
+		events.disturb='disturb';
+		events.disturbTime='disturbTime';
+		events.disturbId=0;
+		events.later='later';
 	}
 
 	/**
@@ -989,7 +1083,7 @@ var plgnotify = function ( sysconfig ) {
 	 * @param error
 	 */
 	function getLaterOptionsList( success, error ) {
-		return getTimeList( 'later', success, error );
+		return getTimeList( events.later, success, error );
 	}
 
 	/**
@@ -998,17 +1092,17 @@ var plgnotify = function ( sysconfig ) {
 	 * @param error
 	 */
 	function getDisturbOptionsList( success, error ) {
-		return getTimeList( 'disturb', success, error );
+		return getTimeList( events.disturb, success, error );
 	}
 
 	/**
 	 * Tratamento para pegar tempos da api
 	 */
 	function getTimeList( type, success, error ) {
-		var _local;
+		var _local = sessionStorage.getItem( type );
 
 		if ( !_local ) {
-			localStorage.setItem( type, '<div class="plgloader"></div>' );
+			sessionStorage.setItem( type, '<div class="plgloader"></div>' );
 
 			http.get(
 				api[type],
@@ -1024,7 +1118,7 @@ var plgnotify = function ( sysconfig ) {
 								_config[type] = arrayTimeToHTML( JSON.parse( data ) );
 							}
 
-							localStorage.setItem( type, _config[type] );
+							sessionStorage.setItem( type, _config[type] );
 
 							if ( success ) {
 								success();
@@ -1032,7 +1126,7 @@ var plgnotify = function ( sysconfig ) {
 						}
 					},
 					error  :function errorCallback( r, s, x ) {
-						localStorage.removeItem( type );
+						sessionStorage.removeItem( type );
 						if ( error ) {
 							error();
 						}
@@ -1040,7 +1134,7 @@ var plgnotify = function ( sysconfig ) {
 				}
 			);
 		}
-		_local = localStorage.getItem( type );
+		_local = sessionStorage.getItem( type );
 		return _config[type] = _local;
 	}
 
@@ -1084,6 +1178,7 @@ var plgnotify = function ( sysconfig ) {
 	 * Valida se plugin está na tela, senão cria e insere.
 	 */
 	function hasPlugin() {
+		var linksTabs,domdisturb,domdisturbcancel;
 		var style, css, html, modalMensages, dom;
 
 		//TODO: possibilitar uso parcial de conteúdo( só insere o css, ou html ).
@@ -1094,7 +1189,7 @@ var plgnotify = function ( sysconfig ) {
 		console.warn( 'Plugin não está na tela.' );
 
 		// adicionar elemntosDOM e styles, se não houver
-		css = '.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;border-bottom:1px solid #d3d3d3;color:#000!important;overflow-x:hidden;max-height:272px;width:154px}.plg-panel li{font-size:1rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap;padding:8px;width:initial;display:block}.plg-panel li:first-letter{text-transform:uppercase}.plg-panel li:nth-child(odd){background:#fafbfb}.plg-panel li:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;animation:.5s fadeIn;display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777}.plgtablink-setting{border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:150;left:50%;bottom:0;opacity:0;border-radius:10px;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;color:#fff;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plgsnackbar-right{width:36px;border-top-right-radius:10px;border-top-left-radius:0;border-bottom-right-radius:10px;border-bottom-left-radius:0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:202px;border-top-right-radius:0;border-top-left-radius:10px;border-bottom-right-radius:0;border-bottom-left-radius:10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;border-radius:50%!important;width:36px;height:36px;margin:2px;animation:2s linear infinite spin!important}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.unselectable{-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.draggable>i{cursor:move}.hide{display:none!important}.hitbox,path,svg{pointer-events:none;padding:0;margin:0}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-moz-transition:none!important;-ms-transition:none!important;-o-transition:none!important;transition:none!important}.plg-notificacoes>li{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:1rem;overflow:hidden;height:42px}.plg-notificacoes li:last-child{border-bottom:0}.plg-notificacoes li:nth-child(odd){background:#fafbfb}.plg-notificacoes li.lida{opacity:.5}.plg-notificacoes li.urgente{background:#d11d1d;color:#fff}.plg-notificacoes li.urgente *{color:#fff}.plg-notificacoes li p,.plg-notificacoes li span{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:90%;min-width:30%;font-size:1.2rem;display:block;font-weight:900;color:#768e99}.circulo,.float-menu{border-radius:100%;width:80px;height:80px}.circulo{box-sizing:border-box;overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;box-shadow:4px 4px 4px rgba(0,0,0,.3);font-family:sans-serif}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:15px;border-radius:100%;height:40px}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;border-radius:100%;font-weight:700;z-index:5}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;border-radius:0 0 100%}.sino{width:50px;height:80px;padding:20px 0 0 10px;box-sizing:border-box;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{animation:1s cubic-bezier(.36,.07,.19,.97) both shake;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;border-radius:3px;color:#fff;display:inline-block;font-size:14px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-btn-big{color:#aaa;font-size:30px;text-decoration:none;position:absolute;right:5px;top:0}.plgmodal-btn-close:hover{color:#000}.plgmodal{display:block;background:rgba(0,0,0,.6);position:fixed;top:0;left:0;right:0;bottom:0;z-index:210}.plgmodal:target:before{display:block}.plgmodal-dialog{background:#fefefe;border:1px solid #333;border-radius:5px;margin-left:-200px;position:fixed;max-height:60%;left:50%;top:-100%;z-index:211;width:360px}.plgmodal-dialog a{cursor:pointer}.plgmodal-body{padding:20px}.plgmodal-footer,.plgmodal-header{padding:10px 20px}.plgmodal-header{border-bottom:1px solid #eee}.plgmodal-header h2{font-size:20px;margin:0}.plgmodal-footer{display:flex;border-top:1px solid #eee;height:30px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.plg-list{margin-top:48px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px;display:block}.disturb{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;border-bottom-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px}.disturb p:hover,.disturb svg:hover{background-color:#fff}.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;text-align:center;padding:10px;vertical-align:middle;border-bottom-right-radius:10px;margin:0;border-top-right-radius:10px;float:left}li.plgnot{padding:10px}li.plgnot>*{pointer-events:none}li.plgnot:hover{background-color:rgba(112,128,144,.42)!important}li.plgnot:hover>*{color:#000!important}';
+		css = '.disturb.cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;border-bottom:1px solid #d3d3d3;color:#000!important;overflow-x:hidden;max-height:272px;width:154px}.plg-panel li{font-size:1rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap;padding:8px;width:initial;display:block}.plg-panel li:first-letter{text-transform:uppercase}.plg-panel li:nth-child(odd){background:#fafbfb}.plg-panel li:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;animation:.5s fadeIn;display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777}.plgtablink-setting{border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:150;left:50%;bottom:0;opacity:0;border-radius:10px;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;color:#fff;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plgsnackbar-right{width:36px;border-top-right-radius:10px;border-top-left-radius:0;border-bottom-right-radius:10px;border-bottom-left-radius:0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:202px;border-top-right-radius:0;border-top-left-radius:10px;border-bottom-right-radius:0;border-bottom-left-radius:10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;border-radius:50%!important;width:36px;height:36px;margin:2px;animation:2s linear infinite spin!important}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.unselectable{-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.draggable>i{cursor:move}.hide{display:none!important}.hitbox,path,svg{pointer-events:none;padding:0;margin:0}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-moz-transition:none!important;-ms-transition:none!important;-o-transition:none!important;transition:none!important}.plg-list.lidas>li,.plg-list.novas>li{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:1rem;overflow:hidden;height:42px}.plg-list.lidas li:last-child,.plg-list.novas li:last-child{border-bottom:0}.plg-list.lidas li:nth-child(odd),.plg-list.novas li:nth-child(odd){background:#fafbfb}.plg-list.lidas li.lida,.plg-list.novas li.lida{opacity:.5}.plg-list.lidas li.urgente,.plg-list.novas li.urgente{background:#d11d1d;color:#fff}.plg-list.lidas li.urgente *,.plg-list.novas li.urgente *{color:#fff}.plg-list.lidas li p,.plg-list.lidas li span,.plg-list.novas li p,.plg-list.novas li span{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:90%;min-width:30%;font-size:1.2rem;display:block;font-weight:900;color:#768e99}.circulo,.float-menu{border-radius:100%;width:80px;height:80px}.circulo{box-sizing:border-box;overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;box-shadow:4px 4px 4px rgba(0,0,0,.3);font-family:sans-serif}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:15px;border-radius:100%;height:40px}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;border-radius:100%;font-weight:700;z-index:5}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;border-radius:0 0 100%}.sino{width:50px;height:80px;padding:20px 0 0 10px;box-sizing:border-box;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{animation:1s cubic-bezier(.36,.07,.19,.97) both shake;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;border-radius:3px;color:#fff;display:inline-block;font-size:14px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-btn-big{color:#aaa;font-size:30px;text-decoration:none;position:absolute;right:5px;top:0}.plgmodal-btn-close:hover{color:#000}.plgmodal{display:block;background:rgba(0,0,0,.6);position:fixed;top:0;left:0;right:0;bottom:0;z-index:210}.plgmodal:target:before{display:block}.plgmodal-dialog{background:#fefefe;border:1px solid #333;border-radius:5px;margin-left:-200px;position:fixed;max-height:60%;left:50%;top:-100%;z-index:211;width:360px}.plgmodal-dialog a{cursor:pointer}.plgmodal-body{padding:20px}.plgmodal-footer,.plgmodal-header{padding:10px 20px}.plgmodal-header{border-bottom:1px solid #eee}.plgmodal-header h2{font-size:20px;margin:0}.plgmodal-footer{display:flex;border-top:1px solid #eee;height:30px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.plg-list{margin-top:48px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;border-bottom-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px}.cancelar p:hover,.disturb p:hover,.disturb svg:hover{background-color:#fff}.cancelar p:active,.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;text-align:center;padding:10px;vertical-align:middle;border-bottom-right-radius:10px;margin:0;border-top-right-radius:10px;float:left}.cancelar p{border:1px solid gray;margin:0 10px;border-radius:10px}li.plgnot{padding:10px}li.plgnot>*{pointer-events:none}li.plgnot:hover{background-color:rgba(112,128,144,.42)!important}li.plgnot:hover>*{color:#000!important}';
 		addContentHTML( 'style', css );
 
 		//adicionar plugin
@@ -1115,22 +1210,24 @@ var plgnotify = function ( sysconfig ) {
 			   '	</div>' +
 			   '	<div class="hide plg-notificacoes plgtab">' +
 			   '		<button class="plgtablink novas visited">Novas</button>' +
-			   '		<button class="plgtablink lidas">Lidas</button>' +
-			   '		<button class="plgtablink-setting plgtablink" title="Configurações">' +
+			   '		<button class="plgtablink lidas ">Lidas</button>' +
+			   '		<button class="plgtablink-setting plgtablink " title="Configurações">' +
 			   '			<svg width="20" height="20" viewBox="0 0 24 24">' +
 			   '				<path fill="white" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>' +
 			   '		</button>' +
 			   '		<div class="plg-list novas"></div>' +
 			   '		<div class="plg-list lidas"></div>' +
 			   '		<div class="plg-list configuracoes ">' +
-			   '			<div class="disturb interactive unselectable">' +
+			   '			<li class="disturb interactive unselectable">' +
 			   '				<strong>Não perturbe me por:</strong>' +
 			   '					<svg width="24" height="24" viewBox="0 0 24 24">' +
 			   '						<path fill="gray" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />' +
 			   '					</svg>' +
 			   '					<p>Por 1 hora</p>' +
-			   '			</div>' +
+			   '			</li>' +
+			   '			<li title="Cancelar não perturbe" class="disturb cancelar hide"><p>Cancelar</p></li>'+
 			   '		</div>' +
+
 			   '	</div>' +
 			   '</div>';
 
@@ -1139,19 +1236,22 @@ var plgnotify = function ( sysconfig ) {
 		dom.classList.add( layout.container );
 
 		//adiciona eventos de selectionar tab
-		dom.querySelectorAll( 'button.plgtablink' ).forEach(
+		linksTabs = dom.querySelectorAll( 'button.plgtablink' );
+		linksTabs .forEach(
 			function ( e ) {
 				e.onclick = selectTab;
 			}
 		);
 
-		dom.querySelector( '.disturb' ).onclick = function(e){
-			showDisturbOptions(e, function (  ) {
-				hideMouseDown();
-				hideList();
-				//todo: fazer método para guardar tempo, do "não perturbe" (localstorage)
-			});
+		//aplica função de 'não perturbe'
+		layout.domdisturb=domdisturb=dom.querySelector( '.disturb' );
+		domdisturb.onclick = function(e){
+			showDisturbOptions(e, selectedDisturbOption );
 		};
+
+		//aplica função de cancelar 'não perturbe'
+		layout.domdisturbcancel=domdisturbcancel=dom.querySelector( '.disturb.cancelar' );
+		domdisturbcancel.onclick=disturbCancel;
 
 		document.body.appendChild( dom );
 
@@ -1302,6 +1402,8 @@ var plgnotify = function ( sysconfig ) {
 		addEventListener( document, events.dragstart, onDragStart );
 		addEventListener( document, events.dragend, onDragEnd );
 
+		updater();
+		disturbValidator();
 	}
 
 	/**

@@ -109,8 +109,9 @@ namespace Notification.Business
 
             if (entity.DelayId.HasValue)
             {
-                //TODO: Configrar a data a ser gravada
-                repository.UpdateDelayDate(entity.NotificationId, userId, new DateTime());
+                var date = DateTime.Now.AddMinutes(DelayTimeBusiness.GetTimeById(entity.DelayId.Value));
+                repository.UpdateDelayDate(entity.NotificationId, userId, date);
+                Signal.SignalRClientBusiness.SendNotificationHangFire(date, userId, entity.NotificationId);
             }
             else if (entity.Read.HasValue)
             {
