@@ -21,15 +21,20 @@ namespace Notification.API.Areas.SGP.v1
         [Route("api/SGP/v1/Teacher")]
         [ResponseType(typeof(IEnumerable<Teacher>))]
         public HttpResponseMessage GetTeacher(
-            [ModelBinder(typeof(Strings))] IEnumerable<string> calendarYear = null ,
+           string calendarYear,
             [ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null,
             [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null,
             [ModelBinder(typeof(Ints))] IEnumerable<int> schoolId = null,
-            [ModelBinder(typeof(Ints))] IEnumerable<int> positionId = null)
+            [ModelBinder(typeof(Ints))] IEnumerable<int> positionId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> courseId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> coursePeriodId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> disciplineId = null,
+            [ModelBinder(typeof(Ints))] IEnumerable<int> teamId = null
+            )
         {
             try
             {
-                var result = TeacherBusiness.Get(claimData.UserId, claimData.GroupId, calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, positionId);
+                var result = TeacherBusiness.Get(claimData.UserId, claimData.GroupId, calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, positionId,courseId, coursePeriodId, disciplineId, teamId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
@@ -43,7 +48,7 @@ namespace Notification.API.Areas.SGP.v1
         [Route("api/SGP/v1/Contributor")]
         [ResponseType(typeof(IEnumerable<Contributor>))]
         public HttpResponseMessage GetContributor(
-            [ModelBinder(typeof(Strings))] IEnumerable<string> calendarYear = null,
+            string calendarYear,
             [ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null,
             [ModelBinder(typeof(Ints))] IEnumerable<int> schoolClassificationId = null,
             [ModelBinder(typeof(Ints))] IEnumerable<int> schoolId = null,
