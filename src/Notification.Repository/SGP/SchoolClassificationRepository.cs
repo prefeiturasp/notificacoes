@@ -20,7 +20,6 @@ namespace Notification.Repository.SGP
                 sb.Append(@"SELECT
 	                    tce.tce_id 'Id',
 	                    tce.tce_nome 'Name',
-	                    tce.tce_permiteQualquerCargoEscola
                     FROM
 	                    ESC_Escola esc WITH(NOLOCK)
 	                    INNER JOIN ESC_EscolaClassificacao ecl WITH(NOLOCK)
@@ -49,7 +48,7 @@ namespace Notification.Repository.SGP
                     {
                         usu_idLogado = userId,
                         gru_idLogado = groupId,
-                        idDre = listSchoolSuperior
+                        idsDRE = listSchoolSuperior
                     });
                 return query;
             }
