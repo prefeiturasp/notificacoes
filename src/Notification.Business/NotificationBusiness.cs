@@ -1,4 +1,5 @@
-﻿using Notification.Entity.API;
+﻿using Notification.Business.SGP;
+using Notification.Entity.API;
 using Notification.Repository;
 using Notification.Repository.CoreSSO;
 using System;
@@ -49,23 +50,38 @@ namespace Notification.Business
                 }
             }
 
-            ltUser = ltUser.Distinct().ToList();
-
-            var entityNotification = new Notification.Entity.Database.Notification()
+            foreach (var item in entity.Recipient.ContributorRecipient)
             {
-                SenderName = entity.SenderName,
-                DateStartNotification = entity.DateStartNotification,
-                DateEndNotification = entity.DateEndNotification,
-                MessageType = entity.MessageType,
-                Title = entity.Title,
-                Message = entity.Message,
-                Recipient = ltUser.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
-            };
+                ltUser.AddRange(ContributorBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
+            }
 
-            var notRep = new NotificationRepository();
-            var Id = notRep.InsertOne(entityNotification);
+            foreach (var item in entity.Recipient.TeacherRecipient)
+            {
+                ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
+            }
 
-            return Id;
+            if (ltUser.Count() > 0)
+            {
+                ltUser = ltUser.Distinct().ToList();
+
+                var entityNotification = new Notification.Entity.Database.Notification()
+                {
+                    SenderName = entity.SenderName,
+                    DateStartNotification = entity.DateStartNotification,
+                    DateEndNotification = entity.DateEndNotification,
+                    MessageType = entity.MessageType,
+                    Title = entity.Title,
+                    Message = entity.Message,
+                    Recipient = ltUser.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
+                };
+
+                var notRep = new NotificationRepository();
+                var Id = notRep.InsertOne(entityNotification);
+
+                return Id;
+            }
+            else
+                return Guid.Empty;
         }
 
         public static NotificationPlugin GetById(Guid id)
@@ -92,8 +108,9 @@ namespace Notification.Business
 
             if (entity.DelayId.HasValue)
             {
-                //TODO: Configrar a data a ser gravada
-                repository.UpdateDelayDate(entity.NotificationId, userId, new DateTime());
+                var date = DateTime.Now.AddMinutes(DelayTimeBusiness.GetTimeById(entity.DelayId.Value));
+                repository.UpdateDelayDate(entity.NotificationId, userId, date);
+                Signal.SignalRClientBusiness.SendNotificationHangFire(date, userId, entity.NotificationId);
             }
             else if (entity.Read.HasValue)
             {

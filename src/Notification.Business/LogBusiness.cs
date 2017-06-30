@@ -2,7 +2,6 @@
 using Notification.Repository;
 using System;
 using System.Collections.Generic;
-using MongoDB.Bson;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +50,7 @@ namespace Notification.Business
             }
         }
         
-        public static ObjectId Error(Exception exception)
+        public static Guid Error(Exception exception)
         {
             if (IsEnabledError)
             {
@@ -71,7 +70,7 @@ namespace Notification.Business
                 return repository.InsertOne(entity);
             }
             else
-                return new ObjectId();
+                return Guid.Empty;
         }
 
         public static IEnumerable<Log> Get(int page, int size)
@@ -80,7 +79,7 @@ namespace Notification.Business
             return repository.Get(page, size);
         }
 
-        public static IEnumerable<Log> GetById(string id)
+        public static IEnumerable<Log> GetById(Guid id)
         {
             var repository = new LogRepository();
             return repository.GetById(id);

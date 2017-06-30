@@ -9,7 +9,7 @@ namespace Notification.Entity.Database
 {
     public class Log
     {
-        public ObjectId id { get; set; }
+        public Guid id { get; set; }
 
         public DateTime date { get; set; }
 

@@ -30,9 +30,9 @@ namespace Notification.API.Areas.v1
         }
 
         [HttpGet]
-        [Route("api/v1/Log/{id}")]
+        [Route("api/v1/Log/{id:guid}")]
         [ResponseType(typeof(IEnumerable<Log>))]
-        public HttpResponseMessage GetById(string id)
+        public HttpResponseMessage GetById(Guid id)
         {
             try
             {

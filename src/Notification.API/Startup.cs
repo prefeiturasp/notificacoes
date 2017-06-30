@@ -6,6 +6,9 @@ using Owin;
 using System.IdentityModel.Tokens;
 using IdentityServer3.AccessTokenValidation;
 using System.Configuration;
+using Hangfire;
+using Hangfire.Mongo;
+using MongoDB.Driver;
 
 [assembly: OwinStartup(typeof(Notification.API.Startup))]
 
@@ -30,6 +33,14 @@ namespace Notification.API
             });
 
             app.UseWebApi(WebApiConfig.Register());
+
+            var stringConnection = Notification.Repository.Connections.Connection.Get("Notification");            
+            var database = new MongoUrlBuilder(stringConnection).DatabaseName;
+
+            GlobalConfiguration.Configuration.UseMongoStorage(stringConnection, database);
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
         }
     }
 }
