@@ -199,7 +199,7 @@
         function startRedactor(){
             //instanciando o redactor
             $("#content").redactor({
-                //lang: 'pt_br',
+                lang: 'pt_br',
                 limiter: $scope.limitCharRedactor, // number of characters
                 plugins: ['limiter']
             });
@@ -244,6 +244,10 @@
                 }
 
             });
+        }
+
+        function  translateRedactor(){
+
         }
 
         /**
@@ -413,16 +417,18 @@
          * busca a lista de sistema
          */
         function getSystem(){
-
+            $scope.load = true;
             HttpServices.getListSystem($scope.VisionSystem.Id, function(data){
                 $scope.listSystem = data;
-
-                if($scope.listSystem.length > 1) {
-                    $scope.showFilter.showSystem = true;
-                    $scope.showTypeFilter.typeSystem = true;
-                    openModal();
-                }else{
-                    toastr.warning("Não existe uma lista de sistemas cadastrada!");
+                $scope.load = false;
+                if(data != null) {
+                    if ($scope.listSystem.length > 1) {
+                        $scope.showFilter.showSystem = true;
+                        $scope.showTypeFilter.typeSystem = true;
+                        openModal();
+                    } else {
+                        toastr.warning("Não existe uma lista de sistemas cadastrada!");
+                    }
                 }
             });
         }
@@ -620,8 +626,6 @@
         $scope.getTeam = function __getTeam(){
 
             if($scope.TeacherRecipient.School.length > 0) {
-
-                $scope.change.checkedTeam = !$scope.change.checkedTeam;
 
                 if (!$scope.change.checkedTeam) {
 
@@ -861,8 +865,8 @@
             };
 
             //convertando para string as datas
-            params.data.DateStartNotification = $scope.filters.DateStartNotification.toString();
-            params.data.DateEndNotification = $scope.filters.DateEndNotification.toString();
+            params.data.DateStartNotification = new Date($scope.filters.DateStartNotification).toISOString();
+            params.data.DateEndNotification = new Date($scope.filters.DateEndNotification).toISOString();
 
             $scope.load = true;
             HttpServices.postSave(params, function(data){

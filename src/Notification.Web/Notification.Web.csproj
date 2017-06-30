@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="common\css\redactor.css" />
     <Content Include="common\fonts\fontawesome-webfont.svg" />
+    <Content Include="common\js\lib\pt_br.js" />
     <Content Include="Gruntfile.js" />
     <Content Include="node_modules\angular-resource\angular-resource.js" />
     <Content Include="node_modules\angular-resource\angular-resource.min.js" />
