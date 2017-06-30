@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$util', 'HttpServices'];
+    Menu.$inject = ['$util', 'HttpServices', '$location'];
 
     function Menu() {
         var directive = {
@@ -19,7 +19,7 @@
             transclude: false
         };
 
-        function MenuController($scope, $util, HttpServices) {
+        function MenuController($scope, $util, HttpServices, $location) {
 
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
@@ -28,7 +28,7 @@
             $scope.openMenuSytem = function __openMenuSytem() {
 
                 if($scope.listMenuSystem.length == 0 && !$scope.showListMenu && !$scope.getListMenu) {
-                    var vision = JSON.parse(atob(window.sessionStorage.VisionSystem));
+                    var vision = JSON.parse(atob(window.sessionStorage.visionSelected));
 
                     HttpServices.getListSystem(vision.VisionId, function (data) {
                         $scope.listMenuSystem = data;
@@ -49,10 +49,10 @@
              * destruindo token de acesso
              */
             $scope.logout = function __logout() {
-               var mgr = $util.getMgr();
+                window.sessionStorage.clear();
+                var mgr = $util.getMgr();
                 mgr.signoutRedirect();
                 $util.setLogout();
-                window.sessionStorage.clear();
             };//logout
 
         }//MenuController
