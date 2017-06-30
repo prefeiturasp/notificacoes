@@ -1,4 +1,5 @@
-﻿using Notification.Entity.Database;
+﻿using Notification.Business.Cache;
+using Notification.Entity.Database;
 using Notification.Repository;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,29 @@ namespace Notification.Business
         {
             var repository = new DelayTimeRepository();
             return repository.Get();
+        }
+
+        public static int GetTimeById(int id)
+        {
+            var cache = DelayTimeCache.Instance;
+            var delayTime = cache.GetValue(id.ToString());
+            
+            if (delayTime == 0)
+            {
+                var repository = new DelayTimeRepository();
+                var u = repository.GetById(id);
+
+                if (u != null)
+                {
+                    delayTime = u.TimeMinutes;
+                    cache.Add(id.ToString(), delayTime);
+                }
+                return delayTime;
+            }
+            else
+            {
+                return delayTime;
+            }
         }
     }
 }
