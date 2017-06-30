@@ -6,6 +6,7 @@ using Owin;
 using System.IdentityModel.Tokens;
 using IdentityServer3.AccessTokenValidation;
 using System.Configuration;
+using Hangfire;
 
 [assembly: OwinStartup(typeof(Notification.API.Startup))]
 
@@ -30,6 +31,11 @@ namespace Notification.API
             });
 
             app.UseWebApi(WebApiConfig.Register());
+
+            GlobalConfiguration.Configuration.UseSqlServerStorage(Notification.Repository.Connections.Connection.Get("Notification"));
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
         }
     }
 }
