@@ -61,9 +61,9 @@
                     startRedactor();
                 },0);
                 $scope.load = false;
+                getTimeStamp();
             }
 
-            getTimeStamp();
         }
 
         function creatteFilters(){
@@ -246,10 +246,6 @@
             });
         }
 
-        function  translateRedactor(){
-
-        }
-
         /**
          *
          * @param typeVision
@@ -406,6 +402,7 @@
                         getCalendar();
                         $scope.load = false;
                         openModal();
+                        getTimeStamp();
                     } else {
                         $scope.VisionSystem = $scope.listVisionSystem[0]
                     }
