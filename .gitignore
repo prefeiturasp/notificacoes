@@ -190,6 +190,7 @@ ClientBin/
 #*.pfx
 *.publishsettings
 node_modules/
+bower_components/
 orleans.codegen.cs
 
 # RIA/Silverlight projects
@@ -248,10 +249,9 @@ ModelManifest.xml
 *Backup.rdl
 
 # Plugin notificação
-/src/Notification.Web/src/common/js/lib/plg-notify/basic.html
-/src/Notification.Web/src/common/js/lib/plg-notify/package-lock.json
-/src/Notification.Web/src/common/js/lib/plg-notify/css.css
-/src/Notification.Web/src/common/js/lib/plg-notify/html.templates.html
-/src/Notification.Web/src/common/js/lib/plg-notify/html.min.html
-/src/Notification.Web/src/common/js/lib/plg-notify/css.min.css
-!/src/Notification.Web/src/common/js/lib/plg-notify.min.js
+/plg-notify/*
+!/plg-notify/basic.html
+!/plg-notify/package.json
+!/plg-notify/bower.json
+!/plg-notify/plugin.js
+!plg-notify.min.js
