@@ -21,5 +21,10 @@ namespace Notification.Repository
         {
             return Collection.Find(new BsonDocument()).ToList();
         }
+
+        public DelayTime GetById(int id)
+        {
+            return Collection.Find(d => d.Id == id).FirstOrDefault();
+        }
     }
 }
