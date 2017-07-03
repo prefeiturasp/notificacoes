@@ -9,7 +9,7 @@ body {
   padding: 0; }
 
 * {
-  box-sizing: border-box;
+  /*box-sizing: border-box;*/
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
   /*-webkit-transition: all .3s ease;*/
@@ -671,7 +671,7 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   border-top: 0;
   vertical-align: middle;
   display: inline-block;
-  width: 101.2%;
+  width: 100.2%;
   line-height: inherit;
   outline: none;
   padding: 10px 15px;
