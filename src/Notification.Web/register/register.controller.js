@@ -123,7 +123,7 @@
                 checkedTeam: true
             };
 
-            $scope.limitCharRedactor = 300;
+            $scope.limitCharRedactor = 1500;
 
             //variaveis de lista de filtros por sistema
             $scope.listSystem = [];
