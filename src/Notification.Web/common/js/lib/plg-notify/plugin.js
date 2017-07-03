@@ -100,14 +100,11 @@ var plgnotify = function ( sysconfig ) {
 
 		hideSnackbar=false;
 		localStorage.removeItem(events.disturbTime);
+		localStorage.removeItem(events.disturbTimeText);
 		events.disturbId=undefined;
 
 		if(e){
-			layout.domdisturbcancel.classList.add('hide');
-		}
-			//tratamento para quando 'não perturbe' for cancelado naturalmente.
-		else{
-			layout.domplugin.classList.add( 'shake-anime' );
+			//layout.domdisturbcancel.classList.add('hide');
 		}
 	}
 
@@ -115,8 +112,8 @@ var plgnotify = function ( sysconfig ) {
 	 * Valida se já acabou o tempo de 'não perturbe'.
 	 */
 	function disturbValidator() {
+		var timeout, _local,texto;
 
-		var timeout, _local;
 		_local=localStorage.getItem(events.disturbTime);
 		_local = parseInt(_local);
 
@@ -129,18 +126,22 @@ var plgnotify = function ( sysconfig ) {
 			hideSnackbar=true;
 			if(events.disturbId)
 				return;
+
 			//cancelAnimationFrame(localStorage.getItem(events.disturbId));
-
-
 			requestAnimationFrame = setTimeout(disturbValidator,(_local-Date.now()|0));
+
+			texto           = document.querySelector( '.disturb p' );
+			texto.innerHTML = localStorage.getItem(events.disturbTimeText);
 
 			//localStorage.setItem(events.disturbId, requestAnimationFrame(disturbValidator) );
 			events.disturbId = requestAnimationFrame;
-			document.queySelector('.disturb.cancelar' ).classList.remove('hide');
+			layout.domlist.getElementsByClassName('cancelar' )[0].classList.remove('hide');
+			console.log('HideSnackbar');
 		}
 		else if(_local){
 			console.info('Acabou não perturbe');
 			disturbCancel();
+			layout.domplugin.classList.add( 'shake-anime' );
 		}
 	}
 
@@ -150,9 +151,14 @@ var plgnotify = function ( sysconfig ) {
 	function selectedDisturbOption( target ) {
 		hidePlugin();
 		hideList();
+		disturbCancel();
+
+		document.querySelector('.disturb p').innerHTML = target.innerHTML;
+
+		localStorage.setItem(events.disturbTime,(Date.now()+target.value));
+		localStorage.setItem(events.disturbTimeText,(target.innerHTML));
+
 		disturbValidator();
-		var texto = document.querySelector('.disturb p');
-		texto.innerHTML = target.innerHTML;		localStorage.setItem(events.disturbTime,Date.now());
 
 	}
 
@@ -200,7 +206,7 @@ var plgnotify = function ( sysconfig ) {
 
 			//se tiver 'value' e 'onclick' executa onclick
 			if ( !isNaN( parseInt( e.target && e.target.value  ) ) && onclick ) {
-				onclick(e.target.value );
+				onclick(e.target);
 			}
 		};
 
@@ -277,7 +283,7 @@ var plgnotify = function ( sysconfig ) {
 	 * @returns {string} - string do elemento DOM.
 	 */
 	function timeToHTML( e ) {
-		return '<li value="' + (e.TimeMinutes * 60) + '">Adiar ' + (e.Name) + '</li>';
+		return '<li value="' + (e.TimeMinutes * 60*1000) + '">Adiar ' + (e.Name) + '</li>';
 	}
 
 	/**
@@ -1073,6 +1079,7 @@ var plgnotify = function ( sysconfig ) {
 
 		events.disturb='disturb';
 		events.disturbTime='disturbTime';
+		events.disturbTimeText='disturbTimeText';
 		events.disturbId=0;
 		events.later='later';
 	}

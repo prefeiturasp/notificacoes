@@ -251,6 +251,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\v1\BaseController.cs" />
     <Compile Include="Attributes\PaginateActionFilterAttribute.cs" />
     <Compile Include="Attributes\UserActionFilterAttribute.cs" />
     <Compile Include="Attributes\UserGroupActionFilterAttribute.cs" />

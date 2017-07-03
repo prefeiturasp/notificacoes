@@ -1,18 +1,20 @@
 ﻿using Notification.API.Attributes;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 
 namespace Notification.API.Areas.v1
 {
-    [Authorize]
-    [UserActionFilter]
-    public class AuthBaseController : ApiController
+    public class BaseController : ApiController
     {
-        public UserActionFilterAttribute claimData
+        public UserActionFilterAttribute filterActionUser
         {
             get
             {
-                return (UserActionFilterAttribute)ControllerContext.ControllerDescriptor.GetFilters()
+                return (UserActionFilterAttribute)ActionContext.ActionDescriptor.GetFilters()
                     .Where(f => f.GetType() == typeof(UserActionFilterAttribute)).Single();
             }
         }
@@ -26,7 +28,7 @@ namespace Notification.API.Areas.v1
             }
         }
 
-        public PaginateActionFilterAttribute paginate
+        public PaginateActionFilterAttribute filterActionPaginate
         {
             get
             {

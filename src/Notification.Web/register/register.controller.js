@@ -123,7 +123,7 @@
                 checkedTeam: true
             };
 
-            $scope.limitCharRedactor = 300;
+            $scope.limitCharRedactor = 1500;
 
             //variaveis de lista de filtros por sistema
             $scope.listSystem = [];
@@ -215,35 +215,35 @@
             $(".redactor-toolbar-link-dropdown").on('click', function(){
                 $(".redactor-dropdown-outdent").remove();
                 $(".redactor-dropdown-indent").remove();
-                $(".redactor-dropdown-indent").text('Lista desordenada');
-                $(".redactor-dropdown-unorderedlist").text('Lista desordenada');
-                $(".redactor-dropdown-orderedlist").text('Lista ordenada');
             });
 
             redactor = $(".redactor-layer-img-edit");
 
+            try {
+                //limita a quantidade de  caracteras usando cltr+v
+                //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
+                document.getElementById('redactor-uuid-0').addEventListener('keyup', function (e) {
 
-            //limita a quantidade de  caracteras usando cltr+v
-            //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
-            document.getElementById('redactor-uuid-0').addEventListener('keyup', function(e){
+                    var element = $(this);
+                    var text = element.text();
 
-                var element = $(this);
-                var text = element.text();
+                    //não deixa inserir mais nem um caracter a mais do limite
+                    if (text.length == ($scope.limitCharRedactor + 1)) {
+                        return;
+                    }
 
-                //não deixa inserir mais nem um caracter a mais do limite
-                if(text.length == ($scope.limitCharRedactor + 1)) { return; }
+                    //se o cltr+v for mair que o limite de caracter aceito
+                    if (text.length > $scope.limitCharRedactor && e.keyCode == 17) {
+                        //pega apenas a string com a quantida de limite de caracteres
+                        text = text.substr(0, $scope.limitCharRedactor);
+                        //limpa o campo de texto
+                        element.text("");
+                        //add o texto dentro do limite de carateres aceito
+                        element.append('<p>' + text + '</p>');
+                    }
 
-                //se o cltr+v for mair que o limite de caracter aceito
-                if(text.length > $scope.limitCharRedactor && e.keyCode == 17){
-                    //pega apenas a string com a quantida de limite de caracteres
-                    text = text.substr(0, $scope.limitCharRedactor);
-                    //limpa o campo de texto
-                    element.text("");
-                    //add o texto dentro do limite de carateres aceito
-                    element.append('<p>'+text+'</p>');
-                }
-
-            });
+                });
+            }catch(e){}
         }
 
         /**
