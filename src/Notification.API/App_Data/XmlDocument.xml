@@ -4,6 +4,12 @@
         <name>Notification.API</name>
     </assembly>
     <members>
+        <member name="M:Notification.API.Areas.v1.ConfigurationController.GetTimeStamp">
+            <summary>
+            Retorna data no formato timestamp unixTime (quantos segundos houveram de 1/1/1970 até o dia de hoje)
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Notification.API.Areas.CoreSSO.v1.GroupController.Get(System.Int32)">
             <summary>
             Retorna todos os grupos cuja visão seja menor ou igual à do usuário logado.
@@ -534,12 +540,6 @@
             <summary>
             Busca as DRE's do usuário logado no sistema de notificações.
             Necessário enviar o id do grupo do usuário logado no Header (groupSid)
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Notification.API.Areas.v1.ConfigurationController.GetTimeStamp">
-            <summary>
-            Retorna data no formato timestamp unixTime (quantos segundos houveram de 1/1/1970 até o dia de hoje)
             </summary>
             <returns></returns>
         </member>
