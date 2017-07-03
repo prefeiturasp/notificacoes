@@ -5,7 +5,7 @@
     "start": "npm install && bower install",
     "server": "node_modules/.bin/http-server -g -c-1 -o -s -p 1337",
     "minify": "node_modules/.bin/html-minifier --remove-comments --remove-tag-whitespace -o html.min.html html.templates.html  && node_modules/.bin/usemin html.min.html -d ./ -o html.min.html --htmlmin true && node_modules/.bin/cleancss -O2 all -o css.min.css css.css",
-    "build": "node_modules/.bin/uglifyjs ./plugin.js -o ../plg-notify.min.js -c dead_code,drop_debugger,inline,drop_console,passes,hoist_vars,hoist_funs,reduce_vars -m -p bare_returns --source-map --overwrite"
+    "build": "node_modules/.bin/uglifyjs ./plugin.js -o ../plg-notify.min.js -c dead_code,drop_debugger,inline,drop_console,passes,hoist_vars,hoist_funs,reduce_vars -m -p bare_returns --source-map --overwrite && gzip -r -k -9 `find . -type f -name \"*.js\"` -f"
   },
   "author": "alexandre calil blasizza paravani",
   "license": "MIT",
