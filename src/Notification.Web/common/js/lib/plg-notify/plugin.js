@@ -475,19 +475,19 @@ var plgnotify = function ( sysconfig ) {
 
 		title = header.childNodes[0];
 		text  = body.childNodes[0];
-
+/*
 		if ( !data ) {
 
 			text.innerHTML  = dom.childNodes[1].innerHTML || 'Algum titulo qualquer';
 			title.innerHTML = dom.childNodes[0].innerHTML || 'Algum texto qualquer';
 		}
-		else {
+		else {*/
 			text.innerHTML   = data.message;
 			title.innerHTML  = data.title;
 			date.innerHTML   = data.dateStart;
 			//capitalizar nome com css
 			sender.innerHTML = data.senderName;
-		}
+		//}
 
 		btnFechar = footer.getElementsByClassName( 'plgmodal-btn-close' )[0];
 		fecharX   = header.getElementsByClassName( 'plgmodal-btn-close' )[0];
@@ -637,7 +637,12 @@ var plgnotify = function ( sysconfig ) {
 	 * @param {event} e - evento mousedown.
 	 */
 	function onListClick( e ) {
-		var classlist = e.target.classList;
+		var classlist;
+
+		//todo - imperdir multiplos cliques
+
+		classlist = e.target.classList;
+
 		if ( classlist.contains( 'plgnot' ) ) {
 
 			if ( e.target.id ) {
@@ -1103,20 +1108,24 @@ var plgnotify = function ( sysconfig ) {
 			return;
 		}
 
+		if( !msg || msg && (!msg.header || !msg.body) ){
+			return;
+		}
+
 		//Verifica se tem mais de um toaster
 		if ( !_config.snackbar ) {
 			_config.snackbar = [];
 		}
 		//se tiver, não exibe outro ( a se definir )
 		else if ( _config.snackbar.length ) {
-			return;
+			return true;
 		}
 
 		// Cria html do snackbar
 		html = '<div class="unselectable plgsnackbar">' +
 			   '<div class="plgsnackbar-center" title="Ler mensagem">' +
-			   '<span class="plgsnackbar-header">' + ((msg && msg.header) ? msg.header : 'titulo da notificação muito longa ') + '</span>' +
-			   '<span class="plgsnackbar-body">' + ((msg && msg.body) ? msg.body : 'mensagem muito longa mesmo') + '</span>' +
+			   '<span class="plgsnackbar-header">' + (msg && msg.header||"") + '</span>' +
+			   '<span class="plgsnackbar-body">' + (msg && msg.body||"") + '</span>' +
 			   '</div>' +
 			   '<button class="plgsnackbar-right" title="Ler mais tarde">' +
 			   '<svg width="20" height="20" viewBox="0 0 24 24"><path fill="white" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg>' +
@@ -1230,12 +1239,14 @@ var plgnotify = function ( sysconfig ) {
 	 * @param {Object} res - respostar do socket, quando recebe novas notificações
 	 */
 	function counterIncrement( res ) {
-		//showSnackbar(res);
-		showSnackbar();
-		if ( !layout.domcounter ) {
+
+		res = JSON.parse(res.data );
+		if ( !res||res !=={} || !layout.domcounter ) {
 			return;
 		}
+
 		counter++;
+		showSnackbar();
 
 		layout.domcounter.innerHTML = counter;
 	}
@@ -1512,7 +1523,7 @@ var plgnotify = function ( sysconfig ) {
 			   '					<svg width="24" height="24" viewBox="0 0 24 24">' +
 			   '						<path fill="gray" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />' +
 			   '					</svg>' +
-			   '					<p> </p>' +
+			   '					<p>Mais opções</p>' +
 			   '			</li>' +
 			   '			<li title="Cancelar não perturbe" class="disturb cancelar hide"><p>Cancelar</p></li>' +
 			   '		</div>' +
@@ -1544,6 +1555,7 @@ var plgnotify = function ( sysconfig ) {
 
 		document.body.appendChild( dom );
 		console.info( 'Plugin adicionado na tela' );
+/*
 
 		return
 		//Cria mensagens da lista de notificação.
@@ -1563,6 +1575,7 @@ var plgnotify = function ( sysconfig ) {
 		dom.innerHTML = (
 			modalMensages
 		);
+*/
 
 	}
 
