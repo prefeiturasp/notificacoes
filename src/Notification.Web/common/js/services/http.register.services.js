@@ -29,7 +29,7 @@
                             var mgr = $util.getMgr();
                             mgr.signoutRedirect();
                             $util.setLogout();
-                        },2000);
+                        },2300);
                         return
                     }
 

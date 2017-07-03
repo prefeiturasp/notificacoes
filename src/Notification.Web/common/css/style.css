@@ -9,7 +9,7 @@ body {
   padding: 0; }
 
 * {
-  /*box-sizing: border-box;*/
+  box-sizing: border-box;
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
   /*-webkit-transition: all .3s ease;*/
@@ -538,6 +538,7 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   margin-right: 10px !important;
   max-height: 200px;
   margin-bottom: 10px;
+  min-width: 25%;
 }
 
 .filtro-por-usuario .por-usuario .divisao-filtro ul {
