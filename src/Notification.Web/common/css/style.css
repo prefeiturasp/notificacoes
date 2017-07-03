@@ -538,6 +538,7 @@ input[type="radio"]:first-child, input[type="radio"].primeiro, input[type="check
   margin-right: 10px !important;
   max-height: 200px;
   margin-bottom: 10px;
+  min-width: 25%;
 }
 
 .filtro-por-usuario .por-usuario .divisao-filtro ul {
@@ -670,7 +671,7 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   border-top: 0;
   vertical-align: middle;
   display: inline-block;
-  width: 101.2%;
+  width: 100.2%;
   line-height: inherit;
   outline: none;
   padding: 10px 15px;

@@ -123,7 +123,7 @@
                 checkedTeam: true
             };
 
-            $scope.limitCharRedactor = 300;
+            $scope.limitCharRedactor = 1500;
 
             //variaveis de lista de filtros por sistema
             $scope.listSystem = [];
@@ -174,6 +174,7 @@
             };
 
             $scope.TeacherRecipientClone = {
+                userType: null,
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -185,6 +186,7 @@
             };
 
             $scope.ContributorRecipientClone = {
+                userType: null,
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -215,35 +217,35 @@
             $(".redactor-toolbar-link-dropdown").on('click', function(){
                 $(".redactor-dropdown-outdent").remove();
                 $(".redactor-dropdown-indent").remove();
-                $(".redactor-dropdown-indent").text('Lista desordenada');
-                $(".redactor-dropdown-unorderedlist").text('Lista desordenada');
-                $(".redactor-dropdown-orderedlist").text('Lista ordenada');
             });
 
             redactor = $(".redactor-layer-img-edit");
 
+            try {
+                //limita a quantidade de  caracteras usando cltr+v
+                //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
+                document.getElementById('redactor-uuid-0').addEventListener('keyup', function (e) {
 
-            //limita a quantidade de  caracteras usando cltr+v
-            //document.getElementById('redactor-uuid-0').onpaste = function(e){return false;}
-            document.getElementById('redactor-uuid-0').addEventListener('keyup', function(e){
+                    var element = $(this);
+                    var text = element.text();
 
-                var element = $(this);
-                var text = element.text();
+                    //não deixa inserir mais nem um caracter a mais do limite
+                    if (text.length == ($scope.limitCharRedactor + 1)) {
+                        return;
+                    }
 
-                //não deixa inserir mais nem um caracter a mais do limite
-                if(text.length == ($scope.limitCharRedactor + 1)) { return; }
+                    //se o cltr+v for mair que o limite de caracter aceito
+                    if (text.length > $scope.limitCharRedactor && e.keyCode == 17) {
+                        //pega apenas a string com a quantida de limite de caracteres
+                        text = text.substr(0, $scope.limitCharRedactor);
+                        //limpa o campo de texto
+                        element.text("");
+                        //add o texto dentro do limite de carateres aceito
+                        element.append('<p>' + text + '</p>');
+                    }
 
-                //se o cltr+v for mair que o limite de caracter aceito
-                if(text.length > $scope.limitCharRedactor && e.keyCode == 17){
-                    //pega apenas a string com a quantida de limite de caracteres
-                    text = text.substr(0, $scope.limitCharRedactor);
-                    //limpa o campo de texto
-                    element.text("");
-                    //add o texto dentro do limite de carateres aceito
-                    element.append('<p>'+text+'</p>');
-                }
-
-            });
+                });
+            }catch(e){}
         }
 
         /**
@@ -706,9 +708,12 @@
         $scope.resetListSchool = function __resetListSchool(){
             $scope.change.checkedSchool = true;
             $scope.TeacherRecipient.School = [];
+            $scope.TeacherRecipientClone.School = [];
             $scope.ContributorRecipient.School = [];
+            $scope.ContributorRecipientClone.School = [];
 
-            $scope.ContributorRecipient.Team = [];
+            $scope.TeacherRecipient.Team = [];
+            $scope.TeacherRecipientClone.Team = [];
             $scope.change.checkedTeam=true;
         };
 
@@ -717,12 +722,17 @@
             $scope.change.checkedSchool = true;
 
             $scope.TeacherRecipient.SchoolClassification = [];
-            $scope.TeacherRecipient.School = [];
+            $scope.TeacherRecipient.SchoolClassification = [];
+            $scope.TeacherRecipientClone.School = [];
+            $scope.TeacherRecipientClone.School = [];
 
             $scope.ContributorRecipient.SchoolClassification = [];
+            $scope.ContributorRecipientClone.SchoolClassification = [];
             $scope.ContributorRecipient.School = [];
+            $scope.ContributorRecipientClone.School = [];
 
-            $scope.ContributorRecipient.Team = [];
+            $scope.TeacherRecipient.Team = [];
+            $scope.TeacherRecipientClone.Team = [];
             $scope.change.checkedTeam=true;
 
         };
@@ -734,8 +744,11 @@
             $scope.change.checkedCoursePeriod=true;
             $scope.change.checkedTeam=true;
             $scope.TeacherRecipient.CoursePeriod = [];
-            $scope.ContributorRecipient.Discipline = [];
-            $scope.ContributorRecipient.Team = [];
+            $scope.TeacherRecipientClone.CoursePeriod = [];
+            $scope.TeacherRecipient.Discipline = [];
+            $scope.TeacherRecipientClone.Discipline = [];
+            $scope.TeacherRecipient.Team = [];
+            $scope.TeacherRecipientClone.Team = [];
         };
 
         /**
@@ -745,7 +758,9 @@
             $scope.change.checkedDiscipline=true;
             $scope.change.checkedTeam=true;
             $scope.TeacherRecipient.Discipline = [];
-            $scope.ContributorRecipient.Team = [];
+            $scope.TeacherRecipientClone.Discipline = [];
+            $scope.TeacherRecipient.Team = [];
+            $scope.TeacherRecipientClone.Team = [];
         };
 
         /**
@@ -753,7 +768,8 @@
          */
         $scope.resetListTeam = function __resetListTeam(){
             $scope.change.checkedTeam=true;
-            $scope.ContributorRecipient.Team = [];
+            $scope.TeacherRecipient.Team = [];
+            $scope.TeacherRecipientClone.Team = [];
         };
 
         /**
@@ -916,10 +932,13 @@
                 $scope.listRecipient.push(angular.copy($scope.SystemRecipientClone));
             }else {
                 $scope.showTypeFilter.typeAccordionUser = true;
-                if(type == 'TeacherRecipient')
+                if(type == 'TeacherRecipient') {
+                    $scope.TeacherRecipientClone.userType = $scope.typeUser;
                     $scope.listRecipientUser.push(angular.copy($scope.TeacherRecipientClone));
-                else
+                }else {
+                    $scope.ContributorRecipientClone.userType = $scope.typeUser;
                     $scope.listRecipientUser.push(angular.copy($scope.ContributorRecipientClone));
+                }
             }
 
             //fecha a modal pelo seu tipo
@@ -949,7 +968,7 @@
         $scope.openModalViewRegisters = function __openModalViewRegisters(registers){
             $scope.showTypeFilter.typeViewRegisters = true;
             $scope.registresSelected = registers;
-            angular.element(body).addClass('hidden-body'); console.log(registers)
+            angular.element(body).addClass('hidden-body');
         };
 
         $scope.closeModalViewRegisters = function __closeModalViewRegisters(){

@@ -75,7 +75,7 @@
                     <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool" ng-click="getSchool(TeacherRecipient.SchoolSuperior, TeacherRecipientClone.SchoolClassification)">Escola</h3>
                     <ul>
                         <li  ng-repeat="item in listSchool" ng-if="!change.checkedSchool">
-                            <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.School, item, RecipientClone.School); resetListTeam();">{{item.Name}}
+                            <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.School, item, TeacherRecipientClone.School); resetListTeam();">{{item.Name}}
                         </li>
 
                         <li ng-if="change.checkedSchool">
@@ -132,7 +132,7 @@
                           </li>
 
                           <li ng-if="change.checkedDiscipline">
-                              <input type="checkbox" class="primeiro" name="Disciplina" value="todas" checked disabled>Todas as Disciplina
+                              <input type="checkbox" class="primeiro" name="Disciplina" value="todas" checked disabled>Todas as Disciplinas
                           </li>
                       </ul>
                   </div>
@@ -145,7 +145,7 @@
                           </li>
 
                           <li ng-if="change.checkedTeam">
-                              <input type="checkbox" class="primeiro" name="Turma" value="todas" checked disabled>Todas as Turma
+                              <input type="checkbox" class="primeiro" name="Turma" value="todas" checked disabled>Todas as Turmas
                           </li>
                       </ul>
                   </div>
@@ -179,7 +179,7 @@
                             </li>
 
                             <li ng-if="change.checkedClassification">
-                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas Classificações
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas as Classificações
                             </li>
                         </ul>
                     </div>
@@ -303,7 +303,7 @@
                     <li ng-repeat="item in registresSelected.SchoolSuperior" >{{item.Name}}</li>
                     <li ng-if="registresSelected.SchoolSuperior.length == 0" >Todas as DREs</li>
 
-                    <li class="lista-destinatarios"><strong>Classificaçãoes</strong></li>
+                    <li class="lista-destinatarios"><strong>Classificações</strong></li>
                     <li ng-repeat="item in registresSelected.SchoolClassification">{{item.Name}}</li>
                     <li ng-if="registresSelected.SchoolClassification.length == 0">Todas as Classificações</li>
 
@@ -319,17 +319,17 @@
                     <li ng-repeat="item in registresSelected.Course">{{item.Name}}</li>
                     <li ng-if="registresSelected.Course.length == 0">Todos os Cursos</li>
 
-                    <li class="lista-destinatarios" ng-if="registresSelected.CoursePeriod"><strong>Periodos</strong></li>
+                    <li class="lista-destinatarios" ng-if="registresSelected.CoursePeriod"><strong>Períodos</strong></li>
                     <li ng-repeat="item in registresSelected.CoursePeriod">{{item.Name}}</li>
-                    <li ng-if="registresSelected.CoursePeriod.length == 0">Todos os Periodos</li>
+                    <li ng-if="registresSelected.CoursePeriod.length == 0">Todos os Períodos</li>
 
                     <li class="lista-destinatarios" ng-if="registresSelected.Discipline"><strong>Diciplinas</strong></li>
                     <li ng-repeat="item in registresSelected.Discipline">{{item.Name}}</li>
                     <li ng-if="registresSelected.Discipline.length == 0">Todas as Diciplinas</li>
 
-                    <li class="lista-destinatarios" ng-if="registresSelected.Team"><strong>Tumas</strong></li>
+                    <li class="lista-destinatarios" ng-if="registresSelected.Team"><strong>Turmas</strong></li>
                     <li ng-repeat="item in registresSelected.Team">{{item.Name}}</li>
-                    <li ng-if="registresSelected.Team.length == 0">Todas as Tumas</li>
+                    <li ng-if="registresSelected.Team.length == 0">Todas as Turmas</li>
 
                 </ul>
                 <a class="continuar" ng-click="closeModalViewRegisters()">Fechar</a>
@@ -366,8 +366,8 @@
                 <div class="panel" style="display: none" ng-class="{'panel-block': showTypeFilter.typeAccordionUser}">
                     <div ng-repeat="filter in listRecipientUser" class="bloco-panel">
 
-                        <p ng-click="openModalViewRegisters(filter)" ng-if="checkTypeRegisterUser(filter, 5)">
-                            <span>{{typeUser}} /</span>
+                        <p ng-click="openModalViewRegisters(filter)" ng-if="checkTypeRegisterUser(filter, 6)">
+                            <span>{{filter.userType}} /</span>
                             <span ng-if="filter.SchoolSuperior.length == 0">Todas as DREs</span>
                             <span ng-if="filter.SchoolSuperior.length > 0">Total de DREs {{filter.SchoolSuperior.length}}</span>/
 
@@ -375,23 +375,23 @@
                             <span ng-if="filter.SchoolClassification.length > 0">Total das Classificações {{filter.SchoolClassification.length}}</span>/
 
                             <span ng-if="filter.School.length == 0">Todas as Escolas</span>
-                            <span ng-if="filter.School.length > 0">Total de Escolas {{filter.SchoolSuperior.length}}</span>/
+                            <span ng-if="filter.School.length > 0">Total de Escolas {{filter.School.length}}</span>/
 
                             <span ng-if="filter.Position.length == 0">Todos os Cargos</span>
                             <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>
                             <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('ContributorRecipient', $index)"></i>
                         </p>
 
-                        <p ng-click="openModalViewRegisters(filter)" ng-if="checkTypeRegisterUser(filter, 9)">
-                            <span>{{typeUser}} /</span>
+                        <p ng-click="openModalViewRegisters(filter)" ng-if="checkTypeRegisterUser(filter, 10)">
+                            <span>{{filter.userType}} /</span>
                             <span ng-if="filter.SchoolSuperior.length == 0">Todas as DREs</span>
                             <span ng-if="filter.SchoolSuperior.length > 0">Total de DREs {{filter.SchoolSuperior.length}}</span>/
 
-                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>/
+                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>
                             <span ng-if="filter.SchoolClassification.length > 0">Total das Classificações {{filter.SchoolClassification.length}}</span>/
 
                             <span ng-if="filter.School.length == 0">Todas as Escolas</span>
-                            <span ng-if="filter.School.length > 0">Total de Escolas {{filter.SchoolSuperior.length}}</span>/
+                            <span ng-if="filter.School.length > 0">Total de Escolas {{filter.School.length}}</span>/
 
                             <span ng-if="filter.Position.length == 0">Todos os Cargos</span>
                             <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>/
@@ -399,14 +399,14 @@
                             <span ng-if="filter.Course.length == 0">Todos os Cursos</span>
                             <span ng-if="filter.Course.length > 0">Total de Cursos {{filter.Course.length}}</span>/
 
-                            <span ng-if="filter.CoursePeriod.length == 0">Todos os Periodos</span>
-                            <span ng-if="filter.CoursePeriod.length > 0">Total de Periodos {{filter.CoursePeriod.length}}</span>/
+                            <span ng-if="filter.CoursePeriod.length == 0">Todos os Períodos</span>
+                            <span ng-if="filter.CoursePeriod.length > 0">Total de Períodos {{filter.CoursePeriod.length}}</span>/
 
                             <span ng-if="filter.Discipline.length == 0">Todas as Disciplinas</span>
                             <span ng-if="filter.Discipline.length > 0">Total de Disciplinas {{filter.Discipline.length}}</span>/
 
-                            <span ng-if="filter.Team.length == 0">Todas as Trumas</span>
-                            <span ng-if="filter.Team.length > 0">Total de Trumas {{filter.Team.length}}</span>
+                            <span ng-if="filter.Team.length == 0">Todas as Turmas</span>
+                            <span ng-if="filter.Team.length > 0">Total de Turmas {{filter.Team.length}}</span>
 
                             <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('TeacherRecipient', $index)"></i>
                         </p>
@@ -438,7 +438,7 @@
             <div class="card">
                 <div class="divisao">
                     <div>
-                        <label>Titulo</label>
+                        <label>Título</label>
                         <input type="text" ng-model="filters.Title" maxlength="100">
                     </div>
                 </div>

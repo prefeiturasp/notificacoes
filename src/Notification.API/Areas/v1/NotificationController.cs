@@ -12,17 +12,18 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
 {
-    public class NotificationController : AuthUserGroupBaseController
+    [Authorize]    
+    public class NotificationController : BaseController
     {
         [HttpPost]
-        [Route("api/v1/Notification")]
+        [Route("api/v1/Notification")]        
         [ResponseType(typeof(Notification.Entity.API.Notification))]
+        [UserGroupActionFilter]
         public HttpResponseMessage Save(Notification.Entity.API.Notification entity)
         {
             try
             {
-                string urlImgLogoCore = ConfigurationManager.AppSettings["IdentityServer"];
-                var notificationId = NotificationBusiness.Save(claimData.UserId, claimData.GroupId, entity);
+                var notificationId = NotificationBusiness.Save(filterActionUserGroup.UserId, filterActionUserGroup.GroupId, entity);
                 return Request.CreateResponse(HttpStatusCode.Created, notificationId);
             }
             catch (Exception exc)
@@ -35,6 +36,7 @@ namespace Notification.API.Areas.v1
         [HttpGet]
         [Route("api/v1/Notification/{id:guid}")]
         [ResponseType(typeof(Notification.Entity.API.NotificationPlugin))]
+        [UserActionFilter]
         public HttpResponseMessage GetById(Guid id)
         {
             try
@@ -57,14 +59,15 @@ namespace Notification.API.Areas.v1
         [PaginateActionFilter]
         [Route("api/v1/Notification/")]
         [ResponseType(typeof(IEnumerable<NotificationPlugin>))]
+        [UserActionFilter]
         public HttpResponseMessage GetByUserId(Guid userId, bool read)
         {
             try
             {
                 var result = 
                     read ?
-                    NotificationBusiness.GetReadByUserId(userId, paginate.Page, paginate.Size) :
-                    NotificationBusiness.GetNotReadByUserId(userId, paginate.Page, paginate.Size);
+                    NotificationBusiness.GetReadByUserId(userId, filterActionPaginate.Page, filterActionPaginate.Size) :
+                    NotificationBusiness.GetNotReadByUserId(userId, filterActionPaginate.Page, filterActionPaginate.Size);
 
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
@@ -79,11 +82,12 @@ namespace Notification.API.Areas.v1
         [PaginateActionFilter]
         [Route("api/v1/Notification/{id:guid}/Action")]
         [ResponseType(typeof(bool))]
+        [UserActionFilter]
         public HttpResponseMessage SaveAction(NotificationAction entity)
         {
             try
             {
-                NotificationBusiness.Action(claimData.UserId, entity);
+                NotificationBusiness.Action(filterActionUser.UserId, entity);                
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception exc)
