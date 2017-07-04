@@ -26,7 +26,10 @@ namespace Notification.SignalRServer.SignalR
             var userId = getUserId.FirstOrDefault();
 
             if (userId != null)
+            {
+                LogBusiness.Debug(string.Format("[NotificationHub] Grupo ({0})  criado (connectionId: {0})", userId));
                 Groups.Add(Context.ConnectionId, userId);
+            }                
 
             return base.OnConnected();
         }
@@ -49,7 +52,10 @@ namespace Notification.SignalRServer.SignalR
             var userId = getUserId.FirstOrDefault();
 
             if (userId != null)
+            {
+                LogBusiness.Debug(string.Format("[NotificationHub] Grupo ({0})  removido (connectionId: {0})", userId));
                 Groups.Remove(Context.ConnectionId, userId.ToString());
+            }
 
             return base.OnDisconnected(stopCalled);
         }
@@ -58,14 +64,23 @@ namespace Notification.SignalRServer.SignalR
         {
             LogBusiness.Info(string.Format("[NotificationHub] SendNotification (connectionId: {0})", Context.ConnectionId));
 
-            var u = new List<Guid>();
-            u.Add(new Guid("7fc07b9d-c130-e111-9b36-00155d033206"));
-
-            Parallel.ForEach(u, user =>
+            if (users == null || !users.Any())
             {
+                LogBusiness.Warn(string.Format("[NotificationHub] SendNotification  - Listagem de usuários vazia (connectionId: {0})", Context.ConnectionId));
+                return;
+            }
+
+            if (notification == null)
+            {
+                LogBusiness.Warn(string.Format("[NotificationHub] SendNotification  - Notificação vazia (connectionId: {0})", Context.ConnectionId));
+                return;
+            }
+
+            Parallel.ForEach(users, user =>
+            {
+                LogBusiness.Debug(string.Format("[NotificationHub] SendNotification  - Motificação ({0}) enviada para o usuário ({1})", notification.Id, user));
                 Clients.Group(user.ToString()).ReceiveNotification(notification);
             });
-
         }
     }
 }
