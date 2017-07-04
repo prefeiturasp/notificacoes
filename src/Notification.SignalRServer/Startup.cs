@@ -84,8 +84,8 @@ namespace Notification.SignalRServer
         {
             try
             {
-                var user = ConfigurationManager.AppSettings["userCredentialBasicAuth"];                
-                var password = ConfigurationManager.AppSettings["passwordCredentialBasicAuth"];
+                var user = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
+                var password = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];
 
                 credentialBasicAuth = new Tuple<string, string>(user, password);
             }
