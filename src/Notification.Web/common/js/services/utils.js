@@ -38,6 +38,10 @@
             }
         };
 
+        app.getUserId = function __getUserId(){
+            return user.profile.sub;
+        };
+
         app.getAccessToken = function __getAccessToken(){
             return user && user.access_token;
         };
