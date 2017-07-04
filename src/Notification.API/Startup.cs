@@ -29,7 +29,7 @@ namespace Notification.API
 
                 //endereço identity server
                 Authority = urlIdentityServer,
-                RequiredScopes = new[] { "api1" },
+                RequiredScopes = new[] { "mstechapi" },
             });
 
             app.UseWebApi(WebApiConfig.Register());
