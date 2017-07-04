@@ -29,7 +29,12 @@ namespace Notification.Business
 
             foreach (var item in entity.Recipient.SystemRecipient)
             {
-                if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
+                if(groupUser.VisionId>1)
+                {
+                    ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
+                }
+
+                else if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
                     || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
                 {
                     if (groupUser.VisionId == 1)

@@ -10,6 +10,5 @@ namespace Notification.Entity.Database.SGP
     {
         public Guid Id { get; set; }
 
-        public string Login { get; set; }
     }
 }
