@@ -34,7 +34,8 @@ namespace Notification.Repository.Connections
                 {
                     lock (syncRoot)
                     {
-                        dicConnection.Add(connectionName, str);
+                        if (!dicConnection.ContainsKey(connectionName))
+                            dicConnection.Add(connectionName, str);
                     }
                 }
             }

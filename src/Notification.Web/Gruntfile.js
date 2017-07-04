@@ -47,7 +47,7 @@ module.exports = function(grunt){
             dist:{
                 expand: true,
                 cwd: '<%= App.src%>',
-                src: ['**', '!**/css/**.css', '!**/js/directives', '!**/js/factorys', '!**/js/filters', '!**/js/module', '!**/js/services', '!**/lib/**.js', '!**/js/directives/**.js', '!**/js/factorys/**.js', '!**/js/filters/**.js', '!**/js/module/**.js', '!**/js/services/**.js' ],
+                src: ['**', '!**.js', '!**/css/**.css', '!**/js/directives', '!**/js/factorys', '!**/js/filters', '!**/js/module', '!**/js/services', '!**/js/lib/plg-notify', '!**/js/lib/plg-notify/**', '!**/lib/**.js', '!**/js/directives/**.js', '!**/js/factorys/**.js', '!**/js/filters/**.js', '!**/js/module/**.js', '!**/js/services/**.js' ],
                 //src: '**',
                 dest: '<%= App.dist%>'
             }

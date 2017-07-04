@@ -13,6 +13,8 @@ namespace Notification.Entity.Database
 
         public DateTime date { get; set; }
 
+        public string systemName { get; set; }
+
         public string level { get; set; }
 
         public string message { get; set; }

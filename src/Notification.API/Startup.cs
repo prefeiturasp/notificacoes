@@ -9,6 +9,7 @@ using System.Configuration;
 using Hangfire;
 using Hangfire.Mongo;
 using MongoDB.Driver;
+using Notification.Business;
 
 [assembly: OwinStartup(typeof(Notification.API.Startup))]
 
@@ -16,20 +17,19 @@ namespace Notification.API
 {
     public partial class Startup
     {
+        private static string urlIdentityServer;
+        private static string scopesIdentityServer;
+
         public void Configuration(IAppBuilder app)
         {
-            string urlIdentityServer = ConfigurationManager.AppSettings["IdentityServer"];
-
-            //app.UseCors()
-
+            LoadIdenityServerConfiguration();
+                        
             JwtSecurityTokenHandler.InboundClaimTypeMap.Clear();
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
-
-                //endereço identity server
                 Authority = urlIdentityServer,
-                RequiredScopes = new[] { "mstechapi" },
+                RequiredScopes = new[] { scopesIdentityServer },
             });
 
             app.UseWebApi(WebApiConfig.Register());
@@ -41,6 +41,19 @@ namespace Notification.API
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
+        }
+
+        private void LoadIdenityServerConfiguration()
+        {
+            try
+            {
+                urlIdentityServer = ConfigurationManager.AppSettings["urlIdentityServer"];
+                scopesIdentityServer = ConfigurationManager.AppSettings["scopesIdentityServer"];
+            }
+            catch (Exception exc)
+            {
+                LogBusiness.Error(exc);
+            }
         }
     }
 }
