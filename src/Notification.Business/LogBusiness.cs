@@ -10,13 +10,33 @@ namespace Notification.Business
 {
     public class LogBusiness
     {
+        public const string ConfigIsEnabledDebug = "LogIsEnabledDebug";
         public const string ConfigIsEnabledInfo = "LogIsEnabledInfo";
         public const string ConfigIsEnabledWarn = "LogIsEnabledWarn";
         public const string ConfigIsEnabledError = "LogIsEnabledError";
 
+        public static bool IsEnabledDebug = false;
         public static bool IsEnabledInfo = false;
         public static bool IsEnabledWarn = false;
         public static bool IsEnabledError = true;
+        public static string SystemName = null;
+
+        public static void Debug(string message)
+        {
+            if (IsEnabledDebug)
+            {
+                var entity = new Log()
+                {
+                    date = DateTime.Now,
+                    systemName = SystemName,
+                    level = "DEBUG",
+                    message = message
+                };
+
+                var repository = new LogRepository();
+                repository.InsertOneAsync(entity);
+            }
+        }
 
         public static void Info(string message)
         {
@@ -25,6 +45,7 @@ namespace Notification.Business
                 var entity = new Log()
                 {
                     date = DateTime.Now,
+                    systemName = SystemName,
                     level = "INFO",
                     message = message
                 };
@@ -41,6 +62,7 @@ namespace Notification.Business
                 var entity = new Log()
                 {
                     date = DateTime.Now,
+                    systemName = SystemName,
                     level = "WARN",
                     message = message
                 };
@@ -57,6 +79,7 @@ namespace Notification.Business
                 var entity = new Log()
                 {
                     date = DateTime.Now,
+                    systemName = SystemName,
                     level = "ERROR",
                     message = exception.Message,
                     exception = new LogException()
