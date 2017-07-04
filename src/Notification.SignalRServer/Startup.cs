@@ -21,6 +21,7 @@ namespace Notification.SignalRServer
     public class Startup
     {
         private static string urlIdentityServer;
+        private static string scopesIdentityServer;
         private static Tuple<string, string> credentialBasicAuth = null;
 
         public void Configuration(IAppBuilder app)
@@ -34,7 +35,7 @@ namespace Notification.SignalRServer
             {
                 //endereço identity server 
                 Authority = urlIdentityServer,
-                RequiredScopes = new[] { "mstechapi" }
+                RequiredScopes = new[] { scopesIdentityServer }
             });
 
             app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureApi",
@@ -71,8 +72,8 @@ namespace Notification.SignalRServer
         {
             try
             {
-                var config = ConfigurationManager.AppSettings["urlIdentityServer"];
-                urlIdentityServer = config;
+                urlIdentityServer = ConfigurationManager.AppSettings["urlIdentityServer"];
+                scopesIdentityServer = ConfigurationManager.AppSettings["scopesIdentityServer"];
             }
             catch (Exception exc)
             {
