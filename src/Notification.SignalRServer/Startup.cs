@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Notification.SignalRServer.Auth;
 using IdentityServer3.AccessTokenValidation;
+using Microsoft.IdentityModel.Protocols;
+using System.Configuration;
+using Notification.Business;
 //using Microsoft.Owin.Cors;
 
 [assembly: OwinStartup(typeof(Notification.SignalRServer.Startup))]
@@ -17,15 +20,21 @@ namespace Notification.SignalRServer
 {
     public class Startup
     {
+        private static string urlIdentityServer;
+        private static Tuple<string, string> credentialBasicAuth = null;
+
         public void Configuration(IAppBuilder app)
         {
+            LoadUrlIdenityServerConfiguration();
+            LoadCredentialBasicAuthConfiguration();
+
             app.UseSignalTokenAuthentication();
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
                 //endereço identity server 
-                Authority = "http://10.10.10.37:5000",
-                RequiredScopes = new[] { "api1" }
+                Authority = urlIdentityServer,
+                RequiredScopes = new[] { "mstechapi" }
             });
 
             app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureApi",
@@ -58,10 +67,38 @@ namespace Notification.SignalRServer
             });
         }
 
+        private void LoadUrlIdenityServerConfiguration()        
+        {
+            try
+            {
+                var config = ConfigurationManager.AppSettings["urlIdentityServer"];
+                urlIdentityServer = config;
+            }
+            catch (Exception exc)
+            {
+                LogBusiness.Error(exc);
+            }
+        }
+
+        private void LoadCredentialBasicAuthConfiguration()
+        {
+            try
+            {
+                var user = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
+                var password = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];
+
+                credentialBasicAuth = new Tuple<string, string>(user, password);
+            }
+            catch (Exception exc)
+            {
+                LogBusiness.Error(exc);
+            }
+        }
+
         private async Task<IEnumerable<Claim>> Authenticate(string username, string password)
         {
-            // authenticate user
-            if (username == password)
+            if ((credentialBasicAuth.Item1 == username) &&
+                (credentialBasicAuth.Item2 == password))
             {
                 var claims = new List<Claim> { new Claim("name", username) };
                 return (IEnumerable<Claim>)claims;
