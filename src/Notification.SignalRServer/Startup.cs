@@ -34,7 +34,7 @@ namespace Notification.SignalRServer
             {
                 //endereço identity server 
                 Authority = urlIdentityServer,
-                RequiredScopes = new[] { "api1" }
+                RequiredScopes = new[] { "mstechapi" }
             });
 
             app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureApi",
