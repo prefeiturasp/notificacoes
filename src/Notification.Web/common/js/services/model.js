@@ -48,7 +48,7 @@
             }
 
             function getSchool(params) {
-                return getheaders('GET', params.groupSid, $util.base_url_APISGP('/SchoolByClassification' + getConcatUrl('?','schoolSuperiorId', params.SchoolSuperior) + getConcatUrl('&','schoolClassificationId', params.schoolClassification)));
+                return getheaders('GET', params.groupSid, $util.base_url_APISGP('/SchoolByClassification?' + getConcatUrl('','schoolSuperiorId', params.SchoolSuperior) + (params.SchoolSuperior.length > 0 ? '&' : '' ) + getConcatUrl('','schoolClassificationId', params.schoolClassification)));
             }
 
             function getPosition() {
@@ -82,6 +82,7 @@
 
             function getConcatUrl(concat, type, params){
                 var url = '';
+
                 for(var i = 0; i < params.length; i++){
                     if(i == 0)
                         url += concat + type + '='+ (params[i].Id != undefined ? params[i].Id : params[i]);

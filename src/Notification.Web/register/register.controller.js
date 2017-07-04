@@ -22,6 +22,7 @@
         $scope.load = true;
         $scope.modalOpen = false;
         $scope.redirect = false;
+        $scope.blockSite = true;
         var body = $('body')[0], redactor;
         $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
 
@@ -29,57 +30,6 @@
          * Contructor
          */
         function initialize() {
-            creatteFilters();
-
-            $scope.typeFilter = {
-                system: 'system',
-                group: 'group',
-                dre: 'dre',
-                school: 'school'
-            };
-
-            $scope.typeUser = null;
-            $scope.listDREs = [];
-            $scope.listVisionSystem = [];
-            $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
-
-            new plgnotify({
-                url: Config.API,
-                token: $util.getKey() + " " + $util.getAccessToken(),
-                ws: {
-                  url: Config.URL_SIGGNALR
-                }
-            });
-
-            //ve se o usúario já escolheu umtipo de grupo
-            if($scope.VisionSystem.length == 0) {
-                getVisionSystem();
-            }else{
-                $scope.showTypeFilter.typeVision = false;
-                $timeout(function(){
-                    declareVariables();
-                    startRedactor();
-                },0);
-                $scope.load = false;
-                getTimeStamp();
-            }
-
-        }
-
-        function creatteFilters(){
-            $scope.filters = {
-                Id: null,
-                Recipient: {},
-                SenderName: null,
-                MessageType: null,
-                DateStartNotification: null,
-                DateEndNotification: null,
-                Message: "",
-                Title: null
-            };
-
-            $scope.listRecipient = [];
-            $scope.listRecipientUser = [];
 
             $scope.showTypeFilter ={
                 typeVision: false,
@@ -92,6 +42,70 @@
                 typeUserContributor: false,
                 typeModalTypeUser: false
             };
+
+            $scope.typeUser = null;
+            $scope.listVisionSystem = [];
+            $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
+
+            //ve se o usúario já escolheu umtipo de grupo
+            if($scope.VisionSystem.length == 0) {
+                getVisionSystem();
+            }else{
+                $scope.showTypeFilter.typeVision = false;
+                $timeout(function(){
+                    startSite();
+                },0);
+                $scope.load = false;
+            }
+        }
+
+        function startSite(){
+            $scope.blockSite = false;
+            creatteFilters();
+            createPluginNotification();
+            declareVariables();
+            getCalendar();
+            getTimeStamp();
+            startRedactor();
+        }
+
+        function creatteFilters(){
+
+            $scope.typeFilter = {
+                system: 'system',
+                group: 'group',
+                dre: 'dre',
+                school: 'school'
+            };
+
+            $scope.filters = {
+                Id: null,
+                Recipient: {},
+                SenderName: null,
+                MessageType: null,
+                DateStartNotification: null,
+                DateEndNotification: null,
+                Message: "",
+                Title: null
+            };
+
+            $scope.listDREs = [];
+            $scope.listRecipient = [];
+            $scope.listRecipientUser = [];
+
+        }
+
+        function createPluginNotification(){
+            new plgnotify({
+                url: Config.API,
+                userId: $util.getUserId(),
+                groupSid: $scope.VisionSystem.Id ,
+                tokenType: $util.getKey() + " ",
+                token: $util.getAccessToken(),
+                ws: {
+                    url: Config.URL_SIGGNALR
+                }
+            });
         }
 
         /**
@@ -338,18 +352,19 @@
          * @param {Event} e
          */
         $scope.openModalUser = function __openModalUser(e){
-            getCalendar();
-            $scope.showTypeFilter.typeUser = true;
-            $scope.showTypeFilter.typeModalTypeUser = true;
-            angular.element(body).addClass('hidden-body');
 
+            if(!$scope.blockSite) {
+                $scope.showTypeFilter.typeUser = true;
+                $scope.showTypeFilter.typeModalTypeUser = true;
+                angular.element(body).addClass('hidden-body');
+            }
         };
 
         /**
          * Abre a modal de filtros por sistemas
          */
         $scope.openModalSystem = function __openModalSystem(){
-            getSystem();
+            if(!$scope.blockSite) getSystem();
         };
 
         function openModal(){
@@ -400,11 +415,9 @@
                     if (data.length > 1) {
 
                         $scope.showTypeFilter.typeVision = true;
-                        declareVariables();
-                        getCalendar();
                         $scope.load = false;
+                        startSite();
                         openModal();
-                        getTimeStamp();
                     } else {
                         $scope.VisionSystem = $scope.listVisionSystem[0]
                     }
@@ -742,6 +755,7 @@
          */
         $scope.resetListCoursePeriod = function __resetListCoursePeriod(){
             $scope.change.checkedCoursePeriod=true;
+            $scope.change.checkedDiscipline=true;
             $scope.change.checkedTeam=true;
             $scope.TeacherRecipient.CoursePeriod = [];
             $scope.TeacherRecipientClone.CoursePeriod = [];
@@ -820,29 +834,32 @@
          */
         $scope.sendNotification = function __sendNotification(){
 
-            if(!$scope.filters.SenderName){
-                toastr.warning("Digite seu nome!");
-                return;
-            }else if($scope.filters.Recipient.length == 0){
-                toastr.warning("Não existe filtros selecionados!");
-                return;
-            }else if(!$scope.filters.MessageType){
-                toastr.warning("Selecione o tipo da mensagem!");
-                return;
-            }else if(!$scope.filters.DateStartNotification){
-                toastr.warning("Informe a data de envio da notificação!");
-                return;
-            }else if(!$scope.filters.DateEndNotification){
-                toastr.warning("Informe a data de validade da notificação!");
-                return;
-            }else if(!$scope.filters.Title){
-                toastr.warning("Digite o titulo da notificação!");
-                return;
-            }else if(getMessage()){
-                toastr.warning("Digite a mensagem!");
-                return;
-            }else{
-                saveNotification();
+            if(!$scope.blockSite) {
+
+                if (!$scope.filters.SenderName) {
+                    toastr.warning("Digite seu nome!");
+                    return;
+                } else if ($scope.filters.Recipient.length == 0) {
+                    toastr.warning("Não existe filtros selecionados!");
+                    return;
+                } else if (!$scope.filters.MessageType) {
+                    toastr.warning("Selecione o tipo da mensagem!");
+                    return;
+                } else if (!$scope.filters.DateStartNotification) {
+                    toastr.warning("Informe a data de envio da notificação!");
+                    return;
+                } else if (!$scope.filters.DateEndNotification) {
+                    toastr.warning("Informe a data de validade da notificação!");
+                    return;
+                } else if (!$scope.filters.Title) {
+                    toastr.warning("Digite o titulo da notificação!");
+                    return;
+                } else if (getMessage()) {
+                    toastr.warning("Digite a mensagem!");
+                    return;
+                } else {
+                    saveNotification();
+                }
             }
         };
 
