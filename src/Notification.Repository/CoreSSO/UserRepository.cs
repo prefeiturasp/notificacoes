@@ -95,9 +95,94 @@ namespace Notification.Repository.CoreSSO
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id
                     INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
                     INNER JOIN SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK) ON UGUA.gru_id = UG.gru_id AND UGUA.usu_id = UG.usu_id
-                    WHERE G.gru_id = @groupId AND UGUA.uad_id IN @ltAdministrativeUnit
+                    WHERE 
+                        G.gru_id = @groupId
+                        AND
+
+                        --busca usuários das UAD's que o usuário tenha permissão, sendo ou não passadas no parâmetro
+                        (
+	                        -- lista de UAD's vazia. Pega todas que o usuário logado tem permissão.
+	                        (
+		                        NOT EXISTS (select 1 from @idsUAD)
+		                        AND ugua.uad_id IN 
+		                        (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
+	                        )
+                        OR
+	                        (
+		                        -- lista de uad preenchida. buscar apenas referente à estas unidades.
+		                        EXISTS (select 1 from @idsUAD) 
+		                        AND ugua.uad_id IN 
+		                        (select id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))
+	                        )
+                        )
+                       --AND UGUA.uad_id IN @ltAdministrativeUnit
                     GROUP BY ug.usu_id",
-                     new { userId = userId, systemId = systemId, groupId = groupId, ltAdministrativeUnit = ltAdministrativeUnit });
+                     new { usu_idLogado = userId, systemId = systemId, gru_idLogado = groupId, idsUAD = ltAdministrativeUnit });
+                return query;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId">ID Usuário logado</param>
+        /// <param name="groupId">ID Grupo usuário logado</param>
+        /// <param name="ltSystem">Filtro: Lista de sistemas da qual o usuário logado tem permissão</param>
+        /// <param name="ltGroup">Filtro: Lista de grupos de mesma visão ou abaixo do usuário logado</param>
+        /// <param name="ltAdministrativeUnit">Filtro: Lista de unidades administrativas que o usuário logado possui permissão</param>
+        /// <returns></returns>
+        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltAdministrativeUnit)
+        {
+            using (var context = new SqlConnection(stringConnection))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(@"SELECT
+	                    DISTINCT
+	                    ug.usu_id as Id 
+                    FROM (
+	                    /* Sistemas permitidos */
+	                    SELECT  g.sis_id 
+	                    FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
+	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id 
+
+	                    WHERE 
+		                    UG.usg_situacao <> 3 AND G.gru_situacao <> 3 
+		                    AND UG.usu_id = @usu_idLogado ");
+
+                if (ltSystem != null && ltSystem.Any())
+                    sb.Append(@" AND G.sis_id IN (select id from @idsSistema)");
+
+                sb.Append(@" GROUP BY sis_id
+                    ) AS T1
+                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id and g.gru_situacao<>3
+                    INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
+                    INNER JOIN SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK) ON UGUA.gru_id = UG.gru_id AND UGUA.usu_id = UG.usu_id
+	
+                    where
+                     g.vis_id >= (SELECT vis_id FROM SYS_Grupo as gruLogado WITH(NOLOCK) where gruLogado.gru_id=@gru_idLogado)");
+
+                if(ltGroup !=null && ltGroup.Any())
+                {
+                    sb.Append(@"AND g.gru_id in (select id from @idsGrupo)");
+                }
+
+                //verificar se o usuário possui permissão nas UAD's passadas por parâmetro
+                if (ltAdministrativeUnit != null && ltAdministrativeUnit.Any())
+                {
+                    sb.Append(@" AND ugua.uad_id IN 
+		                    (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
+                }
+                //Lista de UAD's vazia. Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
+                else
+                {
+                    sb.Append(@"AND ugua.uad_id IN 
+		                    (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+                }
+
+                var query = context.Query<User>(
+                   sb.ToString()
+                    ,
+                     new { usu_idLogado = userId, gru_idLogado= groupId, idsSistema = ltSystem, idsGrupo = ltGroup, idsUAD = ltAdministrativeUnit });
                 return query;
             }
         }

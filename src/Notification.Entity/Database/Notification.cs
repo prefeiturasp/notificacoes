@@ -10,6 +10,8 @@ namespace Notification.Entity.Database
     {
         public Guid Id { get; set; }
 
+        public Guid SenderId { get; set; }
+
         public string SenderName { get; set; }
 
         public IEnumerable<NotificationRecipient> Recipient { get; set; }
