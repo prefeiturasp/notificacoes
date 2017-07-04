@@ -1439,7 +1439,7 @@ function plgnotify( sysconfig ) {
 	 */
 	function setAPI() {
 		// pega token
-		token = _config.token;
+		token = _config.tokenType +  _config.token;
 
 		// pega dados da api
 		api = _config.api;
@@ -1776,6 +1776,7 @@ function plgnotify( sysconfig ) {
 			socket.hasListeners = false;
 
 			socket.connection    = $.connection.notificationHub;
+			$.connection.hub.qs = 'authtoken='+_config.token;
 			$.connection.hub.url = socket.url;
 
 			try {

@@ -14,7 +14,7 @@ var Config = {
         client_id: "mstechjs",
         redirect_uri: "http://10.10.10.37:5021/callback.html",
         response_type: "id_token token",
-        scope:"openid profile api1",
+        scope:"openid profile mstechapi",
         post_logout_redirect_uri : "http://10.10.10.37:5021/index.html"
     }
 };
