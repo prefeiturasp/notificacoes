@@ -1,7 +1,8 @@
+//noinspection ProblematicWhitespace
 /**
  * Created by ale on 6/13/17.
  */
-var plgnotify = function ( sysconfig ) {
+function plgnotify( sysconfig ) {
 	"use strict";
 
 	var notificationsType = ['plg-nu-baixa', 'plg-nu-media', 'plg-nu-alta', 'plg-nu-max'];
@@ -19,10 +20,11 @@ var plgnotify = function ( sysconfig ) {
 
 	//Contador de total de notificações.
 	var counter = 0;
-	var selectedNotification;
-
-	//Guarda última referência da página.
-	var lastHref;
+	var selectedNotification={
+		'NotificationId':undefined,
+		'Read'          :undefined,
+		'DelayId'       :undefined
+	};
 
 	/**
 	 * HTTP
@@ -37,7 +39,7 @@ var plgnotify = function ( sysconfig ) {
 	 * @private
 	 */
 	function _http( method, url, config ) {
-		var xhr = new XMLHttpRequest(), bindData;
+		var xhr = new XMLHttpRequest();
 
 		if ( !xhr ) {
 			alert( 'Não é possível fazer XHR.' );
@@ -48,7 +50,7 @@ var plgnotify = function ( sysconfig ) {
 		if ( config ) {
 			if ( config.header ) {
 				var property, obj = config.header;
-				for ( var property in obj ) {
+				for ( property in obj ) {
 					if ( obj.hasOwnProperty( property ) ) {
 						xhr.setRequestHeader( property, obj[property] );
 					}
@@ -57,7 +59,7 @@ var plgnotify = function ( sysconfig ) {
 
 		}
 
-		xhr.onreadystatechange = function ( e, q, w ) {
+		xhr.onreadystatechange = function () {
 			if ( this.readyState === XMLHttpRequest.DONE ) {
 				if ( this.status === 200 ) {
 					config && config.success && config.success( this.response );
@@ -116,7 +118,7 @@ var plgnotify = function ( sysconfig ) {
 		events.disturbId = undefined;
 
 		if ( e ) {
-			layout.domdisturbcancel.classList.add('hide');
+			layout.domdisturbcancel.classList.add( 'hide' );
 		}
 	}
 
@@ -141,6 +143,7 @@ var plgnotify = function ( sysconfig ) {
 			}
 
 			//cancelAnimationFrame(localStorage.getItem(events.disturbId));
+			//noinspection JSUndeclaredVariable
 			requestAnimationFrame = setTimeout( disturbValidator, (_local - Date.now() | 0) );
 
 			texto           = document.querySelector( '.disturb p' );
@@ -254,7 +257,7 @@ var plgnotify = function ( sysconfig ) {
 
 		html.style.zIndex = 190;
 		//hasSpace(html, e.target );
-		setPosition( e.x, e.y - html.clientHeight, html )
+		setPosition( e.pageX, e.pageY - html.clientHeight, html )
 	}
 
 	/**
@@ -329,7 +332,7 @@ var plgnotify = function ( sysconfig ) {
 	 * @param {event} e - evento do objeto clicado.
 	 */
 	function showLaterOptions( e, onclick, onblur ) {
-		var html, pai, id;
+		var html, pai;
 
 		//Valida se tem dados no local storage.
 		if ( !_config.later ) {
@@ -358,7 +361,6 @@ var plgnotify = function ( sysconfig ) {
 		html += '</div>';
 
 		html = addContentHTML( 'div', html, true ).childNodes[0];
-		id   = e.target.id;
 
 		// evento para quando selecionar item da lista.
 		html.onclick = function ( e ) {
@@ -416,7 +418,7 @@ var plgnotify = function ( sysconfig ) {
 
 		html.style.zIndex = 190;
 		//hasSpace(html, e.target );
-		setPosition( e.x, e.y - html.clientHeight, html )
+		setPosition( e.pageX, e.pageY - html.clientHeight, html )
 
 	}
 
@@ -448,7 +450,7 @@ var plgnotify = function ( sysconfig ) {
 				'<div class="plgmodal-dialog">' +
 				'<div class="plgmodal-header">' +
 				'<h2><span class="plgloader"></span></h2>' +
-				'<h2><small> <span class="senderName"></span> às <span class="date"></span></small></h2>' +
+				'<h2><small> <span class="senderName"></span> em <span class="date"></span></small></h2>' +
 				'<a href="#" class="unselectable plgmodal-btn-close plgmodal-btn-big" aria-hidden="true">×</a>' +
 				'</div>' +
 				'<div class="plgmodal-body">' +
@@ -475,18 +477,18 @@ var plgnotify = function ( sysconfig ) {
 
 		title = header.childNodes[0];
 		text  = body.childNodes[0];
-/*
-		if ( !data ) {
+		/*
+		 if ( !data ) {
 
-			text.innerHTML  = dom.childNodes[1].innerHTML || 'Algum titulo qualquer';
-			title.innerHTML = dom.childNodes[0].innerHTML || 'Algum texto qualquer';
-		}
-		else {*/
-			text.innerHTML   = data.message;
-			title.innerHTML  = data.title;
-			date.innerHTML   = data.dateStart;
-			//capitalizar nome com css
-			sender.innerHTML = data.senderName;
+		 text.innerHTML  = dom.childNodes[1].innerHTML || 'Algum titulo qualquer';
+		 title.innerHTML = dom.childNodes[0].innerHTML || 'Algum texto qualquer';
+		 }
+		 else {*/
+		text.innerHTML   = data.message;
+		title.innerHTML  = data.title;
+		date.innerHTML   = data.dateStart;
+		//capitalizar nome com css
+		sender.innerHTML = data.senderName;
 		//}
 
 		btnFechar = footer.getElementsByClassName( 'plgmodal-btn-close' )[0];
@@ -498,7 +500,7 @@ var plgnotify = function ( sysconfig ) {
 			showLaterOptions( e, _onClick );
 		};
 
-		function _onClick( e ) {
+		function _onClick() {
 			modal.classList.add( 'hitbot' );
 			fecharX.onclick();
 		}
@@ -561,8 +563,8 @@ var plgnotify = function ( sysconfig ) {
 	 * @param id
 	 */
 	function postRead( id ) {
-		// metodo que marca mensagem como lida.
 		console.info( 'Notificação lida:', id );
+		selectedLaterOption(selectedNotification);
 	}
 
 	/**
@@ -633,6 +635,25 @@ var plgnotify = function ( sysconfig ) {
 	}
 
 	/**
+	 * Abre notificação
+	 * @param {event} e - evento
+	 */
+	function openNotification( e ) {
+
+		selectedNotification.NotificationId=e.target.id;
+		selectedNotification.Read=true;
+		selectedNotification.DelayId=undefined;
+
+		postRead( e.target.id );// precisa ?
+
+		//fazer get de item
+		// depois exibir modal
+		//possivel loader
+
+		getNotification( e.target.id, getNotificationSuccess.bind( e ), getNotificationError.bind( e ) );
+	}
+
+	/**
 	 * Tratamentos de click dentro da lista de de notificações.
 	 * @param {event} e - evento mousedown.
 	 */
@@ -644,28 +665,9 @@ var plgnotify = function ( sysconfig ) {
 		classlist = e.target.classList;
 
 		if ( classlist.contains( 'plgnot' ) ) {
-
 			if ( e.target.id ) {
-				selectedNotification = {
-					'NotificationId':e.target.id,
-					'Read'          :undefined,
-					'DelayId'       :undefined
-				};
-
-				postRead( e.target.id );// precisa ?
-
-				//fazer get de item
-				// depois exibir modal
-				//possivel loader;
-
-				getNotification( e.target.id, getNotificationSuccess.bind( e ), getNotificationError.bind( e ) );
+				openNotification(e);
 			}
-
-			//loadingNotification( e.target, success, error );
-
-			//Exibe mensagem
-			//showMessage( e.target );
-
 		}
 		else if ( classlist.contains( 'plgtablink' ) && !classlist.contains( 'plgtablink-setting' ) ) {
 			showList( document.querySelector( '.plgtab > .visited' ) );
@@ -775,9 +777,11 @@ var plgnotify = function ( sysconfig ) {
 	 * Adiciona notificação na lista.
 	 */
 	function addNotification( type, data ) {
-		var element,loader;
+		var element, loader;
 		//caso selecione settings
-		if(!type) return;
+		if ( !type ) {
+			return;
+		}
 		element = document.querySelector( '#' + type + '.plg-list' );
 		loader  = element.childNodes[0];
 
@@ -799,7 +803,7 @@ var plgnotify = function ( sysconfig ) {
 
 		fn(
 			bind,
-			function ( rs ) {
+			function () {
 				console.error( 'lista inválida' );
 			}
 		);
@@ -876,7 +880,7 @@ var plgnotify = function ( sysconfig ) {
 	 * Tratamneto para esconder plugin.
 	 * @param {event} e - evento de mousedown.
 	 */
-	function hidePlugin( e ) {
+	function hidePlugin() {
 		hidden = !hidden;
 		setPosition( 0 );
 	}
@@ -965,7 +969,7 @@ var plgnotify = function ( sysconfig ) {
 		if ( !dragging ) {
 			return;
 		}
-		remDragging()
+		remDragging();
 		dropPosition( e.target, e );
 	}
 
@@ -1045,16 +1049,25 @@ var plgnotify = function ( sysconfig ) {
 		// Se a lista estiver NÃO aberta ou,
 		// Clicar no plugin E NÃO for no sino,
 		// então retorna.
-		var hasFocus, arr, indexes = [];
+		var hasFocus, arr, indexes = [], path = e.path;
+
 		layout.domplugin.classList.remove( 'shake-anime' );
 
 		//deve acontecer onblur nesses elementos do array.
-		arr      = _config.onblur;
-		var path = e.path;
-		path.length -= 3;
+		arr = _config.onblur;
 
-		if ( listOpened ) {
+		if ( !path ) {
+			path     = [];
+			hasFocus = e.target.parentNode;
 
+			for ( ; ; ) {
+
+				if ( !hasFocus || (hasFocus === document.body) ) {
+					break;
+				}
+				path.push( hasFocus );
+				hasFocus = hasFocus.parentNode;
+			}
 		}
 
 		if ( arr.length ) {
@@ -1062,12 +1075,14 @@ var plgnotify = function ( sysconfig ) {
 			indexes  = arr.map(
 				//varre todos e
 				function ( a, i ) {
+					var childs = path || [].slice.call(a.childNodes);
+
 					//valida se algum item da tela é ele.
-					return path.some(
-						function ( e ) {
-							return e === a;
-						}
-					)
+					return childs.some(
+							function ( el ) {
+								return el === a;
+							}
+						)
 						// se for retorna elemento para dar blur.
 						? -1 : i;
 				}
@@ -1108,7 +1123,7 @@ var plgnotify = function ( sysconfig ) {
 			return;
 		}
 
-		if( !msg || msg && (!msg.header || !msg.body) ){
+		if ( !msg || msg && (!msg.header || !msg.body) ) {
 			return;
 		}
 
@@ -1123,9 +1138,9 @@ var plgnotify = function ( sysconfig ) {
 
 		// Cria html do snackbar
 		html = '<div class="unselectable plgsnackbar">' +
-			   '<div class="plgsnackbar-center" title="Ler mensagem">' +
-			   '<span class="plgsnackbar-header">' + (msg && msg.header||"") + '</span>' +
-			   '<span class="plgsnackbar-body">' + (msg && msg.body||"") + '</span>' +
+			   '<div class="plgsnackbar-center" id="'+(msg && msg.id||"a12d562d-3854-4b82-89c5-a92f461a96c1")+'" title="Ler mensagem">' +
+			   '<span class="plgsnackbar-header">' + (msg && msg.header || "") + '</span>' +
+			   '<span class="plgsnackbar-body">' + (msg && msg.body || "") + '</span>' +
 			   '</div>' +
 			   '<button class="plgsnackbar-right" title="Ler mais tarde">' +
 			   '<svg width="20" height="20" viewBox="0 0 24 24"><path fill="white" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/></svg>' +
@@ -1138,10 +1153,18 @@ var plgnotify = function ( sysconfig ) {
 
 		layout.domsnackbar = html = dom;
 
+
+
 		// Configura valores padrões da animação.
 		y     = y ? y : 50;
 		delay = delay ? delay : 0.15;
 		time  = time ? time : 2;
+
+		html.getElementsByClassName( 'plgsnackbar-center' )[0].onclick=function(e){
+			openNotification(e);
+			hide();
+		};
+
 
 		html.getElementsByClassName( 'plgsnackbar-right' )[0].onclick = function ( e ) {
 			//Remove eventos de blur da notificação.
@@ -1149,7 +1172,7 @@ var plgnotify = function ( sysconfig ) {
 			html.onmouseover = undefined;
 			html.onmouseout  = undefined;
 
-			showLaterOptions( e, onClick, onBlurOptions );
+			showLaterOptions( e, hide, onBlurOptions );
 		};
 
 		/**
@@ -1161,12 +1184,12 @@ var plgnotify = function ( sysconfig ) {
 			html.onmouseout  = restoreHide;
 		}
 
-		function onClick() {
+		function onClick(e) {
 			hide();
 			setTimeout(
 				function () {
 					showSnackbar( { header:'adiou a mensagem da snackbar!.' } );
-				}, 3
+				}, 300
 			)
 		}
 
@@ -1210,12 +1233,12 @@ var plgnotify = function ( sysconfig ) {
 		};
 
 		// impede snackabar de esconder
-		layout.domsnackbar.cancelHide = cancelHide = function ( e ) {
+		layout.domsnackbar.cancelHide = cancelHide = function () {
 			clearTimeout( uid[2] );
 		};
 
 		//restora snackabar função de esconder
-		layout.domsnackbar.restoreHide = restoreHide = function ( e ) {
+		layout.domsnackbar.restoreHide = restoreHide = function () {
 			uid[2] = setTimeout(
 				hide, time * 1000 // tempo de exibição
 			);
@@ -1225,6 +1248,7 @@ var plgnotify = function ( sysconfig ) {
 		html.onmouseover = cancelHide;
 		//se TIRAR o mouse por cima da snackbar restaura de esconder
 		html.onmouseout  = restoreHide;
+		//html.onclick  = onClick;
 
 		//salva referencia dos setTimeout, para poder cancelar , se necessário.
 		_config.snackbar.push( uid );
@@ -1240,13 +1264,13 @@ var plgnotify = function ( sysconfig ) {
 	 */
 	function counterIncrement( res ) {
 
-		res = JSON.parse(res.data );
-		if ( !res||res !=={} || !layout.domcounter ) {
+		res = JSON.parse( res.data );
+		if ( !res || res !== {} || !layout.domcounter ) {
 			return;
 		}
 
 		counter++;
-		showSnackbar();
+		showSnackbar(res);
 
 		layout.domcounter.innerHTML = counter;
 	}
@@ -1382,10 +1406,7 @@ var plgnotify = function ( sysconfig ) {
 			http.get(
 				api[type + 'Options'],
 				{
-					header :{
-						'Content-Type' :'application/json;charset=UTF-8',
-						'Authorization':token
-					},
+					header :_config.header,
 					success:function cachaTime( data ) {
 						if ( data ) {
 
@@ -1400,7 +1421,7 @@ var plgnotify = function ( sysconfig ) {
 							}
 						}
 					},
-					error  :function errorCallback( r, s, x ) {
+					error  :function errorCallback() {
 						sessionStorage.removeItem( type );
 						if ( error ) {
 							error();
@@ -1462,7 +1483,7 @@ var plgnotify = function ( sysconfig ) {
 	 * Adiciona conteúdo ao HTML.
 	 */
 	function addContentHTML( type, content, reflow ) {
-		var frag, type;
+		var frag;
 		type           = document.createElement( type );
 		type.innerHTML = content;
 		if ( !reflow ) {
@@ -1479,7 +1500,7 @@ var plgnotify = function ( sysconfig ) {
 	 */
 	function hasPlugin() {
 		var linksTabs, domdisturb, domdisturbcancel;
-		var style, css, html, modalMensages, dom;
+		var style, css, html, dom;
 
 		//TODO: possibilitar uso parcial de conteúdo( só insere o css, ou html ).
 
@@ -1494,41 +1515,40 @@ var plgnotify = function ( sysconfig ) {
 
 		//adicionar plugin
 		html = '<div draggable="true" class="float-menu plg-notify">' +
-			   '		<div class="circulo">' +
-			   '			<div class="lateral">' +
-			   '				<a class="mover plg-notify-move">' +
-			   '					<svg width="20" height="20" viewBox="0 0 24 24"><path d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z"/></svg> ' +
-			   '				</a>' +
-			   '				<a class="esconder plg-notify-hide">' +
-			   '					<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg>' +
-			   '				</a>' +
-			   '			</div>' +
-			   '		<div class="sino plg-notify-bell">' +
-			   '			<svg width="40" height="40" viewBox="0 0 24 24"><path d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z"/></svg>' +
-			   '		</div>' +
-			   '		<a class="numeracao hitbox"><span class="plg-notify-counter">0</span></a>' +
-			   '	</div>' +
-			   '	<div class="hide plg-notificacoes plgtab">' +
-			   '		<button class="plgtablink novas visited" id="' + events.unread + '">Novas</button>' +
-			   '		<button class="plgtablink lidas "id="' + events.read + '">Lidas</button>' +
-			   '		<button class="plgtablink-setting plgtablink " title="Configurações">' +
-			   '			<svg width="20" height="20" viewBox="0 0 24 24">' +
-			   '				<path fill="white" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>' +
-			   '		</button>' +
-			   '		<div class="plg-list novas" id="' + events.unread + '"><div class="plgloader"></div></div>' +
-			   '		<div class="plg-list lidas" id="' + events.read + '"><div class="plgloader"></div></div>' +
-			   '		<div class="plg-list configuracoes ">' +
-			   '			<li class="disturb interactive unselectable">' +
-			   '				<strong>Silênciar por:</strong>' +
-			   '					<svg width="24" height="24" viewBox="0 0 24 24">' +
-			   '						<path fill="gray" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />' +
-			   '					</svg>' +
-			   '					<p>Mais opções</p>' +
-			   '			</li>' +
-			   '			<li title="Cancelar não perturbe" class="disturb cancelar hide"><p>Cancelar</p></li>' +
-			   '		</div>' +
-
-			   '	</div>' +
+			   '<div class="circulo">' +
+			   '<div class="lateral">' +
+			   '<a class="mover plg-notify-move">' +
+			   '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z"/></svg>' +
+			   '</a>' +
+			   '<a class="esconder plg-notify-hide">' +
+			   '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/></svg>' +
+			   '</a>' +
+			   '</div>' +
+			   '<div class="sino plg-notify-bell">' +
+			   '<svg width="40" height="40" viewBox="0 0 24 24"><path d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z"/></svg>' +
+			   '</div>' +
+			   '<a class="numeracao hitbox"><span class="plg-notify-counter">0</span></a>' +
+			   '</div>' +
+			   '<div class="hide plg-notificacoes plgtab">' +
+			   '<button class="plgtablink novas visited" id="' + events.unread + '">Novas</button>' +
+			   '<button class="plgtablink lidas "id="' + events.read + '">Lidas</button>' +
+			   '<button class="plgtablink-setting plgtablink " title="Configurações">' +
+			   '<svg width="20" height="20" viewBox="0 0 24 24">' +
+			   '<path fill="white" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>' +
+			   '</button>' +
+			   '<div class="plg-list novas" id="' + events.unread + '"><div class="plgloader"></div></div>' +
+			   '<div class="plg-list lidas" id="' + events.read + '"><div class="plgloader"></div></div>' +
+			   '<div class="plg-list configuracoes ">' +
+			   '<li class="disturb interactive unselectable">' +
+			   '<strong>Silênciar por:</strong>' +
+			   '<svg width="24" height="24" viewBox="0 0 24 24">' +
+			   '<path fill="gray" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z" />' +
+			   '</svg>' +
+			   '<p>Mais opções</p>' +
+			   '</li>' +
+			   '<li title="Cancelar não perturbe" class="disturb cancelar hide"><p>Cancelar</p></li>' +
+			   '</div>' +
+			   '</div>' +
 			   '</div>';
 
 		dom = addContentHTML( 'div', html, true );
@@ -1555,27 +1575,27 @@ var plgnotify = function ( sysconfig ) {
 
 		document.body.appendChild( dom );
 		console.info( 'Plugin adicionado na tela' );
-/*
+		/*
 
-		return
-		//Cria mensagens da lista de notificação.
-		//TODO: deletar na produção.
-		modalMensages = '<li class="plgnot urgente" 	id="90113d2a-999f-4332-9d74-5069aae0f403"><span>20/06/2017</span><div>Essa mensagem é urgente !</div></li>' +
-						'<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-						'<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-						'<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-						'<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-						'<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-						'<li class="plgnot lida urgente"id="90113d2a-999f-4332-9d74-5069aae0f403"><span>20/06/2017</span><div>Essa mensagem é urgente e já foi lida!</div></li>' +
-						'<li class="plgnot"				id="90113d2a-999f-4332-9d74-5069aae0f403"><span>12/06/2017</span><div>Uma mensagem muito muito muito muito muito muitolonga mesmo ...</div></li>';
+		 return
+		 //Cria mensagens da lista de notificação.
+		 //TODO: deletar na produção.
+		 modalMensages = '<li class="plgnot urgente" 	id="90113d2a-999f-4332-9d74-5069aae0f403"><span>20/06/2017</span><div>Essa mensagem é urgente !</div></li>' +
+		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
+		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
+		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
+		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
+		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
+		 '<li class="plgnot lida urgente"id="90113d2a-999f-4332-9d74-5069aae0f403"><span>20/06/2017</span><div>Essa mensagem é urgente e já foi lida!</div></li>' +
+		 '<li class="plgnot"				id="90113d2a-999f-4332-9d74-5069aae0f403"><span>12/06/2017</span><div>Uma mensagem muito muito muito muito muito muitolonga mesmo ...</div></li>';
 
-		//aplica mensagens falsas no modal
-		// TODO: deletar na produção.
-		dom           = dom.getElementsByClassName( layout.list + ' novas' )[0];
-		dom.innerHTML = (
-			modalMensages
-		);
-*/
+		 //aplica mensagens falsas no modal
+		 // TODO: deletar na produção.
+		 dom           = dom.getElementsByClassName( layout.list + ' novas' )[0];
+		 dom.innerHTML = (
+		 modalMensages
+		 );
+		 */
 
 	}
 
@@ -1797,4 +1817,4 @@ var plgnotify = function ( sysconfig ) {
 
 	//exporta metodos públicos
 	return exports;
-}
+};
