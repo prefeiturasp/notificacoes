@@ -137,47 +137,44 @@ namespace Notification.Repository.CoreSSO
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(@"SELECT
-	                    DISTINCT
-	                    ug.usu_id as Id 
+                    DISTINCT
+                    ug.usu_id as Id 
                     FROM (
-	                    /* Sistemas permitidos */
-	                    SELECT  g.sis_id 
-	                    FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
-	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id 
+                    
+                    SELECT  g.sis_id 
+                    FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
+                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id 
 
-	                    WHERE 
-		                    UG.usg_situacao <> 3 AND G.gru_situacao <> 3 
-		                    AND UG.usu_id = @usu_idLogado ");
+                    WHERE 
+                    UG.usg_situacao <> 3 AND G.gru_situacao <> 3 
+                    AND UG.usu_id = @usu_idLogado ");
 
                 if (ltSystem != null && ltSystem.Any())
-                    sb.Append(@" AND G.sis_id IN (select id from @idsSistema)");
+                    sb.Append(" AND G.sis_id IN @idsSistema");
 
-                sb.Append(@" GROUP BY sis_id
-                    ) AS T1
+                sb.Append(@" GROUP BY sis_id) AS T1
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id and g.gru_situacao<>3
                     INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
                     INNER JOIN SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK) ON UGUA.gru_id = UG.gru_id AND UGUA.usu_id = UG.usu_id
-	
-                    where
-                     g.vis_id >= (SELECT vis_id FROM SYS_Grupo as gruLogado WITH(NOLOCK) where gruLogado.gru_id=@gru_idLogado)");
+
+                    WHERE
+                     (g.vis_id >= (SELECT vis_id FROM SYS_Grupo as gruLogado WITH(NOLOCK) where gruLogado.gru_id=@gru_idLogado))");
 
                 if(ltGroup !=null && ltGroup.Any())
                 {
-                    sb.Append(@"AND g.gru_id in (select id from @idsGrupo)");
+                    sb.Append(@" AND g.gru_id in  @idsGrupo");
                 }
 
                 //verificar se o usuário possui permissão nas UAD's passadas por parâmetro
                 if (ltAdministrativeUnit != null && ltAdministrativeUnit.Any())
                 {
-                    sb.Append(@" AND ugua.uad_id IN 
-		                    (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
+                    //sb.Append(@" AND ugua.uad_id IN (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
+                    sb.Append(@" AND ugua.uad_id IN @idsUAD");
                 }
-                //Lista de UAD's vazia. Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
-                else
-                {
-                    sb.Append(@"AND ugua.uad_id IN 
-		                    (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
-                }
+                //Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
+                
+                sb.Append(@" AND ugua.uad_id IN (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+                
 
                 var query = context.Query<User>(
                    sb.ToString()

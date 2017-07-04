@@ -1,4 +1,5 @@
 ﻿using Notification.Business.SGP;
+using Notification.Business.Signal;
 using Notification.Entity.API;
 using Notification.Repository;
 using Notification.Repository.CoreSSO;
@@ -30,13 +31,12 @@ namespace Notification.Business
             foreach (var item in entity.Recipient.SystemRecipient)
             {
                 //pendente de testes
-                //if(groupUser.VisionId>1)
-                //{
-                //    ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
-                //}
+                if (groupUser.VisionId > 1)
+                {
+                    ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
+                }
 
-                //else 
-                if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
+                else if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
                     || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
                 {
                     if (groupUser.VisionId == 1)
@@ -86,7 +86,8 @@ namespace Notification.Business
                 var notRep = new NotificationRepository();
                 var Id = notRep.InsertOne(entityNotification);
 
-                //SignalRClientBusiness.SendNotificationHangFire
+                if(Id != Guid.Empty)
+                    SignalRClientBusiness.SendNotificationHangFire(ltUser, Id);
 
                 return Id;
             }
