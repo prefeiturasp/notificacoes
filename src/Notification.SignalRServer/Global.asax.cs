@@ -19,9 +19,9 @@ namespace Notification.SignalRServer
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            LoadLogConfiguration();
-
             LogBusiness.SystemName = "Notification-SignalRServer";
+
+            LoadLogConfiguration();
         }
 
         private void LoadLogConfiguration()
@@ -48,6 +48,13 @@ namespace Notification.SignalRServer
 
                 if (config != null && bool.TryParse(config, out value))
                     LogBusiness.IsEnabledError = value;
+
+                LogBusiness.Debug(
+                    string.Format("Configuração de Log: Debug({0}), Info({1}), Warn({2}), Error({3})",
+                        LogBusiness.IsEnabledDebug,
+                        LogBusiness.IsEnabledInfo,
+                        LogBusiness.IsEnabledWarn,
+                        LogBusiness.IsEnabledError));
             }
             catch (Exception exc)
             {
