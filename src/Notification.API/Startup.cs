@@ -49,6 +49,8 @@ namespace Notification.API
             {
                 urlIdentityServer = ConfigurationManager.AppSettings["urlIdentityServer"];
                 scopesIdentityServer = ConfigurationManager.AppSettings["scopesIdentityServer"];
+
+                LogBusiness.Debug(string.Format("Configuração de Identity: Url({0}), Scope({1})", urlIdentityServer, scopesIdentityServer));
             }
             catch (Exception exc)
             {

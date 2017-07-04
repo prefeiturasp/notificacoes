@@ -22,11 +22,11 @@ namespace Notification.API
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            LogBusiness.SystemName = "Notification-API";
+
             LoadLogConfiguration();
 
-            LoadSignalRServerHubConfiguration();
-
-            LogBusiness.SystemName = "Notification-API";
+            LoadSignalRServerHubConfiguration();            
         }
 
         private void LoadLogConfiguration()
@@ -53,6 +53,13 @@ namespace Notification.API
 
                 if (config != null && bool.TryParse(config, out value))
                     LogBusiness.IsEnabledError = value;
+
+                LogBusiness.Debug(
+                    string.Format("Configuração de Log: Debug({0}), Info({1}), Warn({2}), Error({3})",
+                        LogBusiness.IsEnabledDebug,
+                        LogBusiness.IsEnabledInfo,
+                        LogBusiness.IsEnabledWarn,
+                        LogBusiness.IsEnabledError));
             }
             catch (Exception exc)
             {
@@ -67,7 +74,10 @@ namespace Notification.API
                 var config = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_URLSIGNALRSERVERHUB];
 
                 if (config != null)
+                {
                     SignalRClientBusiness.UrlSignalRServer = config;
+                    LogBusiness.Debug(string.Format("Configuração de SignalRServer: Url({0})", SignalRClientBusiness.UrlSignalRServer));
+                }
                 else
                     LogBusiness.Warn("Configuração de UrlSignalRServerHub não encontrada.");
             }
