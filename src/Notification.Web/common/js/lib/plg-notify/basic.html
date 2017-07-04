@@ -7,17 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>teste plugin</title>
 
-    <!--<style>-->
-        <!--* {-->
-            <!--text-decoration: none;-->
-            <!--font-family: 'Roboto', sans-serif;-->
-            <!-- -webkit-transition: all .3s ease;-->
-            <!-- -moz-transition: all .3s ease;-->
-            <!-- -ms-transition: all .3s ease;-->
-            <!-- -o-transition: all .3s ease;-->
-            <!--transition: all .3s ease;-->
-        <!--}-->
-    <!--</style>-->
+    <style>
+        * {
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+             -webkit-transition: all .3s ease;
+             -moz-transition: all .3s ease;
+             -ms-transition: all .3s ease;
+             -o-transition: all .3s ease;
+            transition: all .3s ease;
+        }
+    </style>
 
 
 </head>
@@ -38,10 +38,12 @@
     new plgnotify(
             {
                 url  :'http://10.10.10.37:5019',
+                userId:"7fc07b9d-c130-e111-9b36-00155d033206",
+                groupSid:"1a70f823-6a57-e711-80c7-00155d000d29",
                 token: 'Bearer '+
-                       "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyN0ExREZGMzgzM0E3NzM0MTQwRkUxRjVEMDEwODQ4NEUxNjgwMjciLCJ0eXAiOiJKV1QiLCJ4NXQiOiJFbm9kX3pnenAzTkJRUDRmWFFFSVNFNFdnQ2MifQ.eyJuYmYiOjE0OTkwODI5OTEsImV4cCI6MTQ5OTA4NjU5MSwiaXNzIjoiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAiLCJhdWQiOlsiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAvcmVzb3VyY2VzIiwiYXBpMSJdLCJjbGllbnRfaWQiOiJtc3RlY2hqcyIsInN1YiI6ImI4OGM2ZmY4LWY3MjEtZTIxMS1hNThkLTAwMTU1ZDAyZTcxNiIsImF1dGhfdGltZSI6MTQ5OTA4Mjk5MSwiaWRwIjoibG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlzaWQiOiI2Y2Y0MjRkYy04ZWMzLWUwMTEtOWIzNi0wMDE1NWQwMzMyMDYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXN1YXJpby5zcWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c3Vhcmlvc3FhQG1zdGVjaC5jb20uYnIxMTEiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiYXBpMSJdLCJhbXIiOlsicHdkIl19.osWQsZ7XGzy3B50Za7waTDOxEEembyfw8oD_4jLVwOshXmZgBR52HieJEoyumpBKmmuJOd7HmtpDxBKfeiRLqnD0d-OkYvbuEAHMuG9Srjoxt18hS8piDLofmaQiK4tZyXVCOlek3U-2T9iecHjBRSNF6_esXG7InD0a9a4JMicd1U9Qz6JGP7u4pzHPNd-Vut8L0XL35JIIWUzp0OpzwUIVjlAlBuGuo7LIN5IKje55V33UE0zvwlmDnw5J7MZS3CtVBRL_SI0u4HRV5RYDcgTE8LGsNHcuTH5cA1CvDyyAKDFpEWWLGAl06ZmS0Rie-atHt1CFkDpjw6RtexVO6Q",
+                       "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyN0ExREZGMzgzM0E3NzM0MTQwRkUxRjVEMDEwODQ4NEUxNjgwMjciLCJ0eXAiOiJKV1QiLCJ4NXQiOiJFbm9kX3pnenAzTkJRUDRmWFFFSVNFNFdnQ2MifQ.eyJuYmYiOjE0OTkxMTE1OTEsImV4cCI6MTQ5OTExNTE5MSwiaXNzIjoiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAiLCJhdWQiOlsiaHR0cDovLzEwLjEwLjEwLjM3OjUwMDAvcmVzb3VyY2VzIiwiYXBpMSJdLCJjbGllbnRfaWQiOiJtc3RlY2hqcyIsInN1YiI6ImI4OGM2ZmY4LWY3MjEtZTIxMS1hNThkLTAwMTU1ZDAyZTcxNiIsImF1dGhfdGltZSI6MTQ5OTExMTU1NSwiaWRwIjoibG9jYWwiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ByaW1hcnlzaWQiOiI2Y2Y0MjRkYy04ZWMzLWUwMTEtOWIzNi0wMDE1NWQwMzMyMDYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidXN1YXJpby5zcWEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c3Vhcmlvc3FhQG1zdGVjaC5jb20uYnIxMTEiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiYXBpMSJdLCJhbXIiOlsicHdkIl19.AwGwBBtuHJVcj_auNfEhwDYRk3s0hrN3fCIh2gx4Ab9-9g_OL-NgMtSrUwElDKqgUSIcbv14fiL2MI2tgO14r-RtP29-cVLcTUqke7mFLaPAwhKrkZD6BxLdKglUi1lPv0qdQ03VgjHHsT_OF4P4GUgvhBRfYLi2theV4ZF0vaRaGAulLWDuc1EisNneG841KBHddyfNjWYA1ugnj3kw8qyKzFcTND8rmwOWkWtMPeTlJk4u83842nJQ73EFQsZeAMSwXUc5Ea1YiTUHZHlZNl8MD5ayGcbQS1RNZBWlOwJaLmcoVGjbd6Q-22aTwHL5zrg7lI8pLfPOCFmkbFodIg"
 
-                ws   :{
+                ,ws:{
                     url:'http://10.10.10.37:5020/signalr/'
                 }
             }
