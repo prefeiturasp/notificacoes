@@ -29,6 +29,13 @@ namespace Notification.Business
 
             foreach (var item in entity.Recipient.SystemRecipient)
             {
+                //pendente de testes
+                //if(groupUser.VisionId>1)
+                //{
+                //    ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
+                //}
+
+                //else 
                 if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
                     || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
                 {
@@ -66,6 +73,7 @@ namespace Notification.Business
 
                 var entityNotification = new Notification.Entity.Database.Notification()
                 {
+                    SenderId = userId,
                     SenderName = entity.SenderName,
                     DateStartNotification = entity.DateStartNotification,
                     DateEndNotification = entity.DateEndNotification,
@@ -77,6 +85,8 @@ namespace Notification.Business
 
                 var notRep = new NotificationRepository();
                 var Id = notRep.InsertOne(entityNotification);
+
+                //SignalRClientBusiness.SendNotificationHangFire
 
                 return Id;
             }

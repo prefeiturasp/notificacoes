@@ -10,6 +10,7 @@ namespace Notification.Repository.Connections
 {
     public class Connection
     {
+        private static object syncRoot = new Object();
         private static Dictionary<string, string> dicConnection = new Dictionary<string, string>();
 
         private Connection()
@@ -30,7 +31,12 @@ namespace Notification.Repository.Connections
                 if (string.IsNullOrEmpty(str))
                     throw new MSTech.Data.Common.Exceptions.NullConnectionException();
                 else
-                    dicConnection.Add(connectionName, str);                
+                {
+                    lock (syncRoot)
+                    {
+                        dicConnection.Add(connectionName, str);
+                    }
+                }
             }
 
             return dicConnection[connectionName];            

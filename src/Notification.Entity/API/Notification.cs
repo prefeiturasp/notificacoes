@@ -16,8 +16,14 @@ namespace Notification.Entity.API
 
         public int MessageType { get; set; }
 
+        /// <summary>
+        /// Data Hora em formato ISODate
+        /// </summary>
         public DateTime DateStartNotification { get; set; }
 
+        /// <summary>
+        /// Data Hora em formato ISODate
+        /// </summary>
         public Nullable<DateTime> DateEndNotification { get; set; }
 
         public string Title { get; set; }
