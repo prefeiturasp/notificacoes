@@ -12,6 +12,7 @@ using IdentityServer3.AccessTokenValidation;
 using Microsoft.IdentityModel.Protocols;
 using System.Configuration;
 using Notification.Business;
+using Notification.Business.Signal;
 //using Microsoft.Owin.Cors;
 
 [assembly: OwinStartup(typeof(Notification.SignalRServer.Startup))]
@@ -29,17 +30,20 @@ namespace Notification.SignalRServer
             LoadUrlIdenityServerConfiguration();
             LoadCredentialBasicAuthConfiguration();
 
+            app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureAPI",
+                async (username, password) =>
+                await Authenticate(username, password)));
+
             app.UseSignalTokenAuthentication();
 
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
                 //endereço identity server 
                 Authority = urlIdentityServer,
+                AuthenticationType = "Bearer",
+                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
                 RequiredScopes = new[] { scopesIdentityServer }
             });
-
-            app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureApi",
-                async (username, password) => await Authenticate(username, password)));
 
             //app.MapSignalR();
             app.Map("/signalr", map =>
@@ -52,14 +56,13 @@ namespace Notification.SignalRServer
 
                 // add middleware to translate the query string token  
                 // passed by SignalR into an Authorization Bearer header 
-                
-
                 var hubConfiguration = new HubConfiguration
                 {
                     // You can enable JSONP by uncommenting line below.
                     // JSONP requests are insecure but some older browsers (and some
                     // versions of IE) require JSONP to work cross domain
                     // EnableJSONP = true
+                    
                 };
                 // Run the SignalR pipeline. We're not using MapSignalR
                 // since this branch already runs under the "/signalr"
@@ -87,10 +90,14 @@ namespace Notification.SignalRServer
         {
             try
             {
-                var user = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
-                var password = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];
+                SignalRClientBusiness.UserCredentialSignalRServer = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
+                SignalRClientBusiness.PasswordCredentialSignalRServer = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];
 
-                credentialBasicAuth = new Tuple<string, string>(user, password);
+                if (string.IsNullOrEmpty(SignalRClientBusiness.UserCredentialSignalRServer) ||
+                    string.IsNullOrEmpty(SignalRClientBusiness.PasswordCredentialSignalRServer))
+                {
+                    LogBusiness.Warn("Configuração de Authenticação do SignalR não encontrada.");
+                }
             }
             catch (Exception exc)
             {
@@ -98,14 +105,16 @@ namespace Notification.SignalRServer
             }
         }
 
-        private async Task<IEnumerable<Claim>> Authenticate(string username, string password)
+        public async Task<IEnumerable<Claim>> Authenticate(string username, string password)
         {
-            if ((credentialBasicAuth.Item1 == username) &&
-                (credentialBasicAuth.Item2 == password))
+            if ((SignalRClientBusiness.UserCredentialSignalRServer == username) &&
+                (SignalRClientBusiness.PasswordCredentialSignalRServer == password))
             {
                 var claims = new List<Claim> { new Claim("name", username) };
+                claims.Add(new Claim("scope", "mstechapi"));
+
                 return (IEnumerable<Claim>)claims;
-            }
+            }            
 
             return null;
         }
