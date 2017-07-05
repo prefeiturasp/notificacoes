@@ -17,8 +17,8 @@ function plgnotify( sysconfig ) {
 	var hideSnackbar, hidden, listOpened;
 
 	//Contador de total de notificações.
-	var counter = 0;
-	var selectedNotification={
+	var counter              = 0;
+	var selectedNotification = {
 		'NotificationId':undefined,
 		'Read'          :undefined,
 		'DelayId'       :undefined
@@ -380,7 +380,6 @@ function plgnotify( sysconfig ) {
 					console.info( 'Notificação adia:', selectedNotification.NotificationId );
 				}
 				onclick();
-				selectedNotification = undefined;
 			}
 		};
 
@@ -448,8 +447,8 @@ function plgnotify( sysconfig ) {
 		modal = '<div class="plgmodal" id="plgmodal" aria-hidden="true">' +
 				'<div class="plgmodal-dialog">' +
 				'<div class="plgmodal-header">' +
-				'<h2><span class="plgloader"></span></h2>' +
-				'<div class="unselectable interactive plgmodal-btn-close plgmodal-btn-big" aria-hidden="true">×</div>' +
+				'<h2 class="title"><span class="plgloader"></span></h2>' +
+				'<div class="unselectable interactive plgmodal-xclose" aria-hidden="true">×</div>' +
 				'</div>' +
 				'<div class="plgmodal-body">' +
 				'<p><span class="plgloader"></span></p>' +
@@ -489,15 +488,26 @@ function plgnotify( sysconfig ) {
 		 title.innerHTML = dom.childNodes[0].innerHTML || 'Algum texto qualquer';
 		 }
 		 else {*/
-		text.innerHTML   = data.message;
-		title.innerHTML  = data.title;
+		function multiple( data ) {
+			var i, arr    = [];
+			i = 1024;
+			for(;i--;)
+			 arr.push(data);
+
+			return arr;
+		}
+
+		//text.innerHTML  = multiple( data.message ).join( ' ' );
+		//title.innerHTML = multiple( data.title ).join( ' ' );
+		text.innerHTML  =  data.message;
+		title.innerHTML = data.title;
 		//date.innerHTML   = data.dateStart;
 		//capitalizar nome com css
 		sender.innerHTML = data.senderName;
 		//}
 
 		btnFechar = footer.getElementsByClassName( 'plgmodal-btn-close' )[0];
-		fecharX   = header.getElementsByClassName( 'plgmodal-btn-close' )[0];
+		fecharX   = header.getElementsByClassName( 'plgmodal-xclose' )[0];
 		adiar     = footer.children['plg-modal-adiar'];
 
 		adiar.onclick = function ( e ) {
@@ -556,7 +566,7 @@ function plgnotify( sysconfig ) {
 
 		setTimeout(
 			function () {
-				dialog.style.top = "20%";
+				dialog.style.top = 0;
 			},
 			layout.animationTime * .5
 		);
@@ -569,7 +579,7 @@ function plgnotify( sysconfig ) {
 	 */
 	function postRead( id ) {
 		console.info( 'Notificação lida:', id );
-		selectedLaterOption(selectedNotification);
+		selectedLaterOption( selectedNotification );
 	}
 
 	/**
@@ -645,9 +655,9 @@ function plgnotify( sysconfig ) {
 	 */
 	function openNotification( e ) {
 
-		selectedNotification.NotificationId=e.target.id;
-		selectedNotification.Read=true;
-		selectedNotification.DelayId=undefined;
+		selectedNotification.NotificationId = e.target.id;
+		selectedNotification.Read           = true;
+		selectedNotification.DelayId        = undefined;
 
 		postRead( e.target.id );// precisa ?
 
@@ -671,7 +681,7 @@ function plgnotify( sysconfig ) {
 
 		if ( classlist.contains( 'plgnot' ) ) {
 			if ( e.target.id ) {
-				openNotification(e);
+				openNotification( e );
 			}
 		}
 		else if ( classlist.contains( 'plgtablink' ) && !classlist.contains( 'plgtablink-setting' ) ) {
@@ -770,17 +780,16 @@ function plgnotify( sysconfig ) {
 		var string;
 		return arr.map(
 			function ( e ) {
-				//e.type = notificationsType[(e.type - 1) || 0];
-
 				string = '<li class="plgnot ' + type + ' " id="' + e.id + '">';
 
-				if(e.type >3){
-					string+='<svg class="plg-nu" width="20" height="20" viewBox="0 0 24 24"><path fill="#d11d1d" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>';
+				// adiciona exclamação, se urgente
+				if ( e.type > 3 ) {
+					string += '<svg class="plg-nu" width="20" height="20" viewBox="0 0 24 24"><path fill="#d11d1d" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>';
 				}
 
-			 	string+='<span>' + e.title + '</span>' +
-						'<div>' + e.message + '</div>'+
-						'</li>';
+				string += '<span>' + e.title + '</span>' +
+						  '<div>' + e.message + '</div>' +
+						  '</li>';
 
 				return string;
 			}
@@ -1089,14 +1098,14 @@ function plgnotify( sysconfig ) {
 			indexes  = arr.map(
 				//varre todos e
 				function ( a, i ) {
-					var childs = path || [].slice.call(a.childNodes);
+					var childs = path || [].slice.call( a.childNodes );
 
 					//valida se algum item da tela é ele.
 					return childs.some(
-							function ( el ) {
-								return el === a;
-							}
-						)
+						function ( el ) {
+							return el === a;
+						}
+					)
 						// se for retorna elemento para dar blur.
 						? -1 : i;
 				}
@@ -1152,7 +1161,7 @@ function plgnotify( sysconfig ) {
 
 		// Cria html do snackbar
 		html = '<div class="unselectable plgsnackbar">' +
-			   '<div class="plgsnackbar-center" id="'+(msg && msg.id||"")+'" title="Ler mensagem">' +
+			   '<div class="plgsnackbar-center" id="' + (msg && msg.id || "") + '" title="Ler mensagem">' +
 			   '<span class="plgsnackbar-header">' + (msg && msg.header || "") + '</span>' +
 			   '<span class="plgsnackbar-body">' + (msg && msg.body || "") + '</span>' +
 			   '</div>' +
@@ -1167,18 +1176,15 @@ function plgnotify( sysconfig ) {
 
 		layout.domsnackbar = html = dom;
 
-
-
 		// Configura valores padrões da animação.
 		y     = y ? y : 50;
 		delay = delay ? delay : 0.15;
 		time  = time ? time : 2;
 
-		html.getElementsByClassName( 'plgsnackbar-center' )[0].onclick=function(e){
-			openNotification(e);
+		html.getElementsByClassName( 'plgsnackbar-center' )[0].onclick = function ( e ) {
+			openNotification( e );
 			hide();
 		};
-
 
 		html.getElementsByClassName( 'plgsnackbar-right' )[0].onclick = function ( e ) {
 			//Remove eventos de blur da notificação.
@@ -1198,7 +1204,7 @@ function plgnotify( sysconfig ) {
 			html.onmouseout  = restoreHide;
 		}
 
-		function onClick(e) {
+		function onClick( e ) {
 			hide();
 			setTimeout(
 				function () {
@@ -1284,7 +1290,7 @@ function plgnotify( sysconfig ) {
 		}
 
 		counter++;
-		showSnackbar(res);
+		showSnackbar( res );
 
 		layout.domcounter.innerHTML = counter;
 	}
@@ -1453,7 +1459,7 @@ function plgnotify( sysconfig ) {
 	 */
 	function setAPI() {
 		// pega token
-		token = _config.tokenType +  _config.token;
+		token = _config.tokenType + _config.token;
 
 		// pega dados da api
 		api = _config.api;
@@ -1524,7 +1530,7 @@ function plgnotify( sysconfig ) {
 		console.warn( 'Plugin não está na tela.' );
 
 		// adicionar elemntosDOM e styles, se não houver
-		css = '.disturb.cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;border-bottom:1px solid #d3d3d3;color:#000!important;overflow-x:hidden;max-height:272px;width:154px}.plg-panel li{font-size:1rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap;padding:8px;width:initial;display:block}.plg-panel li:first-letter{text-transform:uppercase}.plg-panel li:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;animation:.5s fadeIn;display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777}.plgtablink-setting{border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:150;left:50%;bottom:0;opacity:0;border-radius:10px;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;color:#fff;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plgsnackbar-right{width:36px;border-top-right-radius:10px;border-top-left-radius:0;border-bottom-right-radius:10px;border-bottom-left-radius:0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:202px;border-top-right-radius:0;border-top-left-radius:10px;border-bottom-right-radius:0;border-bottom-left-radius:10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;border-radius:50%!important;width:36px;height:36px;margin:2px;animation:2s linear infinite spin!important}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.unselectable{-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.draggable>i{cursor:move}.hide{display:none!important}.hitbox,path,svg{pointer-events:none;padding:0;margin:0}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-moz-transition:none!important;-ms-transition:none!important;-o-transition:none!important;transition:none!important}.plg-list.lidas>li,.plg-list.novas>li{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:1rem;overflow:hidden;height:auto}.plg-list.lidas li:last-child,.plg-list.novas li:last-child{border-bottom:0}.plg-list.lidas li.lida,.plg-list.novas li.lida{opacity:.5}.plg-list.lidas li *,.plg-list.novas li *{color:#a9a9a9;height:auto;max-height:32px}.plg-list.lidas li p,.plg-list.lidas li span,.plg-list.novas li p,.plg-list.novas li span{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:90%;min-width:30%;font-size:1.2rem;display:block;font-weight:900;color:#768e99}.circulo,.float-menu{border-radius:100%;width:80px;height:80px}.circulo{box-sizing:border-box;overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;box-shadow:4px 4px 4px rgba(0,0,0,.3);font-family:sans-serif}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:15px;border-radius:100%;height:40px}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;border-radius:100%;font-weight:700;z-index:5}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;border-radius:0 0 100%}.sino{width:50px;height:80px;padding:20px 0 0 10px;box-sizing:border-box;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{animation:1s cubic-bezier(.36,.07,.19,.97) both shake;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;border-radius:3px;color:#fff;display:inline-block;font-size:14px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-btn-big{color:#aaa;font-size:30px;text-decoration:none;position:absolute;right:5px;top:0}.plgmodal-btn-close:hover{color:#000}.plgmodal{display:block;background:rgba(0,0,0,.6);position:fixed;top:0;left:0;right:0;bottom:0;z-index:210}.plgmodal:target:before{display:block}.plgmodal-dialog{overflow:hidden;background:#fefefe;border:1px solid #333;border-radius:5px;margin-left:-200px;position:fixed;left:50%;top:-100%;z-index:211;max-height:60%;min-width:360px;max-width:600px;width:auto;height:auto}.plgmodal-dialog a{cursor:pointer}.plgmodal-body,.plgmodal-footer,.plgmodal-header{padding:5%;overflow:hidden;width:90%;text-align:justify;word-break:break-all}.plgmodal-header{border-bottom:1px solid #eee;height:35px}.plgmodal-body{max-height:525px;padding:20px}.plgmodal-body>*{overflow-x:hidden;overflow-y:auto}.plgmodal-footer{display:flex;border-top:1px solid #eee;height:40px}.plgmodal-header h2{font-size:20px;margin:0}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute;bottom:10px}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.sender{bottom:50px;position:absolute}.plg-list{margin-top:48px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;border-bottom-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px}.cancelar p:hover,.disturb p:hover,.disturb svg:hover{background-color:#fff}.cancelar p:active,.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{height:18px;border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;text-align:center;padding:10px;vertical-align:middle;border-bottom-right-radius:10px;margin:0;border-top-right-radius:10px;float:left}.cancelar p{border:1px solid gray;margin:0 10px;border-radius:10px}li.plgnot{height:auto}li.plgnot>*{padding:5px}li.plgnot>*{pointer-events:none}li.plgnot:hover{background-color:rgba(112,128,144,.42)!important}li.plgnot:hover>*{color:#000!important}.plg-nu{float:right;padding:5px}';
+		css = '.disturb.cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;border-bottom:1px solid #d3d3d3;color:#000!important;overflow-x:hidden;max-height:272px;width:154px}.plg-panel li{font-size:1rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap;padding:8px;width:initial;display:block}.plg-panel li:first-letter{text-transform:uppercase}.plg-panel li:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;animation:.5s fadeIn;display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777}.plgtablink-setting{border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:150;left:50%;bottom:0;opacity:0;border-radius:10px;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;color:#fff;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plgsnackbar-right{width:36px;border-top-right-radius:10px;border-top-left-radius:0;border-bottom-right-radius:10px;border-bottom-left-radius:0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:202px;border-top-right-radius:0;border-top-left-radius:10px;border-bottom-right-radius:0;border-bottom-left-radius:10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;border-radius:50%!important;width:36px;height:36px;margin:2px;animation:2s linear infinite spin!important}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.unselectable{-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.draggable>i{cursor:move}.hide{display:none!important}.hitbox,path,svg{pointer-events:none;padding:0;margin:0}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-moz-transition:none!important;-ms-transition:none!important;-o-transition:none!important;transition:none!important}.plg-list.lidas>li,.plg-list.novas>li{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:1rem;overflow:hidden;height:auto}.plg-list.lidas li:last-child,.plg-list.novas li:last-child{border-bottom:0}.plg-list.lidas li.lida,.plg-list.novas li.lida{opacity:.5}.plg-list.lidas li *,.plg-list.novas li *{color:#a9a9a9;height:auto;max-height:32px}.plg-list.lidas li p,.plg-list.lidas li span,.plg-list.novas li p,.plg-list.novas li span{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:90%;min-width:30%;font-size:1.2rem;display:block;font-weight:900;color:#768e99}.circulo,.float-menu{border-radius:100%;width:80px;height:80px}.circulo{box-sizing:border-box;overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;box-shadow:4px 4px 4px rgba(0,0,0,.3);font-family:sans-serif}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:15px;border-radius:100%;height:40px}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;border-radius:100%;font-weight:700;z-index:5}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;border-radius:0 0 100%}.sino{width:50px;height:80px;padding:20px 0 0 10px;box-sizing:border-box;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{animation:1s cubic-bezier(.36,.07,.19,.97) both shake;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;border-radius:3px;color:#fff;display:inline-block;font-size:14px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-xclose:hover{color:#000}.plgmodal-xclose{color:#aaa;font-size:30px;text-decoration:none;position:absolute;right:0;height:30px;width:30px;top:0;vertical-align:middle;text-align:center}.plgmodal{display:block;background:rgba(0,0,0,.6);position:fixed;top:0;left:0;right:0;bottom:0;z-index:210;width:100%;height:100%;overflow:auto;background-color:#000;background-color:rgba(0,0,0,.4)}.plgmodal-dialog{z-index:211;width:80%;min-width:300px;max-width:600px;height:auto;max-height:600px;left:0;top:-100%;position:relative;padding:0;margin:auto;margin-top:5%;box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);border:1px solid #333;border-radius:5px;background:#fefefe;overflow:hidden}.plgmodal-dialog a{cursor:pointer}.plgmodal-body,.plgmodal-footer,.plgmodal-header{overflow:hidden;width:auto;height:auto;text-align:justify;word-break:break-all}.plgmodal-header{border-bottom:1px solid #eee;max-height:70px}.plgmodal-body{max-height:330px;overflow-x:hidden;overflow-y:auto;padding:10px}.plgmodal-footer{display:flex;border-top:1px solid #eee;height:70px}.plgmodal-header .title{font-size:20px;font-weight:900;line-height:24px;margin:0 0 10px;overflow:hidden;height:auto;padding:10px 35px 10px 10px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute;bottom:10px}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.sender{bottom:46px;font-size:20px;position:absolute;left:10px;max-width:90%;height:20px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.plg-list{margin-top:48px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;border-bottom-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px}.cancelar p:hover,.disturb p:hover,.disturb svg:hover{background-color:#fff}.cancelar p:active,.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{height:18px;border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;text-align:center;padding:10px;vertical-align:middle;border-bottom-right-radius:10px;margin:0;border-top-right-radius:10px;float:left}.cancelar p{border:1px solid gray;margin:0 10px;border-radius:10px}li.plgnot{height:auto}li.plgnot>*{padding:5px}li.plgnot>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none}li.plgnot:hover{opacity:1;background-color:rgba(112,128,144,.42)!important}li.plgnot:hover>*{color:#000!important}.plg-nu{float:right;padding:5px}';
 		addContentHTML( 'style', css );
 
 		//adicionar plugin
@@ -1790,7 +1796,7 @@ function plgnotify( sysconfig ) {
 			socket.hasListeners = false;
 
 			socket.connection    = $.connection.notificationHub;
-			$.connection.hub.qs = 'authtoken='+_config.token;
+			$.connection.hub.qs  = 'authtoken=' + _config.token;
 			$.connection.hub.url = socket.url;
 
 			try {
