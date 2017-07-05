@@ -76,7 +76,12 @@ namespace Notification.Business
                 }
             }
 
-            if (ltUser.Count() > 0)
+            //if(entity.Recipient.UserRecipient !=null)
+            //{
+            //    ltUser.AddRange(entity.Recipient.UserRecipient);
+            //}
+
+            if (ltUser.Any())
             {
                 ltUser = ltUser.Distinct().ToList();
 

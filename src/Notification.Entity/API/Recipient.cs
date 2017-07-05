@@ -13,5 +13,7 @@ namespace Notification.Entity.API
         public IEnumerable<ContributorRecipient> ContributorRecipient { get; set; }
 
         public IEnumerable<TeacherRecipient> TeacherRecipient { get; set; }
+
+        public IEnumerable<Guid> UserRecipient { get; set; }
     }
 }
