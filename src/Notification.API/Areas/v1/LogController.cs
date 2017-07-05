@@ -1,4 +1,5 @@
-﻿using Notification.Business;
+﻿using Notification.API.Attributes;
+using Notification.Business;
 using Notification.Entity.Database;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,17 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
 {
-    public class LogController : ApiController
+    public class LogController : BaseController
     {
         [HttpGet]
         [Route("api/v1/Log")]
         [ResponseType(typeof(IEnumerable<Log>))]
+        [PaginateActionFilter]
         public HttpResponseMessage Get()
         {
             try
             {
-                var result = LogBusiness.Get(0, 10);                
+                var result = LogBusiness.Get(filterActionPaginate.Page, filterActionPaginate.Size);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
