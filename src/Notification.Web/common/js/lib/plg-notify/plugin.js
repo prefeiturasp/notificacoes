@@ -808,7 +808,7 @@ function plgnotify( sysconfig ) {
 		element = document.querySelector( '#' + type + '.plg-list' );
 		loader  = element.childNodes[0];
 
-		if ( loader.classList.contains( 'plgloader' ) ) {
+		if (loader&& loader.classList.contains( 'plgloader' ) ) {
 			loader.parentNode.removeChild( loader );
 		}
 
