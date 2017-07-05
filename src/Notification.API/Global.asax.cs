@@ -26,7 +26,7 @@ namespace Notification.API
 
             LoadLogConfiguration();
 
-            LoadSignalRServerHubConfiguration();            
+            LoadSignalRServerConfiguration();            
         }
 
         private void LoadLogConfiguration()
@@ -67,7 +67,7 @@ namespace Notification.API
             }
         }
 
-        private void LoadSignalRServerHubConfiguration()
+        private void LoadSignalRServerConfiguration()
         {
             try
             {
@@ -80,6 +80,9 @@ namespace Notification.API
                 }
                 else
                     LogBusiness.Warn("Configuração de UrlSignalRServerHub não encontrada.");
+
+                SignalRClientBusiness.UserCredentialSignalRServer = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
+                SignalRClientBusiness.PasswordCredentialSignalRServer = ConfigurationManager.AppSettings[Business.Signal.SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];                
             }
             catch (Exception exc)
             {
