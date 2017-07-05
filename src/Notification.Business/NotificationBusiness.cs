@@ -28,43 +28,52 @@ namespace Notification.Business
             var groupUser = groupRep.GetById(groupId);
             var ltUser = new List<Guid>();
 
-            foreach (var item in entity.Recipient.SystemRecipient)
+            if (entity.Recipient.SystemRecipient != null)
             {
-                //pendente de testes
-                if (groupUser.VisionId > 1)
+                foreach (var item in entity.Recipient.SystemRecipient)
                 {
-                    ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
-                }
+                    //pendente de testes
+                    if (groupUser.VisionId > 1)
+                    {
+                        ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
+                    }
 
-                else if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
-                    || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
-                {
-                    if (groupUser.VisionId == 1)
-                        if (item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
-                            ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnit).Select(u => u.Id));
-                        else
-                            ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnitSuperior).Select(u => u.Id));
-                }
-                else if (item.GroupId != null && item.GroupId.Any())
-                {
-                    if (groupUser.VisionId == 1)
-                        ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId).Select(u => u.Id));
-                }
-                else
-                {
-                    if (groupUser.VisionId == 1)
-                        ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId).Select(u => u.Id));
+                    else if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
+                        || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
+                    {
+                        if (groupUser.VisionId == 1)
+                            if (item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
+                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnit).Select(u => u.Id));
+                            else
+                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnitSuperior).Select(u => u.Id));
+                    }
+                    else if (item.GroupId != null && item.GroupId.Any())
+                    {
+                        if (groupUser.VisionId == 1)
+                            ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId).Select(u => u.Id));
+                    }
+                    else
+                    {
+                        if (groupUser.VisionId == 1)
+                            ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId).Select(u => u.Id));
+                    }
                 }
             }
 
-            foreach (var item in entity.Recipient.ContributorRecipient)
+            if (entity.Recipient.ContributorRecipient != null)
             {
-                ltUser.AddRange(ContributorBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
+                foreach (var item in entity.Recipient.ContributorRecipient)
+                {
+                    ltUser.AddRange(ContributorBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
+                }
             }
 
-            foreach (var item in entity.Recipient.TeacherRecipient)
+            if (entity.Recipient.TeacherRecipient != null)
             {
-                ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
+                foreach (var item in entity.Recipient.TeacherRecipient)
+                {
+                    ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
+                }
             }
 
             if (ltUser.Count() > 0)

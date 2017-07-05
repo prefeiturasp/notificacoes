@@ -44,7 +44,9 @@
             };
 
             $scope.typeUser = null;
+            $scope.YearSelected = null;
             $scope.listVisionSystem = [];
+            $scope.listCalendar = [];
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
 
             //ve se o usúario já escolheu umtipo de grupo
@@ -99,7 +101,7 @@
             new plgnotify({
                 url: Config.API,
                 userId: $util.getUserId(),
-                groupSid: $scope.VisionSystem.Id ,
+                groupSid: $scope.VisionSystem.Id,
                 tokenType: $util.getKey() + " ",
                 token: $util.getAccessToken(),
                 ws: {
@@ -145,7 +147,6 @@
             $scope.AdministrativeUnits = [];
 
             //variaveis de lista de filtros por usuários
-            $scope.listCalendar = [];
             $scope.listCorse = [];
             $scope.listPosition = [];
             $scope.listSchool = [];
@@ -153,7 +154,6 @@
             $scope.listDiscipline = [];
             $scope.listTeam = [];
             $scope.listListSchoolClassification = [];
-            $scope.YearSelected = null;
 
             $scope.SystemRecipientClone = {
                 SystemId: null,
@@ -906,6 +906,8 @@
                     //limpando as variaveis
                     creatteFilters();
                     $(redactor).children().html("");
+                    $scope.showTypeFilter.typeAccordionSys = false;
+                    $scope.showTypeFilter.typeAccordionUser = false;
                     removeCheckInTypeMessage();
                 }
                 $scope.load = false;
