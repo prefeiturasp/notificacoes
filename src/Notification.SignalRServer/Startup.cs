@@ -90,15 +90,14 @@ namespace Notification.SignalRServer
         {
             try
             {
-                //var user = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
-                //var password = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];
-                //credentialBasicAuth = new Tuple<string, string>(user, password);
-                //LogBusiness.Debug(string.Format("Configuração de Basic Auth: User({0}), Pass({1})", user, password));
-
                 SignalRClientBusiness.UserCredentialSignalRServer = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_USERCREDENTIALSIGNALRSERVER];
                 SignalRClientBusiness.PasswordCredentialSignalRServer = ConfigurationManager.AppSettings[SignalRClientBusiness.CONFIG_PASSWORDCREDENTIALSIGNALRSERVER];
 
-                LogBusiness.Debug(string.Format("Configuração de Basic Auth: User({0}), Pass({1})", SignalRClientBusiness.UserCredentialSignalRServer, SignalRClientBusiness.PasswordCredentialSignalRServer));
+                if (string.IsNullOrEmpty(SignalRClientBusiness.UserCredentialSignalRServer) ||
+                    string.IsNullOrEmpty(SignalRClientBusiness.PasswordCredentialSignalRServer))
+                {
+                    LogBusiness.Warn("Configuração de Authenticação do SignalR não encontrada.");
+                }
             }
             catch (Exception exc)
             {
@@ -108,19 +107,14 @@ namespace Notification.SignalRServer
 
         public async Task<IEnumerable<Claim>> Authenticate(string username, string password)
         {
-            LogBusiness.Debug(string.Format("Authentication: User({0}), Pass({1})", username, password));
-
             if ((SignalRClientBusiness.UserCredentialSignalRServer == username) &&
                 (SignalRClientBusiness.PasswordCredentialSignalRServer == password))
             {
-                LogBusiness.Debug("Authentication: Válida");
                 var claims = new List<Claim> { new Claim("name", username) };
                 claims.Add(new Claim("scope", "mstechapi"));
 
                 return (IEnumerable<Claim>)claims;
-            }
-            else
-                LogBusiness.Debug("Authentication: inválida");
+            }            
 
             return null;
         }
