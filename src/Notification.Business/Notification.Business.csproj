@@ -101,6 +101,7 @@
     <Compile Include="CoreSSO\SystemBusiness.cs" />
     <Compile Include="DelayTimeBusiness.cs" />
     <Compile Include="DisturbTimeBusiness.cs" />
+    <Compile Include="Exceptions\Notification.cs" />
     <Compile Include="LogBusiness.cs" />
     <Compile Include="NotificationBusiness.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
