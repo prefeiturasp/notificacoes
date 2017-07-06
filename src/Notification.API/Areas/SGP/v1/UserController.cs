@@ -1,7 +1,9 @@
 ﻿using Notification.API.Areas.v1;
 using Notification.API.ModelBinder;
 using Notification.Business;
+using Notification.Business.CoreSSO;
 using Notification.Business.SGP;
+using Notification.Entity.API.CoreSSO;
 using Notification.Entity.API.SGP;
 using System;
 using System.Collections.Generic;
@@ -57,6 +59,27 @@ namespace Notification.API.Areas.SGP.v1
             try
             {
                 var result = ContributorBusiness.Get(claimData.UserId, claimData.GroupId, calendarYear, schoolSuperiorId, schoolClassificationId, schoolId, positionId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+            }
+        }
+
+        /// <summary>
+        /// Retorna Nome e ID do usuário logado
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/SGP/v1/User")]
+        [ResponseType(typeof(User))]
+        public HttpResponseMessage GetUser()
+        {
+            try
+            {
+                var result = UserBusiness.Get(claimData.UserId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
