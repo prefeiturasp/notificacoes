@@ -1,4 +1,5 @@
-﻿using Notification.Business.SGP;
+﻿using Notification.Business.Exceptions;
+using Notification.Business.SGP;
 using Notification.Business.Signal;
 using Notification.Entity.API;
 using Notification.Repository;
@@ -13,15 +14,33 @@ namespace Notification.Business
 {
     public class NotificationBusiness
     {
+        private static Guid Save(Notification.Entity.Database.Notification entity)
+        {
+            var notRep = new NotificationRepository();
+            var Id = notRep.InsertOne(entity);
+
+            if (Id != Guid.Empty)
+                SignalRClientBusiness.SendNotificationHangFire(entity.Recipient.Select(r => r.UserId), Id);
+
+            return Id;
+        }
+
+        /// <summary>
+        /// Envia a notificação para os usuários baseados nos filtros e nas permissões do usuário logado
+        /// </summary>
+        /// <param name="userId">Id do usuário logado</param>
+        /// <param name="groupId">Id do gruopo logado</param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public static Guid Save(Guid userId, Guid groupId, Notification.Entity.API.Notification entity)
         {
             if (entity.Recipient == null)
-                throw new Exception();
+                throw new NotificationRecipientIsEmptyException();
 
             if ((entity.Recipient.SystemRecipient != null && !entity.Recipient.SystemRecipient.Any())
                 || (entity.Recipient.ContributorRecipient != null && !entity.Recipient.ContributorRecipient.Any())
                 || (entity.Recipient.TeacherRecipient != null && !entity.Recipient.TeacherRecipient.Any()))
-                throw new Exception();
+                throw new NotificationRecipientIsEmptyException();
             
             var groupRep = new GroupRepository();
             var userRep = new UserRepository();
@@ -76,11 +95,6 @@ namespace Notification.Business
                 }
             }
 
-            //if(entity.Recipient.UserRecipient !=null)
-            //{
-            //    ltUser.AddRange(entity.Recipient.UserRecipient);
-            //}
-
             if (ltUser.Any())
             {
                 ltUser = ltUser.Distinct().ToList();
@@ -96,17 +110,53 @@ namespace Notification.Business
                     Message = entity.Message,
                     Recipient = ltUser.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
                 };
-
-                var notRep = new NotificationRepository();
-                var Id = notRep.InsertOne(entityNotification);
-
-                if(Id != Guid.Empty)
-                    SignalRClientBusiness.SendNotificationHangFire(ltUser, Id);
-
-                return Id;
+                
+                return Save(entityNotification);
             }
             else
-                return Guid.Empty;
+                throw new NotificationWithoutRecipientException();
+        }
+
+        /// <summary>
+        /// Envia a notificação para a lista de usuários informada
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static Guid Save(Notification.Entity.API.Notification entity)
+        {
+            if (entity.Recipient == null)
+                throw new NotificationRecipientIsEmptyException();
+
+            if ((entity.Recipient.UserRecipient != null && !entity.Recipient.UserRecipient.Any()))
+                throw new NotificationRecipientIsEmptyException();
+            
+            var ltUser = new List<Guid>();
+
+            if (entity.Recipient.UserRecipient != null)
+            {
+                ltUser.AddRange(entity.Recipient.UserRecipient);
+            }
+
+            if (ltUser.Any())
+            {
+                ltUser = ltUser.Distinct().ToList();
+
+                var entityNotification = new Notification.Entity.Database.Notification()
+                {
+                    SenderId = Guid.Empty,
+                    SenderName = entity.SenderName,
+                    DateStartNotification = entity.DateStartNotification,
+                    DateEndNotification = entity.DateEndNotification,
+                    MessageType = entity.MessageType,
+                    Title = entity.Title,
+                    Message = entity.Message,
+                    Recipient = ltUser.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
+                };
+
+                return Save(entityNotification);
+            }
+            else
+                throw new NotificationWithoutRecipientException();
         }
 
         public static NotificationPlugin GetById(Guid id)
