@@ -78,7 +78,7 @@ namespace Notification.SignalRServer.SignalR
 
             Parallel.ForEach(users, user =>
             {
-                LogBusiness.Debug(string.Format("[NotificationHub] SendNotification  - Motificação ({0}) enviada para o usuário ({1})", notification.Id, user));
+                LogBusiness.Debug(string.Format("[NotificationHub] SendNotification  - Notificação ({0}) enviada para o usuário ({1})", notification.Id, user));
                 Clients.Group(user.ToString()).ReceiveNotification(notification);
             });
         }

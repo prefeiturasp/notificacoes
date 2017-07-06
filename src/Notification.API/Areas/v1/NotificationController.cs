@@ -1,5 +1,7 @@
 ﻿using Notification.API.Attributes;
+using Notification.API.Models;
 using Notification.Business;
+using Notification.Business.Exceptions;
 using Notification.Entity.API;
 using System;
 using System.Collections.Generic;
@@ -26,10 +28,43 @@ namespace Notification.API.Areas.v1
                 var notificationId = NotificationBusiness.Save(filterActionUserGroup.UserId, filterActionUserGroup.GroupId, entity);
                 return Request.CreateResponse(HttpStatusCode.Created, notificationId);
             }
+            catch (NotificationRecipientIsEmptyException exc)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, new ErrorModel(1, exc.Message));
+            }
+            catch (NotificationWithoutRecipientException exc)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, new ErrorModel(2, exc.Message));
+            }
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
+            }
+        }
+
+        [HttpPost]
+        [Route("api/v2/Notification")]
+        [ResponseType(typeof(Notification.Entity.API.Notification))]        
+        public HttpResponseMessage Save2(Notification.Entity.API.Notification entity)
+        {
+            try
+            {
+                var notificationId = NotificationBusiness.Save(entity);
+                return Request.CreateResponse(HttpStatusCode.Created, notificationId);
+            }
+            catch (NotificationRecipientIsEmptyException exc)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, new ErrorModel(1, exc.Message));
+            }
+            catch (NotificationWithoutRecipientException exc)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, new ErrorModel(2, exc.Message));
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -51,7 +86,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -74,7 +109,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -93,7 +128,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
     }

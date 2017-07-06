@@ -1,4 +1,5 @@
-﻿using Notification.Business;
+﻿using Notification.API.Models;
+using Notification.Business;
 using Notification.Entity.Database;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
         
@@ -59,7 +60,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
     }
