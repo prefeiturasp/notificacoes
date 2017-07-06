@@ -14,13 +14,25 @@ namespace Notification.Business
 {
     public class NotificationBusiness
     {
-        private static Guid Save(Notification.Entity.Database.Notification entity)
+        private static Guid Save(Notification.Entity.API.Notification entity, IEnumerable<Guid> users)
         {
+            var entityNotification = new Notification.Entity.Database.Notification()
+            {
+                SenderId = Guid.Empty,
+                SenderName = entity.SenderName,
+                DateStartNotification = entity.DateStartNotification,
+                DateEndNotification = entity.DateEndNotification,
+                MessageType = entity.MessageType,
+                Title = entity.Title,
+                Message = entity.Message,
+                Recipient = users.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
+            };
+
             var notRep = new NotificationRepository();
-            var Id = notRep.InsertOne(entity);
+            var Id = notRep.InsertOne(entityNotification);
 
             if (Id != Guid.Empty)
-                SignalRClientBusiness.SendNotificationHangFire(entity.Recipient.Select(r => r.UserId), Id);
+                SignalRClientBusiness.SendNotificationHangFire(entityNotification.Recipient.Select(r => r.UserId), Id);
 
             return Id;
         }
@@ -98,20 +110,8 @@ namespace Notification.Business
             if (ltUser.Any())
             {
                 ltUser = ltUser.Distinct().ToList();
-
-                var entityNotification = new Notification.Entity.Database.Notification()
-                {
-                    SenderId = userId,
-                    SenderName = entity.SenderName,
-                    DateStartNotification = entity.DateStartNotification,
-                    DateEndNotification = entity.DateEndNotification,
-                    MessageType = entity.MessageType,
-                    Title = entity.Title,
-                    Message = entity.Message,
-                    Recipient = ltUser.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
-                };
-                
-                return Save(entityNotification);
+                                
+                return Save(entity, ltUser);
             }
             else
                 throw new NotificationWithoutRecipientException();
@@ -140,20 +140,8 @@ namespace Notification.Business
             if (ltUser.Any())
             {
                 ltUser = ltUser.Distinct().ToList();
-
-                var entityNotification = new Notification.Entity.Database.Notification()
-                {
-                    SenderId = Guid.Empty,
-                    SenderName = entity.SenderName,
-                    DateStartNotification = entity.DateStartNotification,
-                    DateEndNotification = entity.DateEndNotification,
-                    MessageType = entity.MessageType,
-                    Title = entity.Title,
-                    Message = entity.Message,
-                    Recipient = ltUser.Select(u => new Entity.Database.NotificationRecipient() { UserId = u })
-                };
-
-                return Save(entityNotification);
+                
+                return Save(entity, ltUser);
             }
             else
                 throw new NotificationWithoutRecipientException();

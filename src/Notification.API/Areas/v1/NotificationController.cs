@@ -43,6 +43,31 @@ namespace Notification.API.Areas.v1
             }
         }
 
+        [HttpPost]
+        [Route("api/v2/Notification")]
+        [ResponseType(typeof(Notification.Entity.API.Notification))]        
+        public HttpResponseMessage Save2(Notification.Entity.API.Notification entity)
+        {
+            try
+            {
+                var notificationId = NotificationBusiness.Save(entity);
+                return Request.CreateResponse(HttpStatusCode.Created, notificationId);
+            }
+            catch (NotificationRecipientIsEmptyException exc)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, new ErrorModel(1, exc.Message));
+            }
+            catch (NotificationWithoutRecipientException exc)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, new ErrorModel(2, exc.Message));
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
+            }
+        }
+
         [HttpGet]
         [Route("api/v1/Notification/{id:guid}")]
         [ResponseType(typeof(Notification.Entity.API.NotificationPlugin))]
