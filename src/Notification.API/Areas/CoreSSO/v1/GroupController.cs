@@ -1,4 +1,5 @@
 ﻿using Notification.API.Areas.v1;
+using Notification.API.Models;
 using Notification.Business;
 using Notification.Business.CoreSSO;
 using Notification.Entity.API.CoreSSO;
@@ -64,7 +65,7 @@ namespace Notification.API.Areas.CoreSSO.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 

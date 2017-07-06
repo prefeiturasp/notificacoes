@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using System.Linq;
 using Notification.API.Areas.v1;
 using Notification.Business;
+using Notification.API.Models;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
@@ -29,7 +30,7 @@ namespace Notification.API.Areas.CoreSSO.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
 
             //try

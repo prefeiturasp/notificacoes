@@ -86,7 +86,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -109,7 +109,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -128,7 +128,7 @@ namespace Notification.API.Areas.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
     }

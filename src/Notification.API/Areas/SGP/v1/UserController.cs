@@ -1,5 +1,6 @@
 ﻿using Notification.API.Areas.v1;
 using Notification.API.ModelBinder;
+using Notification.API.Models;
 using Notification.Business;
 using Notification.Business.CoreSSO;
 using Notification.Business.SGP;
@@ -42,7 +43,7 @@ namespace Notification.API.Areas.SGP.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -64,7 +65,7 @@ namespace Notification.API.Areas.SGP.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
 
@@ -85,7 +86,7 @@ namespace Notification.API.Areas.SGP.v1
             catch (Exception exc)
             {
                 var logId = LogBusiness.Error(exc);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, logId);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
     }
