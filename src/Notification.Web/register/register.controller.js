@@ -413,14 +413,19 @@
                 $scope.listVisionSystem = data;
                 if( data != null) {
                     if (data.length > 1) {
-
                         $scope.showTypeFilter.typeVision = true;
-                        $scope.load = false;
-                        startSite();
                         openModal();
                     } else {
-                        $scope.VisionSystem = $scope.listVisionSystem[0]
+                        $scope.VisionSystem = $scope.listVisionSystem[0];
+                        $window.sessionStorage.visionSelected = btoa(JSON.stringify($scope.VisionSystem));
                     }
+                    $scope.load = false;
+                    startSite();
+                }else{
+                    window.sessionStorage.clear();
+                    var mgr = $util.getMgr();
+                    mgr.signoutRedirect();
+                    $util.setLogout();
                 }
             });
         }
@@ -434,7 +439,7 @@
                 $scope.listSystem = data;
                 $scope.load = false;
                 if(data != null) {
-                    if ($scope.listSystem.length > 1) {
+                    if ($scope.listSystem.length > 0) {
                         $scope.showFilter.showSystem = true;
                         $scope.showTypeFilter.typeSystem = true;
                         openModal();
@@ -454,7 +459,7 @@
                 function(data){
                     $scope.listGroups = data;
 
-                    if($scope.listGroups && $scope.listGroups.length > 1) {
+                    if($scope.listGroups && $scope.listGroups.length > 0) {
                         $scope.showFilter.showSystem = false;
                         $scope.showFilter.showGroup = true;
                     }else if($scope.listGroups && $scope.listDREs.listGroups ==  0){
@@ -471,7 +476,7 @@
                 function(data){
                     $scope.listDREs = data;
 
-                    if($scope.listDREs && $scope.listDREs.length > 1) {
+                    if($scope.listDREs && $scope.listDREs.length > 0) {
                         $scope.showFilter.showGroup = false;
                         $scope.showFilter.showDRE = true;
                     }else if($scope.listDREs && $scope.listDREs.length ==  0){
@@ -899,9 +904,11 @@
             params.data.DateEndNotification = new Date($scope.filters.DateEndNotification).toISOString();
 
             $scope.load = true;
-            HttpServices.postSave(params, function(data){
+            HttpServices.postSave(params, function(data, res){
 
-                if(data != null) {
+                if(res.status == 412){
+                    toastr.error(res.data.Message);
+                }else if(data != null) {
                     toastr.success("Notificação salva com sucesso!");
                     //limpando as variaveis
                     creatteFilters();

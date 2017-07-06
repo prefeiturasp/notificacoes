@@ -37,7 +37,7 @@
                         toastr.error(response.data.Message, 'Error');
                     else
                         toastr.error(response.statusText, 'Error');
-                    callback && callback(null);
+                    callback && callback(null, response);
                 });
             }
 
@@ -172,6 +172,12 @@
                 });
             }
 
+            function getUserName(groupSid, callback){
+                httpModel(Model.getUserName(groupSid), function (res) {
+                    callback(res);
+                });
+            }
+
     /*-------------------------------------------POST----------------------------------------------------*/
 
             function postSave(data, callback){
@@ -195,7 +201,8 @@
                 getListTeam: getListTeam,
                 postSave: postSave,
                 getListUnitAdministrative: getListUnitAdministrative,
-                getTimeStamp: getTimeStamp
+                getTimeStamp: getTimeStamp,
+                getUserName: getUserName
             }
 
         };
