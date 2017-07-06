@@ -1,4 +1,5 @@
 //noinspection ProblematicWhitespace
+// noinspection JSUnresolvedVariable
 /**
  * Created by ale on 6/13/17.
  */
@@ -22,11 +23,13 @@ function plgnotify( sysconfig ) {
 	var paginator            = {
 		read  :{
 			page:0,
-			size:10
+			size:10,
+			total:Infinity
 		},
 		unread:{
 			page:0,
-			size:10
+			size:10,
+			total:Infinity
 		}
 	};
 	var selectedNotification = {
@@ -34,6 +37,8 @@ function plgnotify( sysconfig ) {
 		'Read'          :undefined,
 		'DelayId'       :undefined
 	};
+	// noinspection JSUnresolvedVariable
+	var _body                = document.body;
 
 	/**
 	 * HTTP
@@ -71,10 +76,10 @@ function plgnotify( sysconfig ) {
 		xhr.onreadystatechange = function () {
 			if ( this.readyState === XMLHttpRequest.DONE ) {
 				if ( this.status === 200 ) {
-					config && config.success && config.success( this.response );
+					config && config.success && config.success( this );
 				}
 				else {
-					config && config.error && config.error( this.response );
+					config && config.error && config.error( this );
 				}
 			}
 		};
@@ -96,6 +101,124 @@ function plgnotify( sysconfig ) {
 	/**
 	 * Métodos específicos.
 	 * **/
+
+
+	function getPaginationHeader( type ) {
+		return {
+			'groupSid'     :_config.header.groupSid,
+			'Authorization':_config.header.Authorization,
+			'Content-Type' :_config.header['Content-type'],
+			'Page'         :paginator[type].page,
+			'Size'         :paginator[type].size
+		}
+	}
+
+	/**
+	 * Controla efeito de loading da paginação.
+	 */
+	function tooglePagination() {
+		var loader, span;
+		if ( !this.childElementCount ) {
+			return console.error( 'Pagination sem elementos' );
+		}
+
+		loader       = this.childNodes[1];
+		span         = this.childNodes[0];
+		this.loading = !this.loading;
+
+		if ( !loader.classList.contains( 'hide' ) ) {
+			loader.classList.add( 'hide' );
+			span.classList.remove( 'hide' );
+		}
+		else {
+			span.classList.add( 'hide' );
+			loader.classList.remove( 'hide' );
+		}
+	}
+
+	/**
+	 * Adicina dados acima da páginação.
+	 * @param pai
+	 * @param dados
+	 */
+	function paginationNewContent( element, dados ) {
+		var pai   = element.parentNode;
+		var child = addContentHTML( 'a', dados, true );
+
+		pai.insertBefore( child,element );
+	}
+
+	/**
+	 * Controla a visibilidade da paginação.
+	 */
+	function paginationVisibility(t){
+		if(paginator[t].total>0){
+			layout['domPag'+events[t]].classList.remove('hide');
+		}
+		else{
+			layout['domPag'+events[t]].classList.add('hide');
+		}
+	}
+	/**
+	 *
+	 * Valida se ainda tem paginação
+	 */
+	function paginationValidate(t, l) {
+		if(!l.length|| l.length<paginator[t].size){
+			paginator[t].total=0;
+		}
+
+		paginationVisibility(t);
+	}
+
+	/**
+	 * Tratamento para caso haja mais páginas.
+	 * @param lista - dados
+	 */
+	function paginationSuccess( type,lista ) {
+		this.toogle();
+		lista=JSON.parse( lista );
+
+		paginationNewContent( this, notificationHTML( type, lista)  .join(' ') );
+		paginationValidate(type,lista);
+		if(type===events.unread){
+			counterIncrement(counter+lista.length);
+		}
+	}
+
+
+	/**
+	 * Tratamento para quando é clicado na paginação.
+	 * @param mouseEvent
+	 */
+	function paginationClick( type, mouseEvent ) {
+		var dom = mouseEvent && mouseEvent.currentTarget;
+		if ( !dom || dom.loading ) {
+			return;
+		}
+
+		//tratamento http para terminar de carregar ao final da requisição
+		//callback de sucess deve validar se há mais paginas disponíveis
+		this.toogle();
+
+		++paginator[type].page;
+
+		if(events.unread===type){
+			getUnreadList( paginationSuccess.bind( dom ,type) );
+		}
+		else{
+			getReadList( paginationSuccess.bind( dom ,type) );
+		}
+
+
+		//paginationSuccess.bind( dom )(
+		//	'<li class="plgnot">1</li>' +
+		//	'<li class="plgnot">2</li>' +
+		//	'<li class="plgnot">3</li>' +
+		//	'<li class="plgnot">4</li>' +
+		//	'<li class="plgnot">5</li>'
+		//);
+	}
 
 	/**
 	 * Aciona temporizador
@@ -492,31 +615,11 @@ function plgnotify( sysconfig ) {
 
 		title = header.childNodes[0];
 		text  = body.childNodes[0];
-		/*
-		 if ( !data ) {
 
-		 text.innerHTML  = dom.childNodes[1].innerHTML || 'Algum titulo qualquer';
-		 title.innerHTML = dom.childNodes[0].innerHTML || 'Algum texto qualquer';
-		 }
-		 else {*/
-		function multiple( data ) {
-			var i, arr = [];
-			i          = 1024;
-			for ( ; i-- ; ) {
-				arr.push( data );
-			}
-
-			return arr;
-		}
-
-		//text.innerHTML  = multiple( data.message ).join( ' ' );
-		//title.innerHTML = multiple( data.title ).join( ' ' );
 		text.innerHTML  = data.message;
 		title.innerHTML = data.title;
-		//date.innerHTML   = data.dateStart;
-		//capitalizar nome com css
+
 		sender.innerHTML = data.senderName;
-		//}
 
 		btnFechar = footer.getElementsByClassName( 'plgmodal-btn-close' )[0];
 		fecharX   = header.getElementsByClassName( 'plgmodal-xclose' )[0];
@@ -570,7 +673,7 @@ function plgnotify( sysconfig ) {
 		};
 
 		//adiciona na tela
-		document.body.appendChild( modal );
+		_body.appendChild( modal );
 
 		hideList();
 
@@ -666,7 +769,7 @@ function plgnotify( sysconfig ) {
 	 * @param {event} e - evento
 	 */
 	function openNotification( e ) {
-		if(!(e && e.target && e.target.id)) {
+		if ( !(e && e.target && e.target.id) ) {
 			return;
 		}
 
@@ -829,38 +932,17 @@ function plgnotify( sysconfig ) {
 		}
 
 		lista = notificationHTML( type, JSON.parse( data ) );
+		paginationValidate(type,lista);
 
-		function toogleHide( t ){
-			var loader=document.querySelector('#' + type + '.plg-list> .plg-pag div');
-			var span =document.querySelector('#' + type + '.plg-list> .plg-pag span ');
-			if( !loader.classList.contains('hide') ){
-				loader.classList.add('hide');
-				span.classList.remove('hide');
-			}
-			else{
-				span.classList.add('hide');
-				loader.classList.remove('hide');
-			}
+		if ( events.unread === type ) {
+			counterIncrement( lista.length );
 		}
 
-		if(events.unread === type){
-			counterIncrement( lista.length);
-		}
-
-		//if(lista.length){
-		//	lista.push(
-		//		'<li class="plgnot plg-pag">'+
-		//		'<span> Carregar mais</span>' +
-		//		'<div class="plgloader fix24 hide"></div>' +
-		//		'</li>'
-		//	);
-		//}
 
 		element.innerHTML = lista.join( ' ' );
-
-		//if(lista.length){
-		//	element.lastChild.onclick=toogleHide;
-		//}
+		if(paginator[type].total){
+			element.appendChild(layout['domPag'+events[type]] );
+		}
 	}
 
 	/**
@@ -871,6 +953,8 @@ function plgnotify( sysconfig ) {
 
 		fn   = (target.id === events.unread ) ? getUnreadList : getReadList;
 		bind = addNotification.bind( {}, target.id );
+		paginator[target.id].page=0;
+		paginator[target.id].total=Infinity;
 
 		fn(
 			bind,
@@ -888,7 +972,13 @@ function plgnotify( sysconfig ) {
 	 * @returns {*}
 	 */
 	function getUnreadList( success, error ) {
-		return getNotificationList( events.unread, success, error );
+		return getNotificationList( events.unread, function(r){
+			var t=r.getResponseHeader('Total' );
+			if( t && !isNaN (t=parseInt(t )) ){
+				paginator[events.unread].total = t;
+			}
+			success( r.response);
+		}, error );
 	}
 
 	/**
@@ -899,7 +989,13 @@ function plgnotify( sysconfig ) {
 	 * @returns {*}
 	 */
 	function getReadList( success, error ) {
-		return getNotificationList( events.read, success, error );
+		return getNotificationList( events.read,  function(r){
+			var t=r.getResponseHeader('Total' );
+			if( t && !isNaN (t=parseInt(t )) ){
+				paginator[events.read].total = t;
+			}
+			success( r.response);
+		}, error );
 	}
 
 	/**
@@ -915,13 +1011,7 @@ function plgnotify( sysconfig ) {
 		http.get(
 			api[type](),
 			{
-				header :{
-					'groupSid'     :_config.header.groupSid,
-					'Authorization':_config.header.Authorization,
-					'Content-Type' :_config.header['Content-type'],
-					'Page'         :paginator[type].page,
-					'Size'         :paginator[type].size
-				},
+				header :getPaginationHeader(type),
 				success:success,
 				error  :error
 			}
@@ -932,7 +1022,7 @@ function plgnotify( sysconfig ) {
 	 * Tratamento para quando pressiona o sino.
 	 * @param {Event} e - evento de mousedown.
 	 */
-	function toggleList( e ) {
+	function toogleList( e ) {
 		e.stopPropagation();
 
 		//lista é preciso estar na tela para fazer calculo de posicionamento.
@@ -1004,7 +1094,7 @@ function plgnotify( sysconfig ) {
 				hidePlugin( e );
 				break;
 			case layout.dombell:
-				toggleList( e );
+				toogleList( e );
 				break;
 		}
 	}
@@ -1139,7 +1229,7 @@ function plgnotify( sysconfig ) {
 
 			for ( ; ; ) {
 
-				if ( !hasFocus || (hasFocus === document.body) ) {
+				if ( !hasFocus || (hasFocus === _body) ) {
 					break;
 				}
 				path.push( hasFocus );
@@ -1246,10 +1336,10 @@ function plgnotify( sysconfig ) {
 			html.onmouseover = undefined;
 			html.onmouseout  = undefined;
 
-			if(!(e && e.target && e.target.id)) {
+			if ( !(e && e.target && e.target.id) ) {
 				hide();
 			}
-			else{
+			else {
 				showLaterOptions( e, hide, onBlurOptions );
 
 			}
@@ -1289,7 +1379,7 @@ function plgnotify( sysconfig ) {
 		layout.domsnackbar.hideSnackbar = hide = function () {
 			html.onmouseout = html.onmouseover = undefined;
 
-			counter&& counterIncrement(counter--);
+			counter && counterIncrement( counter-- );
 
 			//esconde toaster
 			dom.style.opacity    = 0;
@@ -1346,7 +1436,7 @@ function plgnotify( sysconfig ) {
 	 */
 	function counterIncrement( num ) {
 
-		counter=num;
+		counter                     = num;
 		layout.domcounter.innerHTML = counter;
 	}
 
@@ -1354,7 +1444,7 @@ function plgnotify( sysconfig ) {
 	 * Atualiza elemento com número.
 	 * @param {Object} res - respostar do socket, quando recebe novas notificações
 	 */
-	function onSocketMessage(res){
+	function onSocketMessage( res ) {
 
 		res = JSON.parse( res.data );
 		if ( !res || res !== {} || !layout.domcounter ) {
@@ -1362,7 +1452,7 @@ function plgnotify( sysconfig ) {
 		}
 
 		showSnackbar( res );
-		counterIncrement(counter++);
+		counterIncrement( counter++ );
 	}
 
 	/**
@@ -1498,7 +1588,9 @@ function plgnotify( sysconfig ) {
 				{
 					header :_config.header,
 					success:function cachaTime( data ) {
+
 						if ( data ) {
+							data = data.response;
 
 							if ( typeof data === 'string' ) {
 								_config[type] = arrayTimeToHTML( JSON.parse( data ) );
@@ -1573,23 +1665,43 @@ function plgnotify( sysconfig ) {
 	 * Adiciona conteúdo ao HTML.
 	 */
 	function addContentHTML( type, content, reflow ) {
-		var frag;
-		type           = document.createElement( type );
-		type.innerHTML = content;
-		if ( !reflow ) {
-			frag = document.createDocumentFragment();
-			frag.appendChild( type );
-			document.body.appendChild( frag );
-			return frag;
+		var frag, typo, children = [];
+		frag                     = document.createDocumentFragment();
+		typo                     = document.createElement( content && type || 'div' );
+
+		typo.innerHTML = content || type;
+
+		//é para extrair o conteudo do innerHTML
+		if ( reflow || !(content && type) ) {
+			for ( ; typo.childElementCount ; ) {
+				children.push( typo.removeChild( typo.lastChild ) );
+			}
+
+			children.reverse().map(
+				function ( c, i ) {
+					frag.appendChild( c );
+					children[i] = c = undefined;
+				}
+			);
 		}
-		return type;
+
+		//retorna elemento dom
+		if ( !reflow ) {
+			return typo;
+		}
+
+		typo.innerHTML = null;
+		typo           = null;
+
+		return frag;
+
 	}
 
 	/**
 	 * Valida se plugin está na tela, senão cria e insere.
 	 */
 	function hasPlugin() {
-		var linksTabs, domdisturb, domdisturbcancel;
+		var linksTabs, domdisturb, domdisturbcancel,pagread,pagunread;
 		var style, css, html, dom;
 
 		//TODO: possibilitar uso parcial de conteúdo( só insere o css, ou html ).
@@ -1600,8 +1712,9 @@ function plgnotify( sysconfig ) {
 		console.warn( 'Plugin não está na tela.' );
 
 		// adicionar elemntosDOM e styles, se não houver
-		css = '.disturb.cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;border-bottom:1px solid #d3d3d3;color:#000!important;overflow-x:hidden;max-height:272px;width:154px}.plg-panel li{font-size:1rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap;padding:8px;width:initial;display:block}.plg-panel li:first-letter{text-transform:uppercase}.plg-panel li:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;animation:.5s fadeIn;display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777;cursor:pointer}.plgtablink-setting{border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:150;left:50%;bottom:0;opacity:0;border-radius:10px;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;color:#fff;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plgsnackbar-right{width:36px;border-top-right-radius:10px;border-top-left-radius:0;border-bottom-right-radius:10px;border-bottom-left-radius:0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:202px;border-top-right-radius:0;border-top-left-radius:10px;border-bottom-right-radius:0;border-bottom-left-radius:10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;border-radius:50%!important;width:36px;height:36px;margin:2px;animation:2s linear infinite spin!important}.fix36{width:36px!important;height:36px!important}.fix24{width:24px!important;height:24px!important}.plg-pag{text-align:center;vertical-align:middle;text-align:-webkit-center}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}},.plg-notify-bell,.plg-notify-hide,.plg-notify-move,.unselectable{-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.plg-notify-move{cursor:move!important}.hide{display:none!important}.hitbox,path,svg{pointer-events:none;padding:0;margin:0}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-moz-transition:none!important;-ms-transition:none!important;-o-transition:none!important;transition:none!important}.plg-list.lidas>li,.plg-list.novas>li{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:1rem;overflow:hidden;height:auto;cursor:pointer}.plg-list.lidas li:last-child,.plg-list.novas li:last-child{border-bottom:0}.plg-list.lidas li.lida,.plg-list.novas li.lida{opacity:.5}.plg-list.lidas li *,.plg-list.novas li *{color:#a9a9a9;height:auto;max-height:32px}.plg-list.lidas li p,.plg-list.lidas li span,.plg-list.novas li p,.plg-list.novas li span{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:90%;min-width:30%;font-size:1.2rem;display:block;font-weight:900;color:#768e99}.circulo,.float-menu{border-radius:100%;width:80px;height:80px}.circulo{box-sizing:border-box;overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;box-shadow:4px 4px 4px rgba(0,0,0,.3);font-family:sans-serif}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:15px;border-radius:100%;height:40px}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;border-radius:100%;font-weight:700;z-index:5}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;border-radius:0 0 100%}.sino{width:50px;height:80px;padding:20px 0 0 10px;box-sizing:border-box;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{animation:1s cubic-bezier(.36,.07,.19,.97) both shake;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;border-radius:3px;color:#fff;display:inline-block;font-size:14px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-xclose:hover{color:#000}.plgmodal-xclose{color:#aaa;font-size:30px;text-decoration:none;position:absolute;right:0;height:30px;width:30px;top:0;vertical-align:middle;text-align:center}.plgmodal{display:block;background:rgba(0,0,0,.6);position:fixed;top:0;left:0;right:0;bottom:0;z-index:210;width:100%;height:100%;overflow:auto;background-color:#000;background-color:rgba(0,0,0,.4)}.plgmodal-dialog{z-index:211;width:80%;min-width:300px;max-width:600px;height:auto;max-height:600px;left:0;top:-100%;position:relative;padding:0;margin:auto;margin-top:5%;box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);border:1px solid #333;border-radius:5px;background:#fefefe;overflow:hidden}.plgmodal-dialog a{cursor:pointer}.plgmodal-body,.plgmodal-footer,.plgmodal-header{overflow:hidden;width:auto;height:auto;text-align:justify;word-break:break-all}.plgmodal-header{border-bottom:1px solid #eee;max-height:70px}.plgmodal-body{max-height:330px;overflow-x:hidden;overflow-y:auto;padding:10px}.plgmodal-footer{display:flex;border-top:1px solid #eee;height:70px}.plgmodal-header .title{font-size:20px;font-weight:900;line-height:24px;margin:0 0 10px;overflow:hidden;height:auto;padding:10px 35px 10px 10px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute;bottom:10px}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.sender{bottom:46px;font-size:20px;position:absolute;left:10px;max-width:90%;height:20px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.plg-list{margin-top:48px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;border-bottom-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px}.cancelar p:hover,.disturb p:hover,.disturb svg:hover{background-color:#fff}.cancelar p:active,.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{height:18px;border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;text-align:center;padding:10px;vertical-align:middle;border-bottom-right-radius:10px;margin:0;border-top-right-radius:10px;float:left}.cancelar p{border:1px solid gray;margin:0 10px;border-radius:10px}li.plgnot{height:auto}li.plgnot>*{padding:5px}li.plgnot>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none}li.plgnot:hover{opacity:1;background-color:rgba(112,128,144,.42)!important}li.plgnot:hover>*{color:#000!important}.plg-nu{float:right;padding:5px}';
-		addContentHTML( 'style', css );
+		css = '.disturb.cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;border-bottom:1px solid #d3d3d3;color:#000!important;overflow-x:hidden;max-height:272px;width:154px}.plg-panel li{font-size:1rem;font-weight:700;text-overflow:ellipsis;white-space:nowrap;padding:8px;width:initial;display:block}.plg-panel li:first-letter{text-transform:uppercase}.plg-panel li:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;animation:.5s fadeIn;display:block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777;cursor:pointer}.plgtablink-setting{border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:150;left:50%;bottom:0;opacity:0;border-radius:10px;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;color:#fff;text-transform:lowercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.plgsnackbar-right{width:36px;border-radius:10px 0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:202px;border-radius:0 10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;border-radius:50%!important;width:36px;height:36px;margin:2px;animation:2s linear infinite spin!important}.fix36{width:36px!important;height:36px!important}.fix24{width:24px!important;height:24px!important}.plg-pag{text-align:center;vertical-align:middle;text-align:-webkit-center}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.plg-notify-bell,.plg-notify-hide,.plg-notify-move,.unselectable{-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.plg-notify-move{cursor:move!important}.hide{display:none!important}.hitbox,path,svg{pointer-events:none;padding:0;margin:0}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-moz-transition:none!important;-ms-transition:none!important;-o-transition:none!important;transition:none!important}.plg-list.lidas>li,.plg-list.novas>li{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:1rem;overflow:hidden;height:auto;cursor:pointer}.plg-list.lidas li:last-child,.plg-list.novas li:last-child{border-bottom:0}.plg-list.lidas li.lida,.plg-list.novas li.lida{opacity:.5}.plg-list.lidas li *,.plg-list.novas li *{color:#a9a9a9;height:auto;max-height:32px}.plg-list.lidas li p,.plg-list.lidas li span,.plg-list.novas li p,.plg-list.novas li span{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:90%;min-width:30%;font-size:1.2rem;display:block;font-weight:900;color:#768e99}.circulo,.float-menu{border-radius:100%;width:80px;height:80px}.circulo{box-sizing:border-box;overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;box-shadow:4px 4px 4px rgba(0,0,0,.3);font-family:sans-serif}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:15px;border-radius:100%;height:40px}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;border-radius:100%;font-weight:700;z-index:5}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;border-radius:0 0 100%}.sino{width:50px;height:80px;padding:20px 0 0 10px;box-sizing:border-box;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{animation:1s cubic-bezier(.36,.07,.19,.97) both shake;transform:translate3d(0,0,0);backface-visibility:hidden;perspective:1000px}@keyframes shake{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;border-radius:3px;color:#fff;display:inline-block;font-size:14px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-xclose:hover{color:#000}.plgmodal-xclose{color:#aaa;font-size:30px;text-decoration:none;position:absolute;top:0;right:0;height:30px;width:30px;vertical-align:middle;text-align:center}.plgmodal{display:block;background:rgba(0,0,0,.6);position:fixed;top:0;left:0;right:0;bottom:0;z-index:210;width:100%;height:100%;overflow:auto;background-color:#000;background-color:rgba(0,0,0,.4)}.plgmodal-dialog{z-index:211;width:80%;min-width:300px;max-width:600px;height:auto;max-height:600px;left:0;top:-100%;position:relative;padding:0;margin:auto;margin-top:5%;box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);border:1px solid #333;border-radius:5px;background:#fefefe;overflow:hidden}.plgmodal-dialog a{cursor:pointer}.plgmodal-body,.plgmodal-footer,.plgmodal-header{overflow:hidden;width:auto;height:auto;text-align:justify;word-break:break-all}.plgmodal-header{border-bottom:1px solid #eee;max-height:70px}.plgmodal-body{max-height:330px;overflow-x:hidden;overflow-y:auto;padding:10px}.plgmodal-footer{display:flex;border-top:1px solid #eee;height:70px}.plgmodal-header .title{font-size:20px;font-weight:900;line-height:24px;margin:0 0 10px;overflow:hidden;height:auto;padding:10px 35px 10px 10px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute;bottom:10px}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.sender{bottom:46px;font-size:20px;position:absolute;left:10px;max-width:90%;height:20px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.plg-list{margin-top:48px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;border-bottom-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px}.cancelar p:hover,.disturb p:hover,.disturb svg:hover{background-color:#fff}.cancelar p:active,.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{height:18px;border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;text-align:center;padding:10px;vertical-align:middle;border-bottom-right-radius:10px;margin:0;border-top-right-radius:10px;float:left}.cancelar p{border:1px solid gray;margin:0 10px;border-radius:10px}li.plgnot{height:auto}li.plgnot>*{padding:5px}li.plgnot>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;pointer-events:none}li.plgnot:hover{opacity:1;background-color:rgba(112,128,144,.42)!important}li.plgnot:hover>*{color:#000!important}.plg-nu{float:right;padding:5px}';
+		dom = addContentHTML( 'style', css );
+		_body.appendChild( dom );
 
 		//adicionar plugin
 		html = '<div draggable="true" class="float-menu plg-notify">' +
@@ -1641,7 +1754,7 @@ function plgnotify( sysconfig ) {
 			   '</div>' +
 			   '</div>';
 
-		dom = addContentHTML( 'div', html, true );
+		dom = addContentHTML( 'div', html );
 
 		dom.classList.add( layout.container );
 
@@ -1663,36 +1776,33 @@ function plgnotify( sysconfig ) {
 		layout.domdisturbcancel = domdisturbcancel = dom.querySelector( '.disturb.cancelar' );
 		domdisturbcancel.onclick = disturbCancel;
 
-		document.body.appendChild( dom );
+		_body.appendChild( dom );
 		console.info( 'Plugin adicionado na tela' );
-		/*
 
-		 return
-		 //Cria mensagens da lista de notificação.
-		 //TODO: deletar na produção.
-		 modalMensages = '<li class="plgnot urgente" 	id="90113d2a-999f-4332-9d74-5069aae0f403"><span>20/06/2017</span><div>Essa mensagem é urgente !</div></li>' +
-		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-		 '<li class="plgnot lida"		id="90113d2a-999f-4332-9d74-5069aae0f403"><span>15/06/2017</span><div>Esta mensagem já foi lida.</div></li>' +
-		 '<li class="plgnot lida urgente"id="90113d2a-999f-4332-9d74-5069aae0f403"><span>20/06/2017</span><div>Essa mensagem é urgente e já foi lida!</div></li>' +
-		 '<li class="plgnot"				id="90113d2a-999f-4332-9d74-5069aae0f403"><span>12/06/2017</span><div>Uma mensagem muito muito muito muito muito muitolonga mesmo ...</div></li>';
+		//Cria layout paginação, uma instancia para cada lista.
+		var loadMore = '<li class="plgnot plg-pag">' +
+					   '<span> Carregar mais</span>' +
+					   '<div class="plgloader fix24 hide"></div>' +
+					   '</li>';
 
-		 //aplica mensagens falsas no modal
-		 // TODO: deletar na produção.
-		 dom           = dom.getElementsByClassName( layout.list + ' novas' )[0];
-		 dom.innerHTML = (
-		 modalMensages
-		 );
-		 */
+		pagread=layout['domPag'+events.read] = addContentHTML( 'div', loadMore, true ).childNodes[0];
+		pagunread=layout['domPag'+events.unread ] = addContentHTML( 'div', loadMore, true ).childNodes[0];
+
+		//_body.appendChild( layout['domPag'+events.unread] );
+		//_body.appendChild( layout['domPag'+events.read] );
+
+		pagread.toogle = tooglePagination.bind( pagread );
+		pagunread.toogle = tooglePagination.bind( pagunread );
+
+		pagread.onclick = paginationClick.bind( pagread, events.read );
+		pagunread.onclick = paginationClick.bind( pagunread, events.unread );
 
 	}
 
 	/**
 	 * Cria todo o layout do plugin.
 	 */
-	function createLayout() {
+	function setLayout() {
 
 		// pega ref. do namespace dos elementosDOM.
 		layout = {
@@ -1766,26 +1876,6 @@ function plgnotify( sysconfig ) {
 	}
 
 	/**
-	 * Configura layout do plugin com base em um elemento DOM
-	 * @param {object} layout - elemento DOM.
-	 */
-	function setPreconfigLayout( layout ) {
-		//a se definir
-	}
-
-	/**
-	 * Configura layout
-	 */
-	function setLayout() {
-		if ( _config.layout ) {
-			setPreconfigLayout( _config.layout );
-		}
-		else {
-			createLayout();
-		}
-	}
-
-	/**
 	 * Adiciona ouvintes para eventos internos.
 	 * DragEvents e MouseEvents.
 	 */
@@ -1852,14 +1942,14 @@ function plgnotify( sysconfig ) {
 			socket = _config.ws;
 
 			if ( !socket.hasHubs ) {
-				var hubs    = addContentHTML( 'script', '', true );
+				var hubs    = addContentHTML( 'script', 'hubs' );
 				hubs.src    = socket.url + ( socket.url[socket.url.length] === '/' ? 'hubs' : '/' + 'hubs');
 				hubs.onload = function () {
 					socket.hasHubs = true;
 					hubs.onload    = undefined;
 					startSocket();
 				};
-				document.body.appendChild( hubs );
+				_body.appendChild( hubs );
 				return;
 			}
 
@@ -1887,34 +1977,36 @@ function plgnotify( sysconfig ) {
 		layout.domplugin.classList.remove( 'hide' );
 
 		//Pega total de itens não lidos.
-		getUnreadList(function( data ){
-			var welcome,msg,lista = JSON.parse(data ).length;
-			welcome=localStorage.getItem('welcome');
+		getUnreadList(
+			function ( data ) {
+				var welcome, msg, lista = JSON.parse( data ).length;
+				welcome                 = localStorage.getItem( 'welcome' );
 
-			if(lista){
-				counterIncrement(lista);
-				msg={
-					header:'Bem vindo',
-					body:'Há novas notificações!'
-				 };
-			}
-			else{
-				msg={
-					header:'Bem vindo',
-					body:'Não há notificações.'
+				if ( lista ) {
+					counterIncrement( lista );
+					msg = {
+						header:'Bem vindo',
+						body  :'Há novas notificações!'
+					};
 				}
-			}
+				else {
+					msg = {
+						header:'Bem vindo',
+						body  :'Não há notificações.'
+					}
+				}
 
-			if(welcome){
-				welcome= (new Date()).toLocaleDateString('pt-br') === welcome;
-			}
+				if ( welcome ) {
+					welcome = (new Date()).toLocaleDateString( 'pt-br' ) === welcome;
+				}
 
-			if(!welcome){
-				showSnackbar(msg,0,3);
-				localStorage.setItem('welcome',(new Date()).toLocaleDateString('pt-br'));
-			}
+				if ( !welcome ) {
+					showSnackbar( msg, 0, 3 );
+					localStorage.setItem( 'welcome', (new Date()).toLocaleDateString( 'pt-br' ) );
+				}
 
-		});
+			}
+		);
 	}
 
 	/**
