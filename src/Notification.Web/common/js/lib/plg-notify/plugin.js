@@ -455,6 +455,9 @@ function plgnotify( sysconfig ) {
 					'NotificationId':data.NotificationId,
 					'Read'          :data.Read,
 					'DelayId'       :data.DelayId
+				},
+				success:function(){
+					counter && counterIncrement(data.Read? --counter:++counter  );
 				}
 			}
 		);
@@ -777,7 +780,9 @@ function plgnotify( sysconfig ) {
 		selectedNotification.Read           = true;
 		selectedNotification.DelayId        = undefined;
 
-		postRead( e.target.id );// precisa ?
+		if( e.target.parentNode.id !== events.read){
+			postRead( e.target.id );
+		}
 
 		//fazer get de item
 		// depois exibir modal
@@ -1040,7 +1045,7 @@ function plgnotify( sysconfig ) {
 
 		layout.domlist.classList.remove( 'hide' );
 
-		showList( document.querySelector( '.plgtab > .visited' ) );
+		showList( document.querySelector( '.plgtab .visited' ) );
 	}
 
 	/**
@@ -1379,8 +1384,6 @@ function plgnotify( sysconfig ) {
 		layout.domsnackbar.hideSnackbar = hide = function () {
 			html.onmouseout = html.onmouseover = undefined;
 
-			counter && counterIncrement( counter-- );
-
 			//esconde toaster
 			dom.style.opacity    = 0;
 			dom.style.bottom     = '-50px';
@@ -1452,7 +1455,7 @@ function plgnotify( sysconfig ) {
 		}
 
 		showSnackbar( res );
-		counterIncrement( counter++ );
+		counterIncrement( ++counter );
 	}
 
 	/**
