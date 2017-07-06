@@ -543,6 +543,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Notification.API.Areas.SGP.v1.UserController.GetUser">
+            <summary>
+            Retorna Nome e ID do usuário logado
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Notification.API.Extensions.UserIdentityExtension">
             <summary>
             classe extendendo o Identity. Por hora não está sendo utilizada. Avaliar quando houver persistência do identity no BD para API.

@@ -183,5 +183,29 @@ namespace Notification.Repository.CoreSSO
                 return query;
             }
         }
+
+        /// <summary>
+        /// Busca o usuário (nome e id) solicitado no parâmetro
+        /// Para ser exibido o nome do usuário logado no cabeçalho da página, por exemplo.
+        /// </summary>
+        /// <param name="userId">Id do Usuário</param>
+        /// <returns></returns>
+        public Notification.Entity.API.CoreSSO.User Get(Guid userId)
+        {
+            //a entidade User não é a do namespace DataBase, pois não é o mesmo objeto que está sendo gravado no MongoDB.
+            using (var context = new SqlConnection(stringConnection))
+            {
+                var query = context.Query<Notification.Entity.API.CoreSSO.User>(
+                    @"SELECT
+                            usu_id as Id, 
+                            pes_nome as Name 
+                        FROM SYS_Usuario AS USU WITH(NOLOCK)
+                        INNER JOIN PES_Pessoa as PES WITH(NOLOCK) ON pes.pes_id=usu.pes_id
+	                    WHERE 
+		                    usu.usu_id=@usu_id ",
+                     new { usu_id = userId });
+                return query.FirstOrDefault();
+            }
+        }
     }
 }
