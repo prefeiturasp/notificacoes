@@ -49,9 +49,9 @@ namespace Notification.Business
             if (entity.Recipient == null)
                 throw new NotificationRecipientIsEmptyException();
 
-            if ((entity.Recipient.SystemRecipient != null && !entity.Recipient.SystemRecipient.Any())
-                || (entity.Recipient.ContributorRecipient != null && !entity.Recipient.ContributorRecipient.Any())
-                || (entity.Recipient.TeacherRecipient != null && !entity.Recipient.TeacherRecipient.Any()))
+            if ((entity.Recipient.SystemRecipient == null || !entity.Recipient.SystemRecipient.Any())
+                && (entity.Recipient.ContributorRecipient == null || !entity.Recipient.ContributorRecipient.Any())
+                && (entity.Recipient.TeacherRecipient == null || !entity.Recipient.TeacherRecipient.Any()))
                 throw new NotificationRecipientIsEmptyException();
             
             var groupRep = new GroupRepository();
@@ -127,7 +127,7 @@ namespace Notification.Business
             if (entity.Recipient == null)
                 throw new NotificationRecipientIsEmptyException();
 
-            if ((entity.Recipient.UserRecipient != null && !entity.Recipient.UserRecipient.Any()))
+            if ((entity.Recipient.UserRecipient == null || !entity.Recipient.UserRecipient.Any()))
                 throw new NotificationRecipientIsEmptyException();
             
             var ltUser = new List<Guid>();
