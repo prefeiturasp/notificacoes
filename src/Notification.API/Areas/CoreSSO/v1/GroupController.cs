@@ -16,8 +16,6 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 
-using Notification.API.Extensions;
-
 namespace Notification.API.Areas.CoreSSO.v1
 {
     public class GroupController : AuthBaseController
