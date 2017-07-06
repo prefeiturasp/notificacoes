@@ -746,7 +746,7 @@ function plgnotify( sysconfig ) {
 			console.info( 'notificação vazia' );
 			return;
 		}
-		obj = formatNotification( data );
+		obj = formatNotification( data.response );
 
 		showMessage( this, obj );
 	}
@@ -758,7 +758,7 @@ function plgnotify( sysconfig ) {
 			console.info( 'notificação vazia' );
 			return;
 		}
-		obj = JSON.parse( data );
+		obj = JSON.parse( data.response );
 
 		//showMessage(this,obj);
 		console.info( this, obj );
