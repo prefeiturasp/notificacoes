@@ -19,7 +19,8 @@ namespace Notification.Repository.SGP
                 var query = context.Query<Position>(
                     @"SELECT crg.crg_id as Id, crg.crg_nome as Name                        
                     FROM RHU_Cargo crg WITH(NOLOCK)
-                    WHERE crg.crg_situacao <> 3");
+                    WHERE crg.crg_situacao <> 3
+                    ORDER BY crg.crg_nome");
                 return query;
             }
         }

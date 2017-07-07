@@ -55,6 +55,8 @@ namespace Notification.Repository.SGP
                 if(listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
                     sb.Append(" AND tce.tce_id IN @idsTipoClassificacaoEscola");
 
+                sb.Append(" ORDER BY esc.esc_nome");
+
                 var query = context.Query<School>(sb.ToString(),
                     new
                     {

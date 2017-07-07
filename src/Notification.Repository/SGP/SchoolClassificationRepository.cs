@@ -43,6 +43,8 @@ namespace Notification.Repository.SGP
                 if (listSchoolSuperior != null && listSchoolSuperior.Any())
                     sb.Append(" AND uadSuperior.uad_id in @idsDRE");
 
+                sb.Append(" ORDER BY tce.tce_nome");
+
                 var query = context.Query<SchoolClassification>(
                     sb.ToString(),
                     new

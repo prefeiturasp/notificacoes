@@ -80,6 +80,10 @@
                 return getheaders('GET', null, $util.base_url('/api/v1/TimeStamp'));
             }
 
+            function getUserName(groupSid) {
+                return getheaders('GET', groupSid, $util.base_url('/api/SGP/v1/User'));
+            }
+
             function getConcatUrl(concat, type, params){
                 var url = '';
 
@@ -125,7 +129,8 @@
             getDiscipline: getDiscipline,
             getTeam: getTeam,
             postSave: postSave,
-            getTimeStamp: getTimeStamp
+            getTimeStamp: getTimeStamp,
+            getUserName: getUserName
         }
 
     }

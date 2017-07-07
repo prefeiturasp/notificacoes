@@ -21,7 +21,8 @@ namespace Notification.Repository.SGP
                     FROM ACA_CalendarioCurso cac WITH(NOLOCK)
                     INNER JOIN ACA_CalendarioAnual as cal with(nolock) ON cal.cal_id = cac.cal_id
                     INNER JOIN ACA_Curso cur WITH(NOLOCK) ON cur.cur_id = cac.cur_id AND cur.cur_situacao <> 3
-                    WHERE cal.cal_ano = @calendarYear",
+                    WHERE cal.cal_ano = @calendarYear
+                    ORDER BY cur.cur_nome",
                     new { calendarYear = calendarYear });
                 return query;
             }

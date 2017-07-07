@@ -45,7 +45,7 @@ namespace Notification.Repository.SGP
             if (courseId != null && courseId.Any())
                 sb.Append(" AND cac.cur_id IN @courseId");                       
 
-            sb.Append(" GROUP BY tds.tds_id, tds.tds_nome");
+            sb.Append(" GROUP BY tds.tds_id, tds.tds_nome ORDER BY tds.tds_nome");
 
             using (var context = new SqlConnection(stringConnection))
             {

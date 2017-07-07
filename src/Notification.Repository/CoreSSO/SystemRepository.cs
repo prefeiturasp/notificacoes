@@ -28,7 +28,8 @@ namespace Notification.Repository.CoreSSO
                         WHERE UG.usg_situacao = 1AND G.gru_situacao = 1	AND UG.usu_id = @userId
 	                    GROUP BY G.sis_id) as T1
                     INNER JOIN SYS_SISTEMA AS S WITH(NOLOCK) ON S.sis_id = t1.sis_id
-                    WHERE S.sis_situacao = 1",
+                    WHERE S.sis_situacao = 1
+                    ORDER BY s.sis_nome",
                      new { userId = userId,
                         pastaLogo = temaCoreSSO+"/images/logos/" });
                 return query;

@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$util', 'HttpServices', '$location'];
+    Menu.$inject = ['$util', 'HttpServices', '$timeout'];
 
     function Menu() {
         var directive = {
@@ -19,18 +19,19 @@
             transclude: false
         };
 
-        function MenuController($scope, $util, HttpServices, $location) {
+        function MenuController($scope, $util, HttpServices, $timeout) {
 
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
             $scope.getListMenu = false;
+            $scope.userName = [];
 
             $scope.openMenuSytem = function __openMenuSytem() {
 
                 if($scope.listMenuSystem.length == 0 && !$scope.showListMenu && !$scope.getListMenu) {
                     var vision = JSON.parse(atob(window.sessionStorage.visionSelected));
 
-                    HttpServices.getListSystem(vision.VisionId, function (data) {
+                    HttpServices.getListSystem(vision.Id, function (data) {
                         $scope.listMenuSystem = data;
                         $scope.showListMenu = !$scope.showListMenu;
                         $scope.getListMenu = true;
@@ -44,6 +45,18 @@
                 $scope.showListMenu = false;
             };
 
+            function getUserName(){
+                try{
+                    var vision = JSON.parse(atob(window.sessionStorage.visionSelected));
+                    HttpServices.getUserName(vision.Id, function (data) {
+                        $scope.userName = data;
+                    });
+
+                }catch(e){
+                    setTimeout(function(){ getUserName()}, 1500);
+                }
+            }
+
             /**
              * Efetua o logout do sistema
              * destruindo token de acesso
@@ -54,6 +67,8 @@
                 mgr.signoutRedirect();
                 $util.setLogout();
             };//logout
+
+           getUserName();
 
         }//MenuController
 

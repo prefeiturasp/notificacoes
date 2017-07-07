@@ -86,7 +86,8 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_situacao  <> 3
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))",
+	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
+                    ORDER BY uadSuperior.uad_nome",
                      new { usu_idLogado = userId, gru_idLogado = groupId }
                     );
                 return query;

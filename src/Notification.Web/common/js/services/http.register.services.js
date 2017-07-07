@@ -15,15 +15,17 @@
     //angular.module('services').factory('HttpServices', ['Model', 'toastr', '$http', '$window',
         function HttpRegisterService(Model, toastr, $http, $window, $timeout, $util) {
 
+            var session = false;
+
             function httpModel(model, callback){
 
                 $http(model).then(function successCallback(response) {
-                    callback && callback(response.data);
+                    callback && callback(response.data, response);
                 }, function errorCallback(response) {
 
-                    if(response.status == 401){
+                    if(response.status == 401 && !session){
                         toastr.warning('Sua sessão expirou, refaça o login no sistema!', 'Sessão expirada');
-
+                        session = true;
                         $timeout(function(){
                             window.sessionStorage.clear();
                             var mgr = $util.getMgr();
@@ -37,7 +39,7 @@
                         toastr.error(response.data.Message, 'Error');
                     else
                         toastr.error(response.statusText, 'Error');
-                    callback && callback(null);
+                    callback && callback(null, response);
                 });
             }
 
@@ -172,11 +174,17 @@
                 });
             }
 
+            function getUserName(groupSid, callback){
+                httpModel(Model.getUserName(groupSid), function (res) {
+                    callback(res);
+                });
+            }
+
     /*-------------------------------------------POST----------------------------------------------------*/
 
             function postSave(data, callback){
-                httpModel(Model.postSave(data), function (res) {
-                    callback(res);
+                httpModel(Model.postSave(data), function (data, res) {
+                    callback(data, res);
                 });
             }
 
@@ -195,7 +203,8 @@
                 getListTeam: getListTeam,
                 postSave: postSave,
                 getListUnitAdministrative: getListUnitAdministrative,
-                getTimeStamp: getTimeStamp
+                getTimeStamp: getTimeStamp,
+                getUserName: getUserName
             }
 
         };
