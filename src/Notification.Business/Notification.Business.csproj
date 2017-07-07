@@ -98,6 +98,7 @@
     <Compile Include="Cache\ICacher.cs" />
     <Compile Include="CoreSSO\GroupAUBusiness.cs" />
     <Compile Include="CoreSSO\GroupBusiness.cs" />
+    <Compile Include="CoreSSO\IDSClientCorsOriginsBusiness.cs" />
     <Compile Include="CoreSSO\SystemBusiness.cs" />
     <Compile Include="CoreSSO\UserBusiness.cs" />
     <Compile Include="DelayTimeBusiness.cs" />

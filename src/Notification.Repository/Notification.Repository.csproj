@@ -70,6 +70,7 @@
     <Compile Include="Connections\SGPRepository.cs" />
     <Compile Include="CoreSSO\GroupAURepository.cs" />
     <Compile Include="CoreSSO\GroupRepository.cs" />
+    <Compile Include="CoreSSO\IDSClientCorsOriginsRepository.cs" />
     <Compile Include="CoreSSO\SystemRepository.cs" />
     <Compile Include="CoreSSO\UserRepository.cs" />
     <Compile Include="DelayTimeRepository.cs" />
