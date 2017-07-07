@@ -400,10 +400,15 @@
 
         };
 
-        $scope.checkVisionUser = function checkVisionUser(arr, type){
+        $scope.checkVisionUser = function checkVisionUser(id, type, arr){
 
-            if( arr && arr.length > 0 && ($scope.VisionSystem.VisionId != type) ){
-                return true;
+            if(arr > 0) {
+
+                if (id != 4 && id != type) {
+                    return true;
+                } else {
+                    return false;
+                }
             }else{
                 return false;
             }
