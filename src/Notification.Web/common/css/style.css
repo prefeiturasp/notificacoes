@@ -9,7 +9,7 @@ body {
   padding: 0; }
 
 * {
-  /*box-sizing: border-box;*/
+  box-sizing: border-box;
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
   /*-webkit-transition: all .3s ease;*/
@@ -229,7 +229,7 @@ a {
   width: 100%;
   color: #FFFFFF;
   font-size: 1.6rem;
-  }
+}
 .remetente input:focus {
   outline: none;
   background: #FFFFFF;
@@ -311,26 +311,26 @@ input, textarea, select, button {
   position: relative;
   margin-right: 25px;
   font-size: 1.4rem;
-  }
-  .selecionados p i.fa-times {
-    position: absolute;
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.6rem;
-    background: #93a6af;
-    color: #fff;
-    width: 26px;
-    height: 26px;
-    display: inline-block;
-    border-radius: 100%;
-    text-align: center;
-    padding-top: 4px;
-    cursor: pointer;
-  }
-    .selecionados p i.fa-times {
-      background: #6e8793;
-    }
+}
+.selecionados p i.fa-times {
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  background: #93a6af;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  border-radius: 100%;
+  text-align: center;
+  padding-top: 4px;
+  cursor: pointer;
+}
+.selecionados p i.fa-times {
+  background: #6e8793;
+}
 .selecionados p a {
   font-size: 2rem;
   vertical-align: middle;
@@ -580,8 +580,9 @@ li.sistemas .sub-menu-sistemas {
   background: #FFFFFF;
   border-radius: 6px;
   text-align: left;
-  width: 150px;
+  width: 200px;
   /*display: none;*/
+  z-index: 99;
 }
 li.sistemas .sub-menu-sistemas:before {
   content: '';
@@ -599,13 +600,21 @@ li.sistemas .sub-menu-sistemas li {
   display: inline-block;
   margin: 0;
   width: 100%;
+  border-bottom: 1px solid #DCDCDC;
+}
+li.sistemas .sub-menu-sistemas li img {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  vertical-align: middle;
 }
 li.sistemas .sub-menu-sistemas li a {
   display: inline-block;
   color: #888;
   padding: 8px 15px;
-  width: 100%;
-  border-bottom: 1px solid #DCDCDC;
+  width: calc(100% - 35px) !important;
+  vertical-align: middle;
 }
 li.sistemas .sub-menu-sistemas li a:hover {
   color: #000;
@@ -671,7 +680,7 @@ li.sistemas .sub-menu-sistemas li:last-child a {
   border-top: 0;
   vertical-align: middle;
   display: inline-block;
-  width: 101.2%;
+  width: 100%;
   line-height: inherit;
   outline: none;
   padding: 10px 15px;
@@ -680,11 +689,11 @@ li.sistemas .sub-menu-sistemas li:last-child a {
 .panel-block{display: block !important;}
 
 .remove-transiton{
- -webkit-transition: all 0s ease !important;
+  -webkit-transition: all 0s ease !important;
   -moz-transition: all 0s ease !important;
   -ms-transition: all 0s ease !important;
   -o-transition: all 0s ease !important;
- transition: all 0s ease !important;
+  transition: all 0s ease !important;
 }
 
 .accordion-filters-selected{

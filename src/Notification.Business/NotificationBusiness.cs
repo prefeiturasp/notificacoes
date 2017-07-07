@@ -20,7 +20,7 @@ namespace Notification.Business
             {
                 SenderId = Guid.Empty,
                 SenderName = entity.SenderName,
-                DateStartNotification = entity.DateStartNotification,
+                DateStartNotification = entity.DateStartNotification.Date,
                 DateEndNotification = entity.DateEndNotification,
                 MessageType = entity.MessageType,
                 Title = entity.Title,

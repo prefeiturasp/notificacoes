@@ -250,7 +250,7 @@
                     </li>
                 </ul>
                 <a class="enviar" ng-if="SystemRecipient.SystemId.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-if="checkVisionUser(SystemRecipient.SystemId)" ng-click="nextFilterSytem(typeFilter.system)">Continuar filtro</a>
+                <a class="continuar" ng-if="SystemRecipient.SystemId.length > 0" ng-click="nextFilterSytem(typeFilter.system)">Continuar filtro</a>
             </div>
             <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showGroup, 'some': !showFilter.showGroup}">
                 <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
@@ -261,7 +261,7 @@
                     </li>
                 </ul>
                 <a class="enviar" ng-if="SystemRecipient.GroupId.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-if="checkVisionUser(SystemRecipient.GroupId, 1)" ng-click="nextFilterSytem(typeFilter.group)">Continuar filtro</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipientClone.GroupId.VisionId, 1, SystemRecipient.GroupId.length)" ng-click="nextFilterSytem(typeFilter.group)">Continuar filtro</a>
             </div>
 
             <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showDRE, 'some': !showFilter.showDRE}">
@@ -273,7 +273,7 @@
                     </li>
                 </ul>
                 <a class="enviar" ng-if="SystemRecipient.AdministrativeUnitSuperior.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
-                <a class="continuar" ng-if="checkVisionUser(SystemRecipient.AdministrativeUnitSuperior, 2)" ng-click="nextFilterSytem(typeFilter.dre)">Continuar filtro</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipientClone.GroupId.VisionId, 2, SystemRecipient.AdministrativeUnitSuperior.length)" ng-click="nextFilterSytem(typeFilter.dre)">Continuar filtro</a>
             </div>
 
             <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showShool, 'some': !showFilter.showShool}">
