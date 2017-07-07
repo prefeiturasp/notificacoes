@@ -79,6 +79,7 @@
     <Compile Include="API\SGP\Team.cs" />
     <Compile Include="API\SystemRecipient.cs" />
     <Compile Include="API\TeacherRecipient.cs" />
+    <Compile Include="Database\CoreSSO\IDSClientCorsOrigins.cs" />
     <Compile Include="Database\DelayTime.cs" />
     <Compile Include="Database\DisturbTime.cs" />
     <Compile Include="Database\Log.cs" />

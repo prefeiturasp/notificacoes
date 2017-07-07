@@ -92,5 +92,41 @@ namespace Notification.Repository.SGP
                 return query;
             }
         }
+
+        /// <summary>
+        /// Busca todas as UA's filhas. caso não tenha nenhuma, busca todas que o usuário tenha permissão.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="ltSchoolSuperior"></param>
+        /// <returns></returns>
+        public IEnumerable<Guid> GetAUBySuperior(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior)
+        {
+            using (var context = new SqlConnection(stringConnection))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(@"SELECT DISTINCT
+                         esc.uad_id
+                    FROM
+                        ESC_Escola esc WITH(NOLOCK)
+                    WHERE
+                        esc.esc_situacao <> 3
+                        AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+
+                if (ltSchoolSuperior.Any())
+                    sb.Append(@" AND esc.uad_idSuperiorGestao in @idDre");
+
+                var query = context.Query<Guid>(
+                   sb.ToString(),
+                    new
+                    {
+                        usu_idLogado = userId,
+                        gru_idLogado = groupId,
+                        idDre = ltSchoolSuperior
+                    }
+                    );
+                return query;
+            }
+        }
     }
 }

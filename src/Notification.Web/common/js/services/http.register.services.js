@@ -35,10 +35,13 @@
                         return
                     }
 
-                    if(response.data)
-                        toastr.error(response.data.Message, 'Error');
-                    else
-                        toastr.error(response.statusText, 'Error');
+                    if(!session) {
+                        if (response.data)
+                            toastr.error(response.data.Message, 'Error');
+                        else
+                            toastr.error(response.statusText, 'Error');
+                    }
+
                     callback && callback(null, response);
                 });
             }
@@ -175,9 +178,14 @@
             }
 
             function getUserName(groupSid, callback){
-                httpModel(Model.getUserName(groupSid), function (res) {
-                    callback(res);
-                });
+                if($window.sessionStorage.userName){
+                    callback(JSON.parse(atob($window.sessionStorage.userName)));
+                }else {
+                    httpModel(Model.getUserName(groupSid), function (res) {
+                        callback(res);
+                        if(res)$window.sessionStorage.userName = btoa(JSON.stringify(res));
+                    });
+                }
             }
 
     /*-------------------------------------------POST----------------------------------------------------*/

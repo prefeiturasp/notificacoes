@@ -131,7 +131,7 @@ namespace Notification.Repository.CoreSSO
         /// <param name="ltGroup">Filtro: Lista de grupos de mesma visão ou abaixo do usuário logado</param>
         /// <param name="ltAdministrativeUnit">Filtro: Lista de unidades administrativas que o usuário logado possui permissão</param>
         /// <returns></returns>
-        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltAdministrativeUnit)
+        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltAdministrativeUnitSuperior, IEnumerable<Guid> ltAdministrativeUnit)
         {
             using (var context = new SqlConnection(stringConnection))
             {
@@ -166,10 +166,14 @@ namespace Notification.Repository.CoreSSO
                 }
 
                 //verificar se o usuário possui permissão nas UAD's passadas por parâmetro
-                if (ltAdministrativeUnit != null && ltAdministrativeUnit.Any())
+                if (ltAdministrativeUnitSuperior.Any() || ltAdministrativeUnit.Any())
                 {
                     //sb.Append(@" AND ugua.uad_id IN (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
-                    sb.Append(@" AND ugua.uad_id IN @idsUAD");
+                    sb.Append(@" AND (
+	                    (g.vis_id=2 AND ugua.uad_id IN @idsDRE )
+                    OR
+	                    (g.vis_id=3 AND ugua.uad_id IN @idsUAD )
+                    )");
                 }
                 //Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
                 
@@ -179,7 +183,7 @@ namespace Notification.Repository.CoreSSO
                 var query = context.Query<User>(
                    sb.ToString()
                     ,
-                     new { usu_idLogado = userId, gru_idLogado= groupId, idsSistema = ltSystem, idsGrupo = ltGroup, idsUAD = ltAdministrativeUnit });
+                     new { usu_idLogado = userId, gru_idLogado= groupId, idsSistema = ltSystem, idsGrupo = ltGroup, idsDRE = ltAdministrativeUnitSuperior, idsUAD = ltAdministrativeUnit });
                 return query;
             }
         }

@@ -20,7 +20,7 @@ namespace Notification.Business
             {
                 SenderId = Guid.Empty,
                 SenderName = entity.SenderName,
-                DateStartNotification = entity.DateStartNotification,
+                DateStartNotification = entity.DateStartNotification.Date,
                 DateEndNotification = entity.DateEndNotification,
                 MessageType = entity.MessageType,
                 Title = entity.Title,
@@ -66,7 +66,12 @@ namespace Notification.Business
                     //pendente de testes
                     if (groupUser.VisionId > 1)
                     {
-                        ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
+                        //se não passar Escola, buscar todas as escolas das DRE's selecionadas, e/ou todas que o usuário logado tenha permissão (mesmo se a listagem vier nula)
+                        if (! item.AdministrativeUnit.Any())
+                        {
+                            item.AdministrativeUnit = SchoolBusiness.GetAUBySuperior(userId, groupId, item.AdministrativeUnitSuperior);
+                        }
+                        ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
                     }
 
                     else if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
