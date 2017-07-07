@@ -15,15 +15,17 @@
     //angular.module('services').factory('HttpServices', ['Model', 'toastr', '$http', '$window',
         function HttpRegisterService(Model, toastr, $http, $window, $timeout, $util) {
 
+            var session = false;
+
             function httpModel(model, callback){
 
                 $http(model).then(function successCallback(response) {
-                    callback && callback(response.data);
+                    callback && callback(response.data, response);
                 }, function errorCallback(response) {
 
-                    if(response.status == 401){
+                    if(response.status == 401 && !session){
                         toastr.warning('Sua sessão expirou, refaça o login no sistema!', 'Sessão expirada');
-
+                        session = true;
                         $timeout(function(){
                             window.sessionStorage.clear();
                             var mgr = $util.getMgr();
@@ -181,8 +183,8 @@
     /*-------------------------------------------POST----------------------------------------------------*/
 
             function postSave(data, callback){
-                httpModel(Model.postSave(data), function (res) {
-                    callback(res);
+                httpModel(Model.postSave(data), function (data, res) {
+                    callback(data, res);
                 });
             }
 

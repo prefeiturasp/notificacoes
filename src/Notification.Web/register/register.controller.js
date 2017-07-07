@@ -275,7 +275,6 @@
          *
          */
         $scope.closeVisionGroupSystem = function __closeVisionGroupSystem(){
-            startRedactor();
             closeModal();
             $scope.showTypeFilter.typeVision = false;
             window.sessionStorage.visionSelected = btoa(JSON.stringify($scope.VisionSystem));
