@@ -5,12 +5,12 @@
         </a>
         <p>Sistema para cadastro de notificação</p>
         <ul class="opcoesGerais">
-            <li><span class="nomeUsuario">Bem-vindo, <b>admin</b></span></li>
+            <li><span class="nomeUsuario">Bem-vindo, <b>{{userName.Name}}</b></span></li>
             <li class="sistemas" ng-click="openMenuSytem()">
                 <a type="button" class="ng-scope" ><i class="fa fa-th" aria-hidden="true"></i> Sistemas</a>
                 <ul class="sub-menu-sistemas" ng-if="showListMenu" ng-mouseleave="mouseOver()">
                     <li ng-repeat="system in listMenuSystem">
-                        <img rec="{{system.Image}}">
+                        <img src="{{system.Image}}">
                         <a style="width: 81%;" href="{{system.Url}}" target="_blank">{{system.Name}}</a>
                     </li>
                 </ul>

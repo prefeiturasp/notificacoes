@@ -51,9 +51,8 @@
                     HttpServices.getUserName(vision.Id, function (data) {
                         $scope.userName = data;
                     });
-
                 }catch(e){
-                    setTimeout(function(){ getUserName()}, 1500);
+                    setTimeout(function(){ getUserName()}, 2000);
                 }
             }
 

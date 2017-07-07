@@ -55,6 +55,7 @@
             }else{
                 $scope.showTypeFilter.typeVision = false;
                 $timeout(function(){
+                    getUserName();
                     startSite();
                 },0);
                 $scope.load = false;
@@ -262,6 +263,10 @@
             }catch(e){}
         }
 
+        function getUserName(){
+            //HttpServices.getUserName($scope.VisionSystem.Id, function (data) { $scope.userName = data; });
+        }
+
         /**
          *
          * @param typeVision
@@ -269,6 +274,7 @@
         $scope.selectedVisionGroupSystem = function __selectedVisionGroupSystem(typeVision){
             $scope.VisionSystem = typeVision;
             $window.sessionStorage.visionSelected = btoa(JSON.stringify(typeVision));
+            getUserName();
         };
 
         /**
@@ -692,7 +698,7 @@
 
             if (parseFloat(msDateA) > parseFloat(msDateB)) {
                 toastr.warning("Data selecionada não pode ser menor que o data atual!");
-                $scope.filters[type] = null;
+                $scope.filters[type] = dateCurrent;
             }
         };
 
@@ -892,6 +898,7 @@
          * Salva a notificação na API
          */
         function saveNotification(){
+
             //setando os paramentros
             var params = {
                 data: angular.copy($scope.filters),
@@ -905,9 +912,7 @@
             $scope.load = true;
             HttpServices.postSave(params, function(data, res){
 
-                if(res.status == 412){
-                    toastr.error(res.data.Message);
-                }else if(data != null) {
+                if(data != null) {
                     toastr.success("Notificação salva com sucesso!");
                     //limpando as variaveis
                     creatteFilters();
@@ -1010,6 +1015,7 @@
         function getTimeStamp(){
             HttpServices.getTimeStamp( function (data) {
                 $scope.currentDate = data;
+                $scope.filters.DateStartNotification = new Date($scope.currentDate * 1000);
             });
         }
 
