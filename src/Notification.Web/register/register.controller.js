@@ -273,14 +273,16 @@
          */
         $scope.selectedVisionGroupSystem = function __selectedVisionGroupSystem(typeVision){
             $scope.VisionSystem = typeVision;
-            $window.sessionStorage.visionSelected = btoa(JSON.stringify(typeVision));
-            getUserName();
         };
 
         /**
          *
          */
         $scope.closeVisionGroupSystem = function __closeVisionGroupSystem(){
+
+            $window.sessionStorage.visionSelected = btoa(JSON.stringify($scope.VisionSystem));
+            getUserName();
+
             closeModal();
             $scope.showTypeFilter.typeVision = false;
             window.sessionStorage.visionSelected = btoa(JSON.stringify($scope.VisionSystem));
