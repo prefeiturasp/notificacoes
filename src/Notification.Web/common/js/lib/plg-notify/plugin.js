@@ -22,13 +22,13 @@ function plgnotify( sysconfig ) {
 	var pageSize             = 1;
 	var paginator            = {
 		read  :{
-			page:0,
-			size:10,
+			page :0,
+			size :10,
 			total:Infinity
 		},
 		unread:{
-			page:0,
-			size:10,
+			page :0,
+			size :10,
 			total:Infinity
 		}
 	};
@@ -102,7 +102,17 @@ function plgnotify( sysconfig ) {
 	 * Métodos específicos.
 	 * **/
 
+	function isSafari() {
+		var is_safari = navigator.userAgent.toLowerCase().indexOf( 'safari/' ) > -1;
+		return is_safari;
 
+	}
+
+	/**
+	 * Formata cabeçario das requisições.
+	 * @param type
+	 * @returns {{groupSid: *, Authorization: *, Content-Type: *, Page: number, Size: *}}
+	 */
 	function getPaginationHeader( type ) {
 		return {
 			'groupSid'     :_config.header.groupSid,
@@ -145,47 +155,47 @@ function plgnotify( sysconfig ) {
 		var pai   = element.parentNode;
 		var child = addContentHTML( 'a', dados, true );
 
-		pai.insertBefore( child,element );
+		pai.insertBefore( child, element );
 	}
 
 	/**
 	 * Controla a visibilidade da paginação.
 	 */
-	function paginationVisibility(t){
-		if(paginator[t].total>0){
-			layout['domPag'+events[t]].classList.remove('hide');
+	function paginationVisibility( t ) {
+		if ( paginator[t].total > 0 ) {
+			layout['domPag' + events[t]].classList.remove( 'hide' );
 		}
-		else{
-			layout['domPag'+events[t]].classList.add('hide');
+		else {
+			layout['domPag' + events[t]].classList.add( 'hide' );
 		}
 	}
+
 	/**
 	 *
 	 * Valida se ainda tem paginação
 	 */
-	function paginationValidate(t, l) {
-		if(!l.length|| l.length<paginator[t].size){
-			paginator[t].total=0;
+	function paginationValidate( t, l ) {
+		if ( !l.length || l.length < paginator[t].size ) {
+			paginator[t].total = 0;
 		}
 
-		paginationVisibility(t);
+		paginationVisibility( t );
 	}
 
 	/**
 	 * Tratamento para caso haja mais páginas.
 	 * @param lista - dados
 	 */
-	function paginationSuccess( type,lista ) {
+	function paginationSuccess( type, lista ) {
 		this.toogle();
-		lista=JSON.parse( lista );
+		lista = JSON.parse( lista );
 
-		paginationNewContent( this, notificationHTML( type, lista)  .join(' ') );
-		paginationValidate(type,lista);
-		if(type===events.unread){
-			counterIncrement(counter+lista.length);
+		paginationNewContent( this, notificationHTML( type, lista ).join( ' ' ) );
+		paginationValidate( type, lista );
+		if ( type === events.unread ) {
+			counterIncrement( counter + lista.length );
 		}
 	}
-
 
 	/**
 	 * Tratamento para quando é clicado na paginação.
@@ -203,13 +213,12 @@ function plgnotify( sysconfig ) {
 
 		++paginator[type].page;
 
-		if(events.unread===type){
-			getUnreadList( paginationSuccess.bind( dom ,type) );
+		if ( events.unread === type ) {
+			getUnreadList( paginationSuccess.bind( dom, type ) );
 		}
-		else{
-			getReadList( paginationSuccess.bind( dom ,type) );
+		else {
+			getReadList( paginationSuccess.bind( dom, type ) );
 		}
-
 
 		//paginationSuccess.bind( dom )(
 		//	'<li class="plgnot">1</li>' +
@@ -450,14 +459,14 @@ function plgnotify( sysconfig ) {
 		//http://10.10.10.37:5019/Help/Api/POST-api-v1-Notification-id-Action
 		http.post(
 			api.later( data.NotificationId ), {
-				header:_config.header,
-				data  :{
+				header :_config.header,
+				data   :{
 					'NotificationId':data.NotificationId,
 					'Read'          :data.Read,
 					'DelayId'       :data.DelayId
 				},
-				success:function(){
-					counter && counterIncrement(data.Read? --counter:++counter  );
+				success:function () {
+					counter && counterIncrement( data.Read ? --counter : ++counter );
 				}
 			}
 		);
@@ -742,6 +751,10 @@ function plgnotify( sysconfig ) {
 		);
 	}
 
+	/**
+	 * Tratamento de sucesso ao pegar notificação especifica.
+	 * @param data
+	 */
 	function getNotificationSuccess( data ) {
 		var obj;
 
@@ -754,6 +767,10 @@ function plgnotify( sysconfig ) {
 		showMessage( this, obj );
 	}
 
+	/**
+	 * Tratamento de erro ao pegar notificação especifica.
+	 * @param data
+	 */
 	function getNotificationError( data ) {
 		var obj;
 
@@ -777,7 +794,7 @@ function plgnotify( sysconfig ) {
 			return;
 		}
 
-		selectedNotification.NotificationId =  id;
+		selectedNotification.NotificationId = id;
 		selectedNotification.Read           = true;
 		selectedNotification.DelayId        = undefined;
 
@@ -797,7 +814,7 @@ function plgnotify( sysconfig ) {
 
 		if ( classlist.contains( 'plgnot' ) ) {
 			if ( e.target.id ) {
-				if( e.target.parentNode.id !== events.read){
+				if ( e.target.parentNode.id !== events.read ) {
 					postRead( e.target.id );
 				}
 				openNotification( e, e.target.id );
@@ -933,16 +950,15 @@ function plgnotify( sysconfig ) {
 		}
 
 		lista = notificationHTML( type, JSON.parse( data ) );
-		paginationValidate(type,lista);
+		paginationValidate( type, lista );
 
 		if ( events.unread === type ) {
 			counterIncrement( lista.length );
 		}
 
-
 		element.innerHTML = lista.join( ' ' );
-		if(paginator[type].total){
-			element.appendChild(layout['domPag'+events[type]] );
+		if ( paginator[type].total ) {
+			element.appendChild( layout['domPag' + events[type]] );
 		}
 	}
 
@@ -952,10 +968,10 @@ function plgnotify( sysconfig ) {
 	function showList( target ) {
 		var fn, bind;
 
-		fn   = (target.id === events.unread ) ? getUnreadList : getReadList;
-		bind = addNotification.bind( {}, target.id );
-		paginator[target.id].page=0;
-		paginator[target.id].total=Infinity;
+		fn                         = (target.id === events.unread ) ? getUnreadList : getReadList;
+		bind                       = addNotification.bind( {}, target.id );
+		paginator[target.id].page  = 0;
+		paginator[target.id].total = Infinity;
 
 		fn(
 			bind,
@@ -973,13 +989,15 @@ function plgnotify( sysconfig ) {
 	 * @returns {*}
 	 */
 	function getUnreadList( success, error ) {
-		return getNotificationList( events.unread, function(r){
-			var t=r.getResponseHeader('Total' );
-			if( t && !isNaN (t=parseInt(t )) ){
-				paginator[events.unread].total = t;
-			}
-			success( r.response);
-		}, error );
+		return getNotificationList(
+			events.unread, function ( r ) {
+				var t = r.getResponseHeader( 'Total' );
+				if ( t && !isNaN( t = parseInt( t ) ) ) {
+					paginator[events.unread].total = t;
+				}
+				success( r.response );
+			}, error
+		);
 	}
 
 	/**
@@ -990,13 +1008,15 @@ function plgnotify( sysconfig ) {
 	 * @returns {*}
 	 */
 	function getReadList( success, error ) {
-		return getNotificationList( events.read,  function(r){
-			var t=r.getResponseHeader('Total' );
-			if( t && !isNaN (t=parseInt(t )) ){
-				paginator[events.read].total = t;
-			}
-			success( r.response);
-		}, error );
+		return getNotificationList(
+			events.read, function ( r ) {
+				var t = r.getResponseHeader( 'Total' );
+				if ( t && !isNaN( t = parseInt( t ) ) ) {
+					paginator[events.read].total = t;
+				}
+				success( r.response );
+			}, error
+		);
 	}
 
 	/**
@@ -1012,7 +1032,7 @@ function plgnotify( sysconfig ) {
 		http.get(
 			api[type](),
 			{
-				header :getPaginationHeader(type),
+				header :getPaginationHeader( type ),
 				success:success,
 				error  :error
 			}
@@ -1174,6 +1194,10 @@ function plgnotify( sysconfig ) {
 			y = ((y + dom.clientHeight) >= innerHeight) ? (innerHeight - dom.clientHeight - layout.paddingY) : y;
 			y = (y < 0) ? 0 : y;
 
+			//if(isSafari()){
+			//	y = innerHeight - y ;
+			//}
+
 			dom.style.top = y + layout.posUnit;
 			//dom.style.top = (y/innerHeight*100|0) + "%";// percentual
 			if ( dom === layout.domplugin ) {
@@ -1325,10 +1349,10 @@ function plgnotify( sysconfig ) {
 		// Configura valores padrões da animação.
 		y     = y ? y : 50;
 		delay = delay ? delay : 0.15;
-		time  = time ? time : 2;
+		time  = time ? time : 10;
 
 		html.getElementsByClassName( 'plgsnackbar-center' )[0].onclick = function ( e ) {
-			postRead( e.currentTarget.id  );
+			postRead( e.currentTarget.id );
 			openNotification( e, e.currentTarget.id );
 			hide();
 		};
@@ -1453,16 +1477,18 @@ function plgnotify( sysconfig ) {
 
 		showSnackbar(
 			{
-				'id':res.Id,
+				'id'    :res.Id,
 				'header':res.Title,
-				'body':res.Message
+				'body'  :res.Message
 			}
 		);
-		getUnreadList(function(data){
+		getUnreadList(
+			function ( data ) {
 
-			var lista = JSON.parse( data ).length;
-			counterIncrement( lista );
-		});
+				var lista = JSON.parse( data ).length;
+				counterIncrement( lista );
+			}
+		);
 
 	}
 
@@ -1712,7 +1738,7 @@ function plgnotify( sysconfig ) {
 	 * Valida se plugin está na tela, senão cria e insere.
 	 */
 	function hasPlugin() {
-		var linksTabs, domdisturb, domdisturbcancel,pagread,pagunread;
+		var linksTabs, domdisturb, domdisturbcancel, pagread, pagunread;
 		var style, css, html, dom;
 
 		//TODO: possibilitar uso parcial de conteúdo( só insere o css, ou html ).
@@ -1796,16 +1822,16 @@ function plgnotify( sysconfig ) {
 					   '<div class="plgloader fix24 hide"></div>' +
 					   '</li>';
 
-		pagread=layout['domPag'+events.read] = addContentHTML( 'div', loadMore, true ).childNodes[0];
-		pagunread=layout['domPag'+events.unread ] = addContentHTML( 'div', loadMore, true ).childNodes[0];
+		pagread = layout['domPag' + events.read] = addContentHTML( 'div', loadMore, true ).childNodes[0];
+		pagunread = layout['domPag' + events.unread] = addContentHTML( 'div', loadMore, true ).childNodes[0];
 
 		//_body.appendChild( layout['domPag'+events.unread] );
 		//_body.appendChild( layout['domPag'+events.read] );
 
-		pagread.toogle = tooglePagination.bind( pagread );
+		pagread.toogle   = tooglePagination.bind( pagread );
 		pagunread.toogle = tooglePagination.bind( pagunread );
 
-		pagread.onclick = paginationClick.bind( pagread, events.read );
+		pagread.onclick   = paginationClick.bind( pagread, events.read );
 		pagunread.onclick = paginationClick.bind( pagunread, events.unread );
 
 	}
@@ -1938,11 +1964,11 @@ function plgnotify( sysconfig ) {
 			console.warn( 'client de socket não detectado' );
 			return;
 		}
-		if ( websocket || socket&&socket.hasListeners ) {
+		if ( websocket || socket && socket.hasListeners ) {
 			return console.warn( 'ws já instânciado.' );
 		}
 
-		if ( !socket || socket && socket. hasHubs ) {
+		if ( !socket || socket && socket.hasHubs ) {
 			socket = _config.ws;
 
 			if ( !socket.hasHubs ) {
@@ -1964,7 +1990,7 @@ function plgnotify( sysconfig ) {
 			socket.connection.client.receiveNotification = (onSocketMessage);
 
 			try {
-				$.connection.hub.start({ transport: ['webSockets', 'longPolling'] })
+				$.connection.hub.start( { transport:['webSockets', 'longPolling'] } )
 				 .fail( resetSocketListeners );
 			}
 			catch ( e ) {
