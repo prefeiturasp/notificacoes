@@ -1061,8 +1061,11 @@ function plgnotify( sysconfig ) {
 		listOpened                  = true;
 
 		layout.domlist.classList.remove( 'hide' );
+		var lista= document.querySelector( '.plgtab .visited' );
 
-		showList( document.querySelector( '.plgtab .visited' ) );
+		if( !lista.classList.contains('plgtablink-setting')){
+			showList( lista );
+		}
 	}
 
 	/**
@@ -1330,12 +1333,6 @@ function plgnotify( sysconfig ) {
 			return true;
 		}
 
-		if(msg.body){
-			msg.body.length =128;
-		}
-		if(msg.header){
-			msg.header.length =128;
-		}
 		// Cria html do snackbar
 		html = '<div class="unselectable plgsnackbar">' +
 			   '<div class="plgsnackbar-center" id="' + (msg && msg.id || "") + '" title="Ler mensagem">' +
@@ -2020,7 +2017,7 @@ function plgnotify( sysconfig ) {
 		getUnreadList(
 			function ( data ) {
 				var welcome, msg, lista = JSON.parse( data ).length;
-				welcome                 = localStorage.getItem( 'welcome' );
+				welcome                 = localStorage.getItem( _config.userId );
 
 				if ( lista ) {
 					counterIncrement( lista );
@@ -2042,7 +2039,7 @@ function plgnotify( sysconfig ) {
 
 				if ( !welcome ) {
 					showSnackbar( msg, 0, 3 );
-					localStorage.setItem( 'welcome', (new Date()).toLocaleDateString( 'pt-br' ) );
+					localStorage.setItem(  _config.userId, (new Date()).toLocaleDateString( 'pt-br' ) );
 				}
 
 			}
