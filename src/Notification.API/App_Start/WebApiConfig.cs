@@ -55,7 +55,7 @@ namespace Notification.API
             }                       
             
             //config.EnableCors(new EnableCorsAttribute("http://localhost:5000, http://localhost:5003, http://localhost:5010, http://localhost:5020", "accept, authorization", "GET", "WWW-Authenticate"));
-            config.EnableCors(new EnableCorsAttribute(str.ToString() + urlIdentityServer, "accept, authorization, groupSid, Content-Type, page, size", "GET, POST", "WWW-Authenticate"));
+            config.EnableCors(new EnableCorsAttribute(str.ToString() + urlIdentityServer, "accept, authorization, groupSid, Content-Type, page, size", "GET, POST", "WWW-Authenticate, total"));
 
             //config.Routes.MapHttpRoute(
             //    name: "DefaultApi",

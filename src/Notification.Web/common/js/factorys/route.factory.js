@@ -22,7 +22,8 @@
                         if(!$util.getUser()) {
                             $util.getUserToken(function(user){
                                 if(!user) {
-                                    $location.path("/");
+                                    var mgr = $util.getMgr();
+                                    mgr.signinRedirect();
                                 }else{
                                     window.sessionStorage.redirect = true;
                                 }
@@ -39,16 +40,19 @@
                         auth: ['$util', '$location', '$window', function ($util, $location) {
                             window.sessionStorage.redirect = false;
                             window.sessionStorage.loginRedirect = false;
+                            var mgr = null;
                             if(!$util.getUser()) {
                                 $util.getUserToken(function (user) {
                                     if (user) {
                                         $location.path("register");
                                     }else{
-                                        window.sessionStorage.loginRedirect = true;
+                                        mgr = $util.getMgr();
+                                        mgr.signinRedirect();
                                     }
                                 });
                             }else{
-                                window.sessionStorage.loginRedirect = true
+                                mgr = $util.getMgr();
+                                mgr.signinRedirect();
                             }
                         }]//auth
                     }//resolve

@@ -99,12 +99,16 @@ namespace Notification.API.Areas.v1
         {
             try
             {
+                long total = 0;
                 var result = 
                     read ?
-                    NotificationBusiness.GetReadByUserId(userId, filterActionPaginate.Page, filterActionPaginate.Size) :
-                    NotificationBusiness.GetNotReadByUserId(userId, filterActionPaginate.Page, filterActionPaginate.Size);
+                    NotificationBusiness.GetReadByUserId(userId, filterActionPaginate.Page, filterActionPaginate.Size, out total) :
+                    NotificationBusiness.GetNotReadByUserId(userId, filterActionPaginate.Page, filterActionPaginate.Size, out total);
 
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                var response = Request.CreateResponse(HttpStatusCode.OK, result);
+                response.Headers.Add("Total", total.ToString());
+
+                return response;
             }
             catch (Exception exc)
             {
