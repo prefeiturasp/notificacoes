@@ -54,7 +54,7 @@ namespace Notification.Repository
             return result;
         }
 
-        public IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId, int page, int size)
+        public IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId, int page, int size, out long total)
         {
             var builder = Builders<Notification.Entity.Database.Notification>.Filter;
             var filter = builder.Lte(n => n.DateStartNotification, DateTime.Now.Date) &
@@ -65,6 +65,10 @@ namespace Notification.Repository
                 .Descending(n => n.MessageType)
                 .Ascending(n => n.DateStartNotification);
 
+            total = Collection
+                .Find(filter)
+                .Count();
+            
             var result = Collection
                 .Find(filter)
                 .Project<Notification.Entity.API.NotificationPlugin>(project)
@@ -74,8 +78,8 @@ namespace Notification.Repository
 
             return result.ToList();
         }
-
-        public IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId, int page, int size)
+        
+        public IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId, int page, int size, out long total)
         {
             var builder = Builders<Notification.Entity.Database.Notification>.Filter;
             var filter = builder.Lte(n => n.DateStartNotification, DateTime.Now.Date) &
@@ -85,6 +89,10 @@ namespace Notification.Repository
             var sort = Builders<Notification.Entity.Database.Notification>.Sort
                 .Descending(n => n.MessageType)
                 .Ascending(n => n.DateStartNotification);
+
+            total = Collection
+                .Find(filter)
+                .Count();
 
             var result = Collection
                 .Find(filter)
