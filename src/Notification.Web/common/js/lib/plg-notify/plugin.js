@@ -117,7 +117,7 @@ function plgnotify( sysconfig ) {
 		return {
 			'groupSid'     :_config.header.groupSid,
 			'Authorization':_config.header.Authorization,
-			'Content-Type' :_config.header['Content-type'],
+			'Content-Type' :_config.header['Content-Type'],
 			'Page'         :paginator[type].page,
 			'Size'         :paginator[type].size
 		}
