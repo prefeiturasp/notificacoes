@@ -31,7 +31,7 @@ namespace Notification.Repository.CoreSSO
                     WHERE S.sis_situacao = 1
                     ORDER BY s.sis_nome",
                      new { userId = userId,
-                        pastaLogo = temaCoreSSO+"/images/logos/" });
+                        pastaLogo = temaCoreSSO+"/App_Themes/images/logos/" });
                 return query;
             }
         }
