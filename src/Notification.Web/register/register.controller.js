@@ -25,6 +25,7 @@
         $scope.blockSite = true;
         var body = $('body')[0], redactor;
         $scope.VisionSystem = window.sessionStorage.visionSelected ? JSON.parse(atob($window.sessionStorage.visionSelected)) :  [];
+        $scope.listVisionSystem =  window.sessionStorage.listVision ?  JSON.parse(atob($window.sessionStorage.listVision)) : [];
 
         /**
          * Contructor
@@ -45,7 +46,6 @@
 
             $scope.typeUser = null;
             $scope.YearSelected = null;
-            $scope.listVisionSystem = [];
             $scope.listCalendar = [];
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
 
@@ -423,7 +423,8 @@
 
             HttpServices.getListVisionSystem(function(data){
                 $scope.listVisionSystem = data;
-                if( data != null) {
+                if( data != null && data.length > 0) {
+                    $window.sessionStorage.listVision = btoa(JSON.stringify(data));
                     if (data.length > 1) {
                         $scope.showTypeFilter.typeVision = true;
                         openModal();
@@ -434,10 +435,7 @@
                     $scope.load = false;
                     startSite();
                 }else{
-                    window.sessionStorage.clear();
-                    var mgr = $util.getMgr();
-                    mgr.signoutRedirect();
-                    $util.setLogout();
+                    $scope.load = false;
                 }
             });
         }
@@ -752,12 +750,14 @@
             $scope.change.checkedSchool = true;
 
             $scope.TeacherRecipient.SchoolClassification = [];
-            $scope.TeacherRecipient.SchoolClassification = [];
-            $scope.TeacherRecipientClone.School = [];
+            $scope.TeacherRecipientClone.SchoolClassification = [];
+
+            $scope.TeacherRecipient.School = [];
             $scope.TeacherRecipientClone.School = [];
 
             $scope.ContributorRecipient.SchoolClassification = [];
             $scope.ContributorRecipientClone.SchoolClassification = [];
+
             $scope.ContributorRecipient.School = [];
             $scope.ContributorRecipientClone.School = [];
 

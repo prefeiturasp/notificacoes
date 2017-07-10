@@ -85,7 +85,6 @@
     <Content Include="node_modules\angular\index.js" />
     <Content Include="packages.config" />
     <Content Include="common\css\style.scss" />
-    <Content Include="common\font\fontawesome-webfont.woff2" />
     <Content Include="node_modules\angular-resource\angular-resource.min.js.map" />
     <Content Include="node_modules\angular-resource\bower.json" />
     <Content Include="node_modules\angular-resource\LICENSE.md" />
@@ -129,7 +128,6 @@
     <Content Include="common\css\style.css" />
     <Content Include="common\img\pattern.png" />
     <Content Include="common\js\directives\directive.js" />
-    <Content Include="common\js\directives\login.directive.js" />
     <Content Include="common\js\directives\menu.directive.js" />
     <Content Include="common\js\factorys\factory.js" />
     <Content Include="common\js\factorys\route.factory.js" />
@@ -146,11 +144,9 @@
     <Content Include="common\js\services\notification.js" />
     <Content Include="common\js\services\services.js" />
     <Content Include="common\js\services\utils.js" />
-    <Content Include="common\view\login.directive.html" />
     <Content Include="common\view\menu.directive.html" />
     <Content Include="config.js" />
     <Content Include="index.html" />
-    <Content Include="login\login.html" />
     <Content Include="register\register.controller.js" />
     <Content Include="register\register.view.html" />
     <Content Include="Web.config" />
