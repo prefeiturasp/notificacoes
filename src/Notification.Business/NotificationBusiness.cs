@@ -14,11 +14,18 @@ namespace Notification.Business
 {
     public class NotificationBusiness
     {
-        private static Guid Save(Notification.Entity.API.Notification entity, IEnumerable<Guid> users)
+        /// <summary>
+        /// Salva notificação nos repositórios de dados apropriados, e envia as notificações.
+        /// </summary>
+        /// <param name="entity">Objeto notificação</param>
+        /// <param name="users">Lista de destinatários</param>
+        /// <param name="senderId">(opcional) ID usuário logado no sistema</param>
+        /// <returns></returns>
+        private static Guid Save(Notification.Entity.API.Notification entity, IEnumerable<Guid> users, Guid? senderId=null)
         {
             var entityNotification = new Notification.Entity.Database.Notification()
             {
-                SenderId = Guid.Empty,
+                SenderId = senderId!=null ? senderId.Value : Guid.Empty ,
                 SenderName = entity.SenderName,
                 DateStartNotification = entity.DateStartNotification.Date,
                 DateEndNotification = entity.DateEndNotification,
@@ -116,7 +123,7 @@ namespace Notification.Business
             {
                 ltUser = ltUser.Distinct().ToList();
                                 
-                return Save(entity, ltUser);
+                return Save(entity, ltUser, userId);
             }
             else
                 throw new NotificationWithoutRecipientException();
@@ -126,6 +133,7 @@ namespace Notification.Business
         /// Envia a notificação para a lista de usuários informada
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="senderId">(Opcional): ID usuário logado</param>
         /// <returns></returns>
         public static Guid Save(Notification.Entity.API.Notification entity)
         {
