@@ -12,7 +12,7 @@
 
     function Provider($routeProvider ) {
         $routeProvider
-            .when('/register', {
+            .when('/', {
                 templateUrl: 'register/register.view.html',
                 controller:'RegisterController',
                 resolve: {
@@ -22,7 +22,8 @@
                         if(!$util.getUser()) {
                             $util.getUserToken(function(user){
                                 if(!user) {
-                                    $location.path("/");
+                                    var mgr = $util.getMgr();
+                                    mgr.signinRedirect();
                                 }else{
                                     window.sessionStorage.redirect = true;
                                 }
@@ -32,26 +33,6 @@
                         }
                     }]//auth
                 }//resolve
-            })
-            .when('/', {
-                    templateUrl: 'login/login.html',
-                    resolve: {
-                        auth: ['$util', '$location', '$window', function ($util, $location) {
-                            window.sessionStorage.redirect = false;
-                            window.sessionStorage.loginRedirect = false;
-                            if(!$util.getUser()) {
-                                $util.getUserToken(function (user) {
-                                    if (user) {
-                                        $location.path("register");
-                                    }else{
-                                        window.sessionStorage.loginRedirect = true;
-                                    }
-                                });
-                            }else{
-                                window.sessionStorage.loginRedirect = true
-                            }
-                        }]//auth
-                    }//resolve
             })
             .otherwise({ redirectTo: '/'});
     }

@@ -42,7 +42,14 @@ namespace Notification.Business.Signal
                     LogBusiness.Warn(string.Format("[SignalRClientBusiness] SendNotification - Notificação não encontrada ({0})", notificationId));
                     return;
                 }
-
+                
+                if ((notif.DateStartNotification > DateTime.Now.Date)
+                    || (notif.DateEndNotification != null && DateTime.Now.Date > notif.DateEndNotification))
+                {
+                    LogBusiness.Info(string.Format("[SignalRClientBusiness] SendNotification - Notificação fora do período programado ({0})", notificationId));
+                    return;
+                }
+                
                 var notifP = new Notification.Entity.SignalR.Notification()
                 {
                     Id = notif.Id,

@@ -1,7 +1,7 @@
     <div class="loading" ng-if="load"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></div>
     <menu ng-show="redirect"></menu>
 
-    <section class="body-content"  ng-if="VisionSystem.VisionId == 4">
+    <section class="body-content"  ng-if="VisionSystem.VisionId == 4 && listVisionSystem.length == 0">
         <div class="headerCustom">
             <div class="max-width-menor">
                 <h4><i class="fa fa-bell-o" aria-hidden="true"></i> CADASTRO DE NOTIFICAÇÃO<span> <strong>Usuários do tipo individual não tem permissão para acessar o sistema de notificação!</strong></span></h4>
@@ -9,7 +9,7 @@
         </div>
     </section>
 
-    <section class="body-content" ng-show="redirect" ng-if="VisionSystem.VisionId != 4">
+    <section class="body-content" ng-show="redirect" ng-if="VisionSystem.VisionId != 4 && listVisionSystem.length != 0">
         <alert></alert>
 
         <div class="headerCustom">
@@ -451,7 +451,7 @@
         </form>
     </section>
 
-    <footer class="footer" ng-show="redirect" ng-if="VisionSystem.VisionId != 4">
+    <footer class="footer" ng-show="redirect" ng-if="VisionSystem.VisionId != 4 && listVisionSystem.length != 0">
         <div class="max-width">
             <p>Sistema para cadastro de notificação<span>Todos os direitos reservados.</span></p>
         </div>

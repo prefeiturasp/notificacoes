@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$util', 'HttpServices', '$timeout'];
+    Menu.$inject = ['$util', 'HttpServices', '$timeout', '$location'];
 
     function Menu() {
         var directive = {
@@ -19,7 +19,7 @@
             transclude: false
         };
 
-        function MenuController($scope, $util, HttpServices, $timeout) {
+        function MenuController($scope, $util, HttpServices, $timeout, $location) {
 
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
@@ -28,16 +28,19 @@
 
             $scope.openMenuSytem = function __openMenuSytem() {
 
-                if($scope.listMenuSystem.length == 0 && !$scope.showListMenu && !$scope.getListMenu) {
-                    var vision = JSON.parse(atob(window.sessionStorage.visionSelected));
+                if(window.sessionStorage.visionSelected) {
 
-                    HttpServices.getListSystem(vision.Id, function (data) {
-                        $scope.listMenuSystem = data;
+                    if ($scope.listMenuSystem.length == 0 && !$scope.showListMenu && !$scope.getListMenu) {
+                        var vision = JSON.parse(atob(window.sessionStorage.visionSelected));
+
+                        HttpServices.getListSystem(vision.Id, function (data) {
+                            $scope.listMenuSystem = data;
+                            $scope.showListMenu = !$scope.showListMenu;
+                            $scope.getListMenu = true;
+                        });
+                    } else if ($scope.getListMenu) {
                         $scope.showListMenu = !$scope.showListMenu;
-                        $scope.getListMenu = true;
-                    });
-                }else if($scope.getListMenu){
-                    $scope.showListMenu = !$scope.showListMenu;
+                    }
                 }
             };
 
