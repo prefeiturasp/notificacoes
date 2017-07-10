@@ -26,6 +26,7 @@ namespace Notification.Repository.CoreSSO
                             SYS_UsuarioGrupo AS UG WITH(NOLOCK) 
                         INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
                         WHERE UG.usg_situacao = 1AND G.gru_situacao = 1	AND UG.usu_id = @userId
+                            AND ug.usg_situacao <> 3 AND G.gru_situacao <> 3
 	                    GROUP BY G.sis_id) as T1
                     INNER JOIN SYS_SISTEMA AS S WITH(NOLOCK) ON S.sis_id = t1.sis_id
                     WHERE S.sis_situacao = 1
