@@ -30,8 +30,11 @@ namespace Notification.Repository.CoreSSO
                     INNER JOIN SYS_SISTEMA AS S WITH(NOLOCK) ON S.sis_id = t1.sis_id
                     WHERE S.sis_situacao = 1
                     ORDER BY s.sis_nome",
-                     new { userId = userId,
-                        pastaLogo = temaCoreSSO+"/App_Themes/images/logos/" });
+                     new
+                     {
+                         userId = userId,
+                         pastaLogo = "App_Themes/" + temaCoreSSO + "/images/logos/"
+                     });
                 return query;
             }
         }
