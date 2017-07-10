@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$util', 'HttpServices', '$timeout'];
+    Menu.$inject = ['$util', 'HttpServices', '$timeout', '$location'];
 
     function Menu() {
         var directive = {
@@ -19,7 +19,7 @@
             transclude: false
         };
 
-        function MenuController($scope, $util, HttpServices, $timeout) {
+        function MenuController($scope, $util, HttpServices, $timeout, $location) {
 
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
