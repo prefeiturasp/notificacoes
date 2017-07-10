@@ -11,12 +11,14 @@ namespace Notification.API.Areas
     public class SignalController : ApiController
     {
         [HttpGet]
-        [Route("api/v1/Signal/{id:guid}")]        
+        [Route("api/v1/Signal/{id:guid}")]
+        [Authorize]
         public HttpResponseMessage GetById(Guid id)
         {
             try
             {
-                var ltNotif = NotificationBusiness.GetNotReadByUserId(id, 0, 100);
+                long total = 0;
+                var ltNotif = NotificationBusiness.GetNotReadByUserId(id, 0, 100, out total);
                 var users = new List<Guid>();
                 users.Add(id);
 

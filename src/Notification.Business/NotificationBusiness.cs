@@ -158,16 +158,16 @@ namespace Notification.Business
             return repository.GetById(id);
         }
 
-        public static IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId, int page, int size)
+        public static IEnumerable<NotificationPlugin> GetNotReadByUserId(Guid userId, int page, int size, out long total)
         {
             var repository = new NotificationRepository();
-            return repository.GetNotReadByUserId(userId, page, size);
+            return repository.GetNotReadByUserId(userId, page, size, out total);
         }
 
-        public static IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId, int page, int size)
+        public static IEnumerable<NotificationPlugin> GetReadByUserId(Guid userId, int page, int size, out long total)
         {
             var repository = new NotificationRepository();
-            return repository.GetReadByUserId(userId, page, size);
+            return repository.GetReadByUserId(userId, page, size, out total);
         }
 
         public static void Action(Guid userId, NotificationAction entity)
