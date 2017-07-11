@@ -1013,7 +1013,7 @@ function plgnotify( sysconfig ) {
 					paginator[events.unread].total = t;
 					counterIncrement( t );
 				}
-				success( r.response );
+				success && success( r.response );
 			}, error
 		);
 	}
