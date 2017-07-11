@@ -175,7 +175,7 @@ function plgnotify( sysconfig ) {
 	 * Valida se ainda tem paginação
 	 */
 	function paginationValidate( t, l ) {
-		if ( !l.length || l.length <=paginator[t].size ) {
+		if ( !l.length || l.length < paginator[t].size ) {
 			paginator[t].total = 0;
 		}
 
