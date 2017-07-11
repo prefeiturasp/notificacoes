@@ -192,9 +192,6 @@ function plgnotify( sysconfig ) {
 
 		paginationNewContent( this, notificationHTML( type, lista ).join( ' ' ) );
 		paginationValidate( type, lista );
-		//if ( type === events.unread ) {
-		//	counterIncrement( counter + lista.length );
-		//}
 	}
 
 	/**
@@ -1336,7 +1333,6 @@ function plgnotify( sysconfig ) {
 		var uid, i, dom, html, open, hide, destroy, cancelHide, restoreHide;
 
 		if ( hideSnackbar ) {
-			counterIncrement(counter++);
 			console.info( 'Não perturbe está ativado, snackbar escondidas.' );
 			return;
 		}
@@ -1482,6 +1478,7 @@ function plgnotify( sysconfig ) {
 	function counterIncrement( num ) {
 
 		if ( counter < 0 ) {
+			layout.domcounter.innerHTML = counter;
 			return;
 		}
 		counter = num;
@@ -1517,14 +1514,7 @@ function plgnotify( sysconfig ) {
 				'body'  :res.Message
 			}
 		);
-		getUnreadList(
-			function ( data ) {
-
-				var lista = JSON.parse( data ).length;
-				counterIncrement( lista );
-			}
-		);
-
+		getUnreadList();
 	}
 
 	/**
