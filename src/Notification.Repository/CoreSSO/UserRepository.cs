@@ -89,7 +89,7 @@ namespace Notification.Repository.CoreSSO
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
 	                    WHERE 
 		                    UG.usg_situacao != 3 AND G.gru_situacao != 3 
-		                    AND UG.usu_id = @userId AND G.sis_id = @systemId
+		                    AND UG.usu_id = @usu_idLogado AND G.sis_id = @systemId
 	                    GROUP BY sis_id
                     ) AS T1
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id
