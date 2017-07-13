@@ -427,11 +427,11 @@
                 <div class="divisao">
                     <div>
                         <label>Data de envio da notificação</label>
-                        <input type="date" ng-model="filters.DateStartNotification" ng-change="checkDateSelected('DateStartNotification')">
+                        <input placeholder="dd-MM-yyyy" ui-date="dateOptions" type="text" ng-model="filters.DateStartNotification" ng-change="checkDateSelected('DateStartNotification')">
                     </div>
                     <div>
                         <label>Data de validade da notificação</label>
-                        <input type="date" ng-model="filters.DateEndNotification" ng-change="checkDateSelected('DateEndNotification')">
+                        <input placeholder="dd-MM-yyyy" ui-date="dateOptions" type="text" ng-model="filters.DateEndNotification" ng-change="checkDateSelected('DateEndNotification')">
                     </div>
                 </div>
             </div>
