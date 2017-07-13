@@ -128,5 +128,52 @@ namespace Notification.Repository.SGP
                 return query;
             }
         }
+
+
+        /// <summary>
+        /// MÉTODO EM CONSTRUÇÃO
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="ltSchoolSuperior"></param>
+        /// <returns></returns>
+        public IEnumerable<Guid> GetAUByPermission(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<Guid> lstSchool)
+        {
+            using (var context = new SqlConnection(stringConnection))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(@"select esc.uad_id--, esc.uad_idSuperiorGestao, esc.esc_nome
+		from Synonym_SYS_UsuarioGrupoUA as usg with(nolock)
+		inner join ESC_Escola as esc on usg.uad_id= esc.uad_idSuperiorGestao
+		where usg.usu_id= @usu_idLogado
+		and usg.gru_id= @gru_idLogado
+		and @vis_id=2
+		and (not exists(select 1 from @idsDRES) or (exists (select 1 from @idsDRES) and esc.uad_idSuperiorGestao in (select id from @idsDRES)))
+		and (not exists(select 1 from @idsUAS) or (exists (select 1 from @idsUAS) and esc.uad_id in (select id from @idsUAS)))
+	
+	union
+	
+	select usg.uad_id--, esc.uad_idSuperiorGestao, esc.esc_nome
+		from Synonym_SYS_UsuarioGrupoUA as usg with(nolock)
+		--inner join ESC_Escola as esc on usg.uad_id= esc.uad_id
+		where usg.usu_id= @usu_idLogado
+		and usg.gru_id= @gru_idLogado
+		and (not exists(select 1 from @idsUAS) or (exists (select 1 from @idsUAS) and usg.uad_id in (select id from @idsUAS))) ");
+
+                if (ltSchoolSuperior.Any())
+                    sb.Append(@" AND esc.uad_idSuperiorGestao in @idDre");
+
+                var query = context.Query<Guid>(
+                   sb.ToString(),
+                    new
+                    {
+                        usu_idLogado = userId,
+                        gru_idLogado = groupId,
+                        idDre = ltSchoolSuperior
+                    }
+                    );
+                return query;
+            }
+        }
     }
 }
