@@ -90,13 +90,17 @@ namespace Notification.API.Attributes
 
                 if (getUsuId.Any())
                     userId = new Guid(getUsuId.FirstOrDefault());
+                else
+                    userId = Guid.Empty;
                 
                 var getEntId = from c in principal.Identities.First().Claims
                                where c.Type == CLAIM_ENTITYID
                                select c.Value;//.FirstOrDefault();
 
                 if (getEntId.Any())
-                    entityId = new Guid(getEntId.FirstOrDefault());                
+                    entityId = new Guid(getEntId.FirstOrDefault());
+                else
+                    entityId = Guid.Empty;
             }
             else
             {
