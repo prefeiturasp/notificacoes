@@ -63,7 +63,16 @@ namespace Notification.Business.Signal
                 hubConnection.Headers.Add("Authorization", "Basic " + Base64Encode(UserCredentialSignalRServer, PasswordCredentialSignalRServer));
 
                 hubConnection.Start().Wait();
-                hub.Invoke("SendNotification", users, notifP);
+
+                int i = 0;
+                int total = users.Count();
+
+                while (i < total)
+                {
+                    hub.Invoke("SendNotification", users.Skip(i).Take(1000), notifP);
+                    i += 1000;
+                }
+
                 hubConnection.Stop();
             }
             catch (Exception exc)
