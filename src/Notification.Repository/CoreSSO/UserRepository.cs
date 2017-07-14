@@ -89,14 +89,14 @@ namespace Notification.Repository.CoreSSO
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
 	                    WHERE 
 		                    UG.usg_situacao != 3 AND G.gru_situacao != 3 
-		                    AND UG.usu_id = @userId AND G.sis_id = @systemId
+		                    AND UG.usu_id = @usu_idLogado AND G.sis_id = @systemId
 	                    GROUP BY sis_id
                     ) AS T1
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id
                     INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
                     INNER JOIN SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK) ON UGUA.gru_id = UG.gru_id AND UGUA.usu_id = UG.usu_id
                     WHERE 
-                        G.gru_id = @groupId
+                        G.gru_id = @gru_idLogado
                         AND
 
                         --busca usuários das UAD's que o usuário tenha permissão, sendo ou não passadas no parâmetro
@@ -115,7 +115,7 @@ namespace Notification.Repository.CoreSSO
 		                        (select id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))
 	                        )
                         )
-                       --AND UGUA.uad_id IN @ltAdministrativeUnit
+                       
                     GROUP BY ug.usu_id",
                      new { usu_idLogado = userId, systemId = systemId, gru_idLogado = groupId, idsUAD = ltAdministrativeUnit });
                 return query;
