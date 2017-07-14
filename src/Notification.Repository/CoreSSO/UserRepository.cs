@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Notification.Entity.Database.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.SGP;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -99,6 +100,8 @@ namespace Notification.Repository.CoreSSO
                         G.gru_id = @gru_idLogado
                         AND
 
+                        --/************** CORRIGIR  ********************///
+
                         --busca usuários das UAD's que o usuário tenha permissão, sendo ou não passadas no parâmetro
                         (
 	                        -- lista de UAD's vazia. Pega todas que o usuário logado tem permissão.
@@ -115,6 +118,8 @@ namespace Notification.Repository.CoreSSO
 		                        (select id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))
 	                        )
                         )
+                    
+                    --/***************************/
                        
                     GROUP BY ug.usu_id",
                      new { usu_idLogado = userId, systemId = systemId, gru_idLogado = groupId, idsUAD = ltAdministrativeUnit });
@@ -131,8 +136,12 @@ namespace Notification.Repository.CoreSSO
         /// <param name="ltGroup">Filtro: Lista de grupos de mesma visão ou abaixo do usuário logado</param>
         /// <param name="ltAdministrativeUnit">Filtro: Lista de unidades administrativas que o usuário logado possui permissão</param>
         /// <returns></returns>
-        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltAdministrativeUnitSuperior, IEnumerable<Guid> ltAdministrativeUnit)
+        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<Guid> ltSchoolUA)
         {
+
+            SchoolRepository school = new SchoolRepository();
+            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, null, ltSchoolUA);
+
             using (var context = new SqlConnection(stringConnection))
             {
                 StringBuilder sb = new StringBuilder();
@@ -165,25 +174,32 @@ namespace Notification.Repository.CoreSSO
                     sb.Append(@" AND g.gru_id in  @idsGrupo");
                 }
 
-                //verificar se o usuário possui permissão nas UAD's passadas por parâmetro
-                if (ltAdministrativeUnitSuperior.Any() || ltAdministrativeUnit.Any())
-                {
-                    //sb.Append(@" AND ugua.uad_id IN (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
-                    sb.Append(@" AND (
-	                    (g.vis_id=2 AND ugua.uad_id IN @idsDRE )
-                    OR
-	                    (g.vis_id=3 AND ugua.uad_id IN @idsUAD )
-                    )");
-                }
-                //Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
-                
-                sb.Append(@" AND ugua.uad_id IN (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
-                
+                ////verificar se o usuário possui permissão nas UAD's passadas por parâmetro
+                //if ((ltSchoolSuperior!=null && ltSchoolSuperior.Any()) || (ltSchoolUA!=null && ltSchoolUA.Any()))
+                //{
+                //    //sb.Append(@" AND ugua.uad_id IN (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
+                //    sb.Append(@" AND (
+	               //     (g.vis_id=2 AND ugua.uad_id IN @idsDRE )
+                //    OR
+	               //     (g.vis_id=3 AND ugua.uad_id IN @idsUAD )
+                //    )");
+                //}
 
+                //Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
+                sb.Append(@" AND ugua.uad_id IN @idsUADPermissao");
+
+                //(SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+                
                 var query = context.Query<User>(
                    sb.ToString()
                     ,
-                     new { usu_idLogado = userId, gru_idLogado= groupId, idsSistema = ltSystem, idsGrupo = ltGroup, idsDRE = ltAdministrativeUnitSuperior, idsUAD = ltAdministrativeUnit });
+                     new { usu_idLogado = userId
+                     , gru_idLogado= groupId
+                     , idsSistema = ltSystem
+                     , idsGrupo = ltGroup
+                     , idsUADPermissao = ltAUPermission
+                     , idsDRE = ltSchoolSuperior
+                     , idsUAD = ltSchoolUA });
                 return query;
             }
         }

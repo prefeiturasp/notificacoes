@@ -16,10 +16,14 @@ namespace Notification.Repository.SGP
         /// Retorna docentes baseados em filtros.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Teacher> Get(Guid userId, Guid groupId, string calendarName, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> listSchool, IEnumerable<int> listPosition, IEnumerable<int> listCourse, IEnumerable<int> listCoursePeriod, IEnumerable<int> listDiscipline, IEnumerable<int> listTeam )
+        public IEnumerable<Teacher> Get(Guid userId, Guid groupId, string calendarName, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> ltSchoolID, IEnumerable<int> listPosition, IEnumerable<int> listCourse, IEnumerable<int> listCoursePeriod, IEnumerable<int> listDiscipline, IEnumerable<int> listTeam )
         {
             using (var context = new SqlConnection(stringConnection))
             {
+
+                SchoolRepository school = new SchoolRepository();
+                IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
+
                 StringBuilder sb = new StringBuilder();
                 sb.Append(
                     @"SELECT
@@ -72,33 +76,34 @@ namespace Notification.Repository.SGP
 		                    AND cal.cal_situacao<>3
                     WHERE
 	                    tur.tur_situacao <> 3
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+	                    AND uad.uad_id IN @idsUADPermissao");
+                //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (!String.IsNullOrEmpty(calendarName))
                     sb.Append(" AND cal.cal_ano = @calendarioNome");
 
-                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
                     sb.Append(" AND uadSuperior.uad_id IN @idsDRES");
 
                 if (listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
                     sb.Append(" AND tce.tce_id IN @idsTipoClassificacaoEscola");
 
-                if (listSchool != null && listSchool.Any())
+                if (ltSchoolID != null && ltSchoolID.Any())
                     sb.Append(" AND esc.esc_id IN @idsEscola");
 
                 if (listPosition != null && listPosition.Any())
                     sb.Append(" AND crg.crg_id IN @idsCargo");
 
-                if (listPosition != null && listPosition.Any())
+                if (listCourse != null && listCourse.Any())
                     sb.Append(" AND tcr.cur_id IN @idsCurso");
 
-                if (listPosition != null && listPosition.Any())
+                if (listCoursePeriod != null && listCoursePeriod.Any())
                     sb.Append(" AND tcr.crp_id IN @idsPeriodo");
 
-                if (listPosition != null && listPosition.Any())
+                if (listDiscipline != null && listDiscipline.Any())
                     sb.Append(" AND dis.tds_id IN @idsDisciplina");
 
-                if (listPosition != null && listPosition.Any())
+                if (listTeam != null && listTeam.Any())
                     sb.Append(" AND tur.tur_id IN @idsTurma");
 
 
@@ -110,9 +115,10 @@ namespace Notification.Repository.SGP
                          calendarioNome = calendarName
                         , usu_idLogado = userId
                         , gru_idLogado = groupId
-                        , idsDRES = listSchoolSuperior
+                        , idsDRES = ltSchoolSuperior
                         , idsTipoClassificacaoEscola = listClassificationTypeSchool
-                        , idsEscola = listSchool
+                        , idsUADPermissao = ltAUPermission
+                        , idsEscola = ltSchoolID
                         , idsCargo = listPosition
                         , idsCurso = listCourse
                         , idsPeriodo = listCoursePeriod

@@ -66,7 +66,7 @@ namespace Notification.Business
             var groupUser = groupRep.GetById(groupId);
             var ltUser = new List<Guid>();
 
-            if (entity.Recipient.SystemRecipient != null)
+            if (entity.Recipient.SystemRecipient != null && entity.Recipient.SystemRecipient.Any())
             {
                 foreach (var item in entity.Recipient.SystemRecipient)
                 {
@@ -76,7 +76,7 @@ namespace Notification.Business
                         //se não passar Escola, buscar todas as escolas das DRE's selecionadas, e/ou todas que o usuário logado tenha permissão (mesmo se a listagem vier nula)
                         if (! item.AdministrativeUnit.Any())
                         {
-                            item.AdministrativeUnit = SchoolBusiness.GetAUBySuperior(userId, groupId, item.AdministrativeUnitSuperior);
+                            item.AdministrativeUnit = SchoolBusiness.GetAUByPermission(userId, groupId, item.AdministrativeUnitSuperior);
                         }
                         ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
                     }
@@ -107,7 +107,7 @@ namespace Notification.Business
             {
                 foreach (var item in entity.Recipient.ContributorRecipient)
                 {
-                    ltUser.AddRange(ContributorBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
+                    ltUser.AddRange(ContributorBusiness.Get(userId, groupId, item.Calendar.Name, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
                 }
             }
 
@@ -115,7 +115,7 @@ namespace Notification.Business
             {
                 foreach (var item in entity.Recipient.TeacherRecipient)
                 {
-                    ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
+                    ltUser.AddRange(TeacherBusiness.Get(userId, groupId, item.Calendar.Name, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
                 }
             }
 
