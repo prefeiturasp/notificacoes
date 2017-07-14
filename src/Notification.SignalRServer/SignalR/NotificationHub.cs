@@ -29,7 +29,7 @@ namespace Notification.SignalRServer.SignalR
 
                 if (userId != null)
                 {
-                    LogBusiness.Debug(string.Format("[NotificationHub] Grupo ({0})  criado (connectionId: {0})", userId));
+                    LogBusiness.Debug(string.Format("[NotificationHub] Grupo ({0})  criado (connectionId: {1})", userId, Context.ConnectionId));
                     Groups.Add(Context.ConnectionId, userId);
                 }
 
@@ -71,7 +71,7 @@ namespace Notification.SignalRServer.SignalR
 
                 if (userId != null)
                 {
-                    LogBusiness.Debug(string.Format("[NotificationHub] Grupo ({0})  removido (connectionId: {0})", userId));
+                    LogBusiness.Debug(string.Format("[NotificationHub] Grupo ({0})  removido (connectionId: {1})", userId, Context.ConnectionId));
                     Groups.Remove(Context.ConnectionId, userId.ToString());
                 }
 
@@ -102,11 +102,11 @@ namespace Notification.SignalRServer.SignalR
                     return;
                 }
 
-                Parallel.ForEach(users, user =>
+                foreach (var user in users)
                 {
                     LogBusiness.Debug(string.Format("[NotificationHub] SendNotification  - Notificação ({0}) enviada para o usuário ({1})", notification.Id, user));
                     Clients.Group(user.ToString()).ReceiveNotification(notification);
-                });
+                }
             }
             catch (Exception exc)
             {
