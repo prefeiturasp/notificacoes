@@ -69,7 +69,9 @@ namespace Notification.Business.Signal
 
                 while (i < total)
                 {
-                    hub.Invoke("SendNotification", users.Skip(i).Take(1000), notifP);
+                    var ltU = users.Skip(i).Take(1000).ToList();
+                    LogBusiness.Debug(string.Format("[SignalRClientBusiness] SendNotification - Enviando... ({0}-{1})", i, ltU.Count));
+                    hub.Invoke("SendNotification", ltU, notifP).Wait();
                     i += 1000;
                 }
 
