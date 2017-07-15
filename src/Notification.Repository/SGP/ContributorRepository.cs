@@ -16,10 +16,13 @@ namespace Notification.Repository.SGP
         /// Retorna docentes baseados em filtros.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Contributor> Get(Guid userId, Guid groupId, string calendarName, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> listSchool, IEnumerable<int> listPosition)
+        public IEnumerable<Contributor> Get(Guid userId, Guid groupId, string calendarName, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> ltSchoolID, IEnumerable<int> listPosition)
         {
             using (var context = new SqlConnection(stringConnection))
             {
+                SchoolRepository school = new SchoolRepository();
+                IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
+
                 StringBuilder sb = new StringBuilder();
                 sb.Append(
                     @"SELECT
@@ -67,18 +70,19 @@ namespace Notification.Repository.SGP
                             ON pes.pes_id= usu.pes_id
                     WHERE
                     col.col_situacao <> 3
-                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+                    AND uad.uad_id IN @idsUADPermissao");
+                //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (!String.IsNullOrEmpty(calendarName))
                     sb.Append(" AND cal.cal_ano = @calendarioNome");
 
-                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
                     sb.Append(" AND uadSuperior.uad_id IN @idsDRES");
 
                 if (listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
                     sb.Append(" AND tce.tce_id IN @idsTipoClassificacaoEscola");
 
-                if (listSchool != null && listSchool.Any())
+                if (ltSchoolID != null && ltSchoolID.Any())
                     sb.Append(" AND esc.esc_id IN @idsEscola");
 
                 if (listPosition != null && listPosition.Any())
@@ -127,18 +131,19 @@ namespace Notification.Repository.SGP
                     WHERE
                         col.col_situacao <> 3
 
-                        AND esc.uad_id IN  (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+                        AND esc.uad_id IN @idsUADPermissao");
+                //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (!String.IsNullOrEmpty(calendarName))
                     sb.Append(" AND cal.cal_ano = @calendarioNome");
 
-                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
                     sb.Append(" AND uadSuperior.uad_id IN @idsDRES");
 
                 if (listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
                     sb.Append(" AND tce.tce_id IN @idsTipoClassificacaoEscola");
 
-                if (listSchool != null && listSchool.Any())
+                if (ltSchoolID != null && ltSchoolID.Any())
                     sb.Append(" AND esc.esc_id IN @idsEscola");
 
                 if (listPosition != null && listPosition.Any())
@@ -151,9 +156,10 @@ namespace Notification.Repository.SGP
                          calendarioNome = calendarName
                         , usu_idLogado = userId
                         , gru_idLogado = groupId
-                        , idsDRES = listSchoolSuperior
+                        , idsDRES = ltSchoolSuperior
+                        , idsUADPermissao = ltAUPermission
                         , idsTipoClassificacaoEscola = listClassificationTypeSchool
-                        , idsEscola = listSchool
+                        , idsEscola = ltSchoolID
                         , idsCargo = listPosition
                      }
                      );

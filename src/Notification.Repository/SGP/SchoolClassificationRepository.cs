@@ -12,10 +12,14 @@ namespace Notification.Repository.SGP
 {
     public class SchoolClassificationRepository : SGPRepository
     {
-        public IEnumerable<SchoolClassification> Get(Guid userId, Guid groupId, IEnumerable<Guid> listSchoolSuperior)
+        public IEnumerable<SchoolClassification> Get(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior)
         {
             using (var context = new SqlConnection(stringConnection))
             {
+                SchoolRepository school = new SchoolRepository();
+                IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior);
+
+
                 StringBuilder sb = new StringBuilder();
                 sb.Append(@"SELECT 
                         DISTINCT
@@ -38,9 +42,10 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_situacao <> 3 
                     WHERE
 	                    esc.esc_situacao <> 3 
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+	                    AND uad.uad_id IN @idsUADPermissao");
+                //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
-                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
                     sb.Append(" AND uadSuperior.uad_id in @idsDRE");
 
                 sb.Append(" ORDER BY tce.tce_nome");
@@ -49,9 +54,10 @@ namespace Notification.Repository.SGP
                     sb.ToString(),
                     new
                     {
-                        usu_idLogado = userId,
-                        gru_idLogado = groupId,
-                        idsDRE = listSchoolSuperior
+                        usu_idLogado = userId
+                        , gru_idLogado = groupId
+                        , idsUADPermissao = ltAUPermission
+                        , idsDRE = ltSchoolSuperior
                     });
                 return query;
             }

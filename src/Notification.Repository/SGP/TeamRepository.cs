@@ -16,13 +16,17 @@ namespace Notification.Repository.SGP
             Guid userId,
             Guid groupId,
             string calendarYear, 
-            IEnumerable<Guid> schoolSuperiorId, 
+            IEnumerable<Guid> ltSchoolSuperior, 
             IEnumerable<int> schoolClassificationId, 
-            IEnumerable<int> schoolId, 
+            IEnumerable<int> ltSchoolID, 
             IEnumerable<int> courseId, 
             IEnumerable<string> coursePeriodId, 
             IEnumerable<int> disciplineId)
         {
+
+            SchoolRepository school = new SchoolRepository();
+            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID );
+
             var ltCoursePeriod = coursePeriodId.Select(c => new { curId = c.Split('|')[0], crrId = c.Split('|')[1], crpId = c.Split('|')[2] });
 
             StringBuilder sb = new StringBuilder();
@@ -53,15 +57,16 @@ namespace Notification.Repository.SGP
             }
 
             sb.Append(@" WHERE tur.tur_situacao <> 3 AND cal.cal_ano = @calendarYear
-                AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@userId, @groupId))");
+                AND uad.uad_id IN @idsUADPermissao");
+            //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@userId, @groupId))");
 
-            if (schoolSuperiorId != null && schoolSuperiorId.Any())
+            if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
                 sb.Append(" AND uadSuperior.uad_id IN @schoolSuperiorId");
 
             if (schoolClassificationId != null && schoolClassificationId.Any())
                 sb.Append(" AND tce.tce_id IN @schoolClassificationId");
 
-            if (schoolId != null && schoolId.Any())
+            if (ltSchoolID != null && ltSchoolID.Any())
                 sb.Append(" AND esc.esc_id IN @schoolId");
 
             if (courseId != null && courseId.Any())
@@ -78,9 +83,10 @@ namespace Notification.Repository.SGP
                          userId = userId,
                          groupId = groupId,
                          calendarYear = calendarYear,
-                         schoolSuperiorId = schoolSuperiorId,
+                         idsUADPermissao = ltAUPermission,
+                         schoolSuperiorId = ltSchoolSuperior,
                          schoolClassificationId = schoolClassificationId,
-                         schoolId = schoolId,
+                         schoolId = ltSchoolID,
                          courseId = courseId,
                          crp_id = coursePeriodId,
                          disciplineId = disciplineId
