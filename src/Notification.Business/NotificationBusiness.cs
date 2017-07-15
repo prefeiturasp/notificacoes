@@ -103,7 +103,7 @@ namespace Notification.Business
                 }
             }
 
-            if (entity.Recipient.ContributorRecipient != null)
+            if (entity.Recipient.ContributorRecipient != null && entity.Recipient.ContributorRecipient.Any())
             {
                 foreach (var item in entity.Recipient.ContributorRecipient)
                 {
@@ -111,7 +111,7 @@ namespace Notification.Business
                 }
             }
 
-            if (entity.Recipient.TeacherRecipient != null)
+            if (entity.Recipient.TeacherRecipient != null && entity.Recipient.TeacherRecipient.Any())
             {
                 foreach (var item in entity.Recipient.TeacherRecipient)
                 {
@@ -119,7 +119,7 @@ namespace Notification.Business
                 }
             }
 
-            if (ltUser.Any())
+            if (ltUser!=null && ltUser.Any())
             {
                 ltUser = ltUser.Distinct().ToList();
                                 
