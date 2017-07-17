@@ -33,7 +33,7 @@ namespace Notification.Repository.SGP
 
                         WHERE
 
-                            UG.usg_situacao != 3 AND G.gru_situacao != 3
+                            UG.usg_situacao <> 3 AND G.gru_situacao <> 3
 
                             AND UG.usu_id = @usu_idLogado AND G.sis_id = @systemId
 
