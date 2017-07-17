@@ -106,12 +106,11 @@ namespace Notification.Repository.CoreSSO
                     WHERE 
                         g.gru_situacao <> 3
                         and ug.usg_situacao <> 3
-                         and esc.esc_situacao <> 3");
+                        and esc.esc_situacao <> 3");
 
                 if (ltGroup != null && ltGroup.Any())
-                {
                     sb.Append(" AND G.gru_id IN @idsGrupo");
-                }
+                
 
                 sb.Append(@" AND (
 		            ugua.uad_id in
@@ -137,16 +136,12 @@ namespace Notification.Repository.CoreSSO
 
 
                 if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
-                {
-                    
                     sb.Append(" AND esc.uad_idSuperiorGestao IN @idsDRES");
-                }
+
 
                 if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
-                {
                     sb.Append(@" AND esc.uad_id IN @idsUAD ");
-                }
-
+                
 
                 sb.Append(@" UNION
 	        
@@ -162,27 +157,27 @@ namespace Notification.Repository.CoreSSO
                       AND esc.esc_situacao<>3 ");
 
                 if (ltGroup != null && ltGroup.Any())
-                {
                     sb.Append(" AND usg.gru_id IN @idsGrupo");
-                }
+                
                 if (ltAdministrativeUnit != null && ltAdministrativeUnit.Any())
-                {
                     sb.Append(" AND usg.uad_id IN @idsUAD");
-                }
+                
 
                 sb.Append(@") /* fechando uad_id in */
                     ) /* fechando AND */
                 ");
 
 
-                //and (not exists(select 1 from @idsDRES) or (exists (select 1 from @idsDRES) and not exists(select 1 from @idsUAD) and esc.uad_idSuperiorGestao in (select id from @idsDRES)))
-
                 sb.Append(" GROUP BY ug.usu_id");
-		
-	
 	    
                     var query = context.Query<User>(sb.ToString(),
-                     new { usu_idLogado = userId, systemId = systemId, gru_idLogado = groupId, idsUAD = ltAdministrativeUnit });
+                     new {
+                         usu_idLogado = userId
+                         , systemId = systemId
+                         , idsGrupo = ltGroup
+                         , idsUAD = ltAdministrativeUnit
+                         , idsDRES = ltSchoolSuperior
+                     });
                 return query;
             }
         }
