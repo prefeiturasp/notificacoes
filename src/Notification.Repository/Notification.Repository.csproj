@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Connections\CoreSSORepository.cs" />
+    <Compile Include="Connections\IDSRepository.cs" />
     <Compile Include="Connections\NotificationRepository.cs" />
     <Compile Include="Connections\SGPRepository.cs" />
     <Compile Include="CoreSSO\GroupAURepository.cs" />
