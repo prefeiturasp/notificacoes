@@ -4,6 +4,7 @@ using Notification.Business.Signal;
 using Notification.Entity.API;
 using Notification.Repository;
 using Notification.Repository.CoreSSO;
+using Notification.Repository.SGP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,7 @@ namespace Notification.Business
             
             var groupRep = new GroupRepository();
             var userRep = new UserRepository();
+            var userSGPRep = new UserSGPRepository();
             var groupUser = groupRep.GetById(groupId);
             var ltUser = new List<Guid>();
 
@@ -87,7 +89,7 @@ namespace Notification.Business
                         if (groupUser.VisionId == 1)
                             if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
                                 || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
-                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
+                                ltUser.AddRange(userSGPRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
                             //else if(item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any())
                             //    ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
                     }
