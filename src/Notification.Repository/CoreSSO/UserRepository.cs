@@ -161,8 +161,8 @@ namespace Notification.Repository.CoreSSO
                         INNER JOIN PES_Pessoa as PES WITH(NOLOCK) ON pes.pes_id=usu.pes_id
 	                    WHERE 
 		                    usu.usu_id=@usu_id 
-                            USU.usu_situacao <>3
-                            PES.pes_situacao<>3",
+                            and USU.usu_situacao <>3
+                            and PES.pes_situacao<>3",
                      new { usu_id = userId });
                 return query.FirstOrDefault();
             }
