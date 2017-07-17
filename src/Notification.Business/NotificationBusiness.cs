@@ -85,10 +85,11 @@ namespace Notification.Business
                         || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
                     {
                         if (groupUser.VisionId == 1)
-                            if (item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
-                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnit).Select(u => u.Id));
-                            else
-                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnitSuperior).Select(u => u.Id));
+                            if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
+                                || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
+                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
+                            //else if(item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any())
+                            //    ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
                     }
                     else if (item.GroupId != null && item.GroupId.Any())
                     {
