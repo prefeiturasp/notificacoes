@@ -14,22 +14,18 @@ namespace Notification.Repository.SGP
     {
         //[TODO]: query que busca escolas da tabela Escolas do Gestão
 
-        public IEnumerable<School> Get(Guid userId, Guid groupId, IEnumerable<Guid> listSchoolSuperior, IEnumerable<int> listClassificationTypeSchool)
+        public IEnumerable<School> Get(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<int> listClassificationTypeSchool)
         {
+
+            IEnumerable<Guid> ltAUPermission = GetAUByPermission(userId, groupId, ltSchoolSuperior);
+
             using (var context = new SqlConnection(stringConnection))
             {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(
                     @"SELECT
 	                    esc.esc_id 'Id',
-	                    esc.ent_id,
-	                    esc.uad_id,
-	                    esc.esc_codigo,
 	                    esc.esc_nome 'Name',
-	                    esc.esc_codigoInep,
-	                    esc.uad_idSuperiorGestao,
-	                    esc.esc_controleSistema,
-	                    esc.esc_terceirizada
                     FROM
 	                    ESC_Escola esc WITH(NOLOCK)
 	                    INNER JOIN ESC_EscolaClassificacao ecl WITH(NOLOCK)
@@ -47,12 +43,13 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_situacao <> 3
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+	                    AND uad.uad_id IN @idsUADPermissao");
+                //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
-                if (listSchoolSuperior != null && listSchoolSuperior.Any())
+                if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
                     sb.Append(" AND uadSuperior.uad_id in @idsDRE");
 
-                if(listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
+                if (listClassificationTypeSchool != null && listClassificationTypeSchool.Any())
                     sb.Append(" AND tce.tce_id IN @idsTipoClassificacaoEscola");
 
                 sb.Append(" ORDER BY esc.esc_nome");
@@ -61,34 +58,55 @@ namespace Notification.Repository.SGP
                     new
                     {
                         usu_idLogado = userId
-                        ,gru_idLogado = groupId
-                        ,idsDRE = listSchoolSuperior
-                        ,idsTipoClassificacaoEscola = listClassificationTypeSchool
+                        ,
+                        gru_idLogado = groupId
+                        ,
+                        idsDRE = ltSchoolSuperior
+                        ,
+                        idsUADPermissao = ltAUPermission
+                        ,
+                        idsTipoClassificacaoEscola = listClassificationTypeSchool
                     }
                     );
                 return query;
             }
         }
 
+        [System.Obsolete("desuso. substituindo a função do core de permissões")]
         public IEnumerable<School> GetBySuperior(Guid userId, Guid groupId, Guid schoolSuperiorId)
         {
+            IEnumerable<Guid> ltAUPermission = GetAUByPermission(userId, groupId);
+
             using (var context = new SqlConnection(stringConnection))
             {
-                var query = context.Query<School>(
-                    @"SELECT DISTINCT
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append(@"SELECT DISTINCT
 	                     esc.esc_id 'Id'
 	                    , esc.esc_nome 'Name'
                     FROM 
 	                    ESC_Escola esc WITH(NOLOCK)
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-                        AND esc.uad_idSuperiorGestao = @idDre",
-                    new
-                    {
-                        usu_idLogado = userId , gru_idLogado = groupId, idDre = schoolSuperiorId
-                    }
-                    );
+	                    AND esc.uad_id IN @idsUADPermissao");
+                //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
+
+                sb.Append(" AND esc.uad_idSuperiorGestao = @idDre");
+
+                var query = context.Query<School>(
+
+               sb.ToString(),
+                     new
+                     {
+                         usu_idLogado = userId
+                         ,
+                         gru_idLogado = groupId
+                         ,
+                         idsUADPermissao = ltAUPermission
+                        ,
+                         idDre = schoolSuperiorId
+                     }
+                     );
                 return query;
             }
         }
@@ -100,21 +118,80 @@ namespace Notification.Repository.SGP
         /// <param name="groupId"></param>
         /// <param name="ltSchoolSuperior"></param>
         /// <returns></returns>
+        /// 
+        [System.Obsolete("método em desuso. substituindo a function de permissão do coresso")]
         public IEnumerable<Guid> GetAUBySuperior(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior)
+        {
+            return null;
+            //using (var context = new SqlConnection(stringConnection))
+            //{
+            //    StringBuilder sb = new StringBuilder();
+            //    sb.Append(@"SELECT DISTINCT
+            //             esc.uad_id
+            //        FROM
+            //            ESC_Escola esc WITH(NOLOCK)
+            //        WHERE
+            //            esc.esc_situacao <> 3
+            //            AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+
+            //    if (ltSchoolSuperior.Any())
+            //        sb.Append(@" AND esc.uad_idSuperiorGestao in @idDre");
+
+            //    var query = context.Query<Guid>(
+            //       sb.ToString(),
+            //        new
+            //        {
+            //            usu_idLogado = userId,
+            //            gru_idLogado = groupId,
+            //            idDre = ltSchoolSuperior
+            //        }
+            //        );
+            //    return query;
+            //}
+        }
+
+
+        /// <summary>
+        /// MÉTODO EM CONSTRUÇÃO
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <param name="ltSchoolSuperior"></param>
+        /// <param name="ltSchoolUA"></param>
+        /// <param name="ltSchoolID"></param>
+        /// <returns></returns>
+        public IEnumerable<Guid> GetAUByPermission(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior = null, IEnumerable<int> ltSchoolID = null, IEnumerable<Guid> ltSchoolUA = null)
         {
             using (var context = new SqlConnection(stringConnection))
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(@"SELECT DISTINCT
-                         esc.uad_id
-                    FROM
-                        ESC_Escola esc WITH(NOLOCK)
-                    WHERE
-                        esc.esc_situacao <> 3
-                        AND esc.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
+                sb.Append(@"select esc.uad_id
+		            from Synonym_SYS_UsuarioGrupoUA as usg with(nolock)
+		            inner join ESC_Escola as esc on usg.uad_id= esc.uad_idSuperiorGestao
+		            where usg.usu_id= @usu_idLogado
+		            and usg.gru_id= @gru_idLogado
+		            and (select top 1 vis_id from synonym_sys_grupo as gru with(nolock) where gru.gru_id=@gru_idLogado)=2");
+                if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
+                    sb.Append(" AND esc.uad_idSuperiorGestao in @idsDRES");
 
-                if (ltSchoolSuperior.Any())
-                    sb.Append(@" AND esc.uad_idSuperiorGestao in @idDre");
+                if (ltSchoolUA != null && ltSchoolUA.Any())
+                    sb.Append(" AND esc.uad_id in @idsUAS");
+                else if (ltSchoolID != null && ltSchoolID.Any())
+                    sb.Append(" AND esc.esc_id in @idsESC");
+
+                sb.Append(
+                @" UNION
+	
+	            select usg.uad_id
+		            from Synonym_SYS_UsuarioGrupoUA as usg with(nolock)
+		            where usg.usu_id= @usu_idLogado
+		            and usg.gru_id= @gru_idLogado");
+
+                if (ltSchoolUA != null && ltSchoolUA.Any())
+                    sb.Append(" AND usg.uad_id in @idsUAS");
+                //else if (ltSchoolID != null && ltSchoolID.Any())
+                //    sb.Append(" AND esc.esc_id in @idsESC");
+
 
                 var query = context.Query<Guid>(
                    sb.ToString(),
@@ -122,7 +199,9 @@ namespace Notification.Repository.SGP
                     {
                         usu_idLogado = userId,
                         gru_idLogado = groupId,
-                        idDre = ltSchoolSuperior
+                        idsDRES = ltSchoolSuperior,
+                        idsUAS = ltSchoolUA,
+                        idsESC = ltSchoolID
                     }
                     );
                 return query;

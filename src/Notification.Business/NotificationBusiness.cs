@@ -4,6 +4,7 @@ using Notification.Business.Signal;
 using Notification.Entity.API;
 using Notification.Repository;
 using Notification.Repository.CoreSSO;
+using Notification.Repository.SGP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,10 +64,11 @@ namespace Notification.Business
             
             var groupRep = new GroupRepository();
             var userRep = new UserRepository();
+            var userSGPRep = new UserSGPRepository();
             var groupUser = groupRep.GetById(groupId);
             var ltUser = new List<Guid>();
 
-            if (entity.Recipient.SystemRecipient != null)
+            if (entity.Recipient.SystemRecipient != null && entity.Recipient.SystemRecipient.Any())
             {
                 foreach (var item in entity.Recipient.SystemRecipient)
                 {
@@ -76,7 +78,7 @@ namespace Notification.Business
                         //se não passar Escola, buscar todas as escolas das DRE's selecionadas, e/ou todas que o usuário logado tenha permissão (mesmo se a listagem vier nula)
                         if (! item.AdministrativeUnit.Any())
                         {
-                            item.AdministrativeUnit = SchoolBusiness.GetAUBySuperior(userId, groupId, item.AdministrativeUnitSuperior);
+                            item.AdministrativeUnit = SchoolBusiness.GetAUByPermission(userId, groupId, item.AdministrativeUnitSuperior);
                         }
                         ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
                     }
@@ -85,10 +87,11 @@ namespace Notification.Business
                         || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
                     {
                         if (groupUser.VisionId == 1)
-                            if (item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
-                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnit).Select(u => u.Id));
-                            else
-                                ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId.First(), item.AdministrativeUnitSuperior).Select(u => u.Id));
+                            if ((item.AdministrativeUnit != null && item.AdministrativeUnit.Any())
+                                || (item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any()))
+                                ltUser.AddRange(userSGPRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
+                            //else if(item.AdministrativeUnitSuperior != null && item.AdministrativeUnitSuperior.Any())
+                            //    ltUser.AddRange(userRep.GetByVisionAdministrator(userId, item.SystemId.First(), item.GroupId, item.AdministrativeUnitSuperior).Select(u => u.Id));
                     }
                     else if (item.GroupId != null && item.GroupId.Any())
                     {
@@ -103,23 +106,23 @@ namespace Notification.Business
                 }
             }
 
-            if (entity.Recipient.ContributorRecipient != null)
+            if (entity.Recipient.ContributorRecipient != null && entity.Recipient.ContributorRecipient.Any())
             {
                 foreach (var item in entity.Recipient.ContributorRecipient)
                 {
-                    ltUser.AddRange(ContributorBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
+                    ltUser.AddRange(ContributorBusiness.Get(userId, groupId, item.Calendar.Name, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position).Select(u => u.Id));
                 }
             }
 
-            if (entity.Recipient.TeacherRecipient != null)
+            if (entity.Recipient.TeacherRecipient != null && entity.Recipient.TeacherRecipient.Any())
             {
                 foreach (var item in entity.Recipient.TeacherRecipient)
                 {
-                    ltUser.AddRange(TeacherBusiness.Get(userId, groupId, null, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
+                    ltUser.AddRange(TeacherBusiness.Get(userId, groupId, item.Calendar.Name, item.SchoolSuperior, item.SchoolClassification, item.School, item.Position, item.Course, item.CoursePeriod, item.Discipline, item.Team).Select(u => u.Id));
                 }
             }
 
-            if (ltUser.Any())
+            if (ltUser!=null && ltUser.Any())
             {
                 ltUser = ltUser.Distinct().ToList();
                                 

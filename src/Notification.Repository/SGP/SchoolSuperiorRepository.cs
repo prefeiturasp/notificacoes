@@ -67,6 +67,9 @@ namespace Notification.Repository.SGP
 
         public IEnumerable<SchoolSuperior> Get(Guid userId, Guid groupId)
         {
+            SchoolRepository school = new SchoolRepository();
+            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId);
+
             using (var context = new SqlConnection(stringConnection))
             {
                 var query = context.Query<SchoolSuperior>(
@@ -86,9 +89,12 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_situacao  <> 3
                     WHERE
 	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
+	                    AND uad.uad_id IN @idsUADPermissao 
                     ORDER BY uadSuperior.uad_nome",
-                     new { usu_idLogado = userId, gru_idLogado = groupId }
+                     new { usu_idLogado = userId
+                     , gru_idLogado = groupId
+                     , idsUADPermissao = ltAUPermission
+                     }
                     );
                 return query;
             }

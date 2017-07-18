@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Notification.Entity.Database.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.SGP;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -28,12 +29,14 @@ namespace Notification.Repository.CoreSSO
 	                    SELECT g.sis_id FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
 	                    WHERE 
-		                    UG.usg_situacao != 3 AND G.gru_situacao != 3 
+		                    UG.usg_situacao <> 3 AND G.gru_situacao <> 3 
 		                    AND UG.usu_id = @userId AND G.sis_id IN @ltSystem
 	                    GROUP BY sis_id
                     ) AS T1
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id
                     INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
+                    WHERE
+                        UG.usg_situacao <> 3 AND G.gru_situacao <> 3 
                     GROUP BY ug.usu_id",
                      new { userId = userId, ltSystem = ltSystem });
                 return query;
@@ -57,70 +60,23 @@ namespace Notification.Repository.CoreSSO
 	                    SELECT g.sis_id FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
 	                    WHERE 
-		                    UG.usg_situacao != 3 AND G.gru_situacao != 3 
+		                    UG.usg_situacao <> 3 AND G.gru_situacao <> 3 
 		                    AND UG.usu_id = @userId AND G.sis_id = @systemId
 	                    GROUP BY sis_id
                     ) AS T1
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id
                     INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
-                    WHERE G.gru_id in @ltGroup	
+                    WHERE 
+                        G.gru_id in @ltGroup	
+                        AND UG.usg_situacao <> 3 
+                        AND G.gru_situacao <> 3 
                     GROUP BY ug.usu_id",
                      new { userId = userId, systemId = systemId, ltGroup = ltGroup });
                 return query;
             }
         }
 
-        /// <summary>
-        /// Busca os usuários filtrado por um sistema, um grupo  e uma lista de Unidades Administrativas que o usuário logado tem acesso
-        /// </summary>
-        /// <param name="userId">Id do usuário logado</param>
-        /// <param name="systemId">Filtro: Id do sistema</param>
-        /// <param name="groupId">Filtro: Id do grupo</param>
-        /// <param name="ltAdministrativeUnit">Filtro: Lista de Unidade Administrativas</param>
-        /// <returns></returns>
-        public IEnumerable<User> GetByVisionAdministrator(Guid userId, int systemId, Guid groupId, IEnumerable<Guid> ltAdministrativeUnit)
-        {
-            using (var context = new SqlConnection(stringConnection))
-            {
-                var query = context.Query<User>(
-                    @"SELECT ug.usu_id as Id FROM (
-	                    /* Sistemas permitidos */
-	                    SELECT g.sis_id FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
-	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
-	                    WHERE 
-		                    UG.usg_situacao != 3 AND G.gru_situacao != 3 
-		                    AND UG.usu_id = @userId AND G.sis_id = @systemId
-	                    GROUP BY sis_id
-                    ) AS T1
-                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id
-                    INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
-                    INNER JOIN SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK) ON UGUA.gru_id = UG.gru_id AND UGUA.usu_id = UG.usu_id
-                    WHERE 
-                        G.gru_id = @groupId
-                        AND
-
-                        --busca usuários das UAD's que o usuário tenha permissão, sendo ou não passadas no parâmetro
-                        (
-	                        -- lista de UAD's vazia. Pega todas que o usuário logado tem permissão.
-	                        (
-		                        NOT EXISTS (select 1 from @idsUAD)
-		                        AND ugua.uad_id IN 
-		                        (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
-	                        )
-                        OR
-	                        (
-		                        -- lista de uad preenchida. buscar apenas referente à estas unidades.
-		                        EXISTS (select 1 from @idsUAD) 
-		                        AND ugua.uad_id IN 
-		                        (select id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))
-	                        )
-                        )
-                       --AND UGUA.uad_id IN @ltAdministrativeUnit
-                    GROUP BY ug.usu_id",
-                     new { usu_idLogado = userId, systemId = systemId, gru_idLogado = groupId, idsUAD = ltAdministrativeUnit });
-                return query;
-            }
-        }
+        
 
         /// <summary>
         /// 
@@ -131,8 +87,12 @@ namespace Notification.Repository.CoreSSO
         /// <param name="ltGroup">Filtro: Lista de grupos de mesma visão ou abaixo do usuário logado</param>
         /// <param name="ltAdministrativeUnit">Filtro: Lista de unidades administrativas que o usuário logado possui permissão</param>
         /// <returns></returns>
-        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltAdministrativeUnitSuperior, IEnumerable<Guid> ltAdministrativeUnit)
+        public IEnumerable<User> GetByVisionAll(Guid userId, Guid groupId, IEnumerable<int> ltSystem, IEnumerable<Guid> ltGroup, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<Guid> ltSchoolUA)
         {
+
+            SchoolRepository school = new SchoolRepository();
+            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, null, ltSchoolUA);
+
             using (var context = new SqlConnection(stringConnection))
             {
                 StringBuilder sb = new StringBuilder();
@@ -154,7 +114,7 @@ namespace Notification.Repository.CoreSSO
 
                 sb.Append(@" GROUP BY sis_id) AS T1
                     INNER JOIN SYS_Grupo AS G WITH(NOLOCK) on t1.sis_id = g.sis_id and g.gru_situacao<>3
-                    INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id
+                    INNER JOIN SYS_UsuarioGrupo AS UG WITH(NOLOCK) on UG.gru_id = G.gru_id AND ug.usg_situacao<>3
                     INNER JOIN SYS_UsuarioGrupoUA AS UGUA WITH(NOLOCK) ON UGUA.gru_id = UG.gru_id AND UGUA.usu_id = UG.usu_id
 
                     WHERE
@@ -165,25 +125,19 @@ namespace Notification.Repository.CoreSSO
                     sb.Append(@" AND g.gru_id in  @idsGrupo");
                 }
 
-                //verificar se o usuário possui permissão nas UAD's passadas por parâmetro
-                if (ltAdministrativeUnitSuperior.Any() || ltAdministrativeUnit.Any())
-                {
-                    //sb.Append(@" AND ugua.uad_id IN (SELECT id from @idsUAD as uadParam where id in (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado)))");
-                    sb.Append(@" AND (
-	                    (g.vis_id=2 AND ugua.uad_id IN @idsDRE )
-                    OR
-	                    (g.vis_id=3 AND ugua.uad_id IN @idsUAD )
-                    )");
-                }
                 //Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
+                sb.Append(@" AND ugua.uad_id IN @idsUADPermissao");
                 
-                sb.Append(@" AND ugua.uad_id IN (SELECT uad_id FROM FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
-                
-
                 var query = context.Query<User>(
                    sb.ToString()
                     ,
-                     new { usu_idLogado = userId, gru_idLogado= groupId, idsSistema = ltSystem, idsGrupo = ltGroup, idsDRE = ltAdministrativeUnitSuperior, idsUAD = ltAdministrativeUnit });
+                     new { usu_idLogado = userId
+                     , gru_idLogado= groupId
+                     , idsSistema = ltSystem
+                     , idsGrupo = ltGroup
+                     , idsUADPermissao = ltAUPermission
+                     , idsDRE = ltSchoolSuperior
+                     , idsUAD = ltSchoolUA });
                 return query;
             }
         }
@@ -206,7 +160,9 @@ namespace Notification.Repository.CoreSSO
                         FROM SYS_Usuario AS USU WITH(NOLOCK)
                         INNER JOIN PES_Pessoa as PES WITH(NOLOCK) ON pes.pes_id=usu.pes_id
 	                    WHERE 
-		                    usu.usu_id=@usu_id ",
+		                    usu.usu_id=@usu_id 
+                            and USU.usu_situacao <>3
+                            and PES.pes_situacao<>3",
                      new { usu_id = userId });
                 return query.FirstOrDefault();
             }

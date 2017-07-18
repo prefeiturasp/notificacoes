@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Notification.Entity.API.SGP;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Notification.Entity.API
 {
     public class TeacherRecipient
     {
+        public Calendar Calendar { get; set; }
+
         public IEnumerable<Guid> SchoolSuperior { get; set; }
 
         public IEnumerable<int> SchoolClassification { get; set; }

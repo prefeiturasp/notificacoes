@@ -44,10 +44,16 @@
                 typeModalTypeUser: false
             };
 
+            $scope.dateOptions = {
+                dateFormat: 'dd.mm.yy'
+            };
+
             $scope.typeUser = null;
             $scope.YearSelected = null;
             $scope.listCalendar = [];
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
+
+            creatteFilters();
 
             //ve se o usúario já escolheu umtipo de grupo
             if($scope.VisionSystem.length == 0) {
@@ -64,12 +70,15 @@
 
         function startSite(){
             $scope.blockSite = false;
-            creatteFilters();
-            createPluginNotification();
             declareVariables();
             getCalendar();
             getTimeStamp();
-            startRedactor();
+
+            $timeout(function() {
+                startRedactor();
+            },0);
+
+            createPluginNotification();
         }
 
         function creatteFilters(){
@@ -434,6 +443,7 @@
                     }
                     $scope.load = false;
                     startSite();
+
                 }else{
                     $scope.load = false;
                 }
@@ -1021,9 +1031,37 @@
         //Busca a data atual no servidor
         function getTimeStamp(){
             HttpServices.getTimeStamp( function (data) {
+
                 $scope.currentDate = data;
                 $scope.filters.DateStartNotification = new Date($scope.currentDate * 1000);
+
+                //$( "#datepicker1" ).datepicker({ dateFormat: 'yy-mm-dd', "setDate": $scope.filters.DateStartNotification});
+                //$( "#datepicker2" ).datepicker({ dateFormat: 'yy-mm-dd'});
+                //
+                //$( "#datepicker1").on('change', function(e){
+                //    checkDate($(this).val(), $(this), 'DateStartNotification');
+                //});
+                //
+                //$( "#datepicker2").on('change', function(e){
+                //    checkDate($(this).val(), $(this), 'DateEndNotification');
+                //});
             });
+        }
+
+        function checkDate( date, elem, type ){
+
+            var dateCurrent = new Date($scope.currentDate * 1000);
+            var dateSelected = new Date(date);
+
+            var msDateA = Date.UTC(dateCurrent.getFullYear(), dateCurrent.getMonth()+1, dateCurrent.getDate());
+            var msDateB = Date.UTC(dateSelected.getFullYear(), dateSelected.getMonth()+1, dateSelected.getDate());
+
+            if (parseFloat(msDateA) > parseFloat(msDateB)) {
+                toastr.warning("Data selecionada não pode ser menor que o data atual!");
+                $scope.filters[type] = dateCurrent;
+            }else{
+                $scope.filters[type] = dateSelected;
+            }
         }
 
         $scope.load = true;

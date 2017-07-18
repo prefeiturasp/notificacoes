@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Connections\Connection.cs" />
     <Compile Include="Connections\CoreSSORepository.cs" />
+    <Compile Include="Connections\IDSRepository.cs" />
     <Compile Include="Connections\NotificationRepository.cs" />
     <Compile Include="Connections\SGPRepository.cs" />
     <Compile Include="CoreSSO\GroupAURepository.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="SGP\SchoolSuperiorRepository.cs" />
     <Compile Include="SGP\TeacherRepository.cs" />
     <Compile Include="SGP\TeamRepository.cs" />
+    <Compile Include="SGP\UserSGPRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

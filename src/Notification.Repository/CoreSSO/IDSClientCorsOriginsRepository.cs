@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Notification.Repository.CoreSSO
 {
-    public class IDSClientCorsOriginsRepository : CoreSSORepository
+    public class IDSClientCorsOriginsRepository : IDSRepository
     {
         public IEnumerable<IDSClientCorsOrigins> Get()
         {
