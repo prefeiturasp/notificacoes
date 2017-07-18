@@ -98,13 +98,12 @@ function plgnotify( sysconfig ) {
 		'post':_http.bind( {}, 'post' )
 	};
 
-
 	/**
 	 * Métodos específicos.
 	 * **/
 
 	function hasOwnProperty( obj, key ) {
-		return obj.hasOwnProperty(key) && obj[key] ;
+		return obj.hasOwnProperty( key ) && obj[key];
 
 	}
 
@@ -117,7 +116,7 @@ function plgnotify( sysconfig ) {
 		return {
 			'groupSid'     :_config.header.groupSid,
 			'Authorization':_config.header.Authorization,
-			'Content-Type' : hasOwnProperty(_config.header,'Content-Type'),
+			'Content-Type' :hasOwnProperty( _config.header, 'Content-Type' ),
 			'Page'         :paginator[type].page,
 			'Size'         :paginator[type].size
 		}
@@ -162,7 +161,7 @@ function plgnotify( sysconfig ) {
 	 * Controla a visibilidade da paginação.
 	 */
 	function paginationVisibility( t ) {
-		var _layout =hasOwnProperty(layout,'domPag' + events[t])
+		var _layout = hasOwnProperty( layout, 'domPag' + events[t] )
 		if ( paginator[t].total > 0 ) {
 			_layout.classList.remove( 'hide' );
 		}
@@ -236,7 +235,7 @@ function plgnotify( sysconfig ) {
 									   || window.webkitRequestAnimationFrame
 									   || window.msRequestAnimationFrame
 									   || function ( f ) {
-				return setTimeout( f, 1000 * 60 * 60 )
+				return setTimeout( f, 1000 * (1 / 60) )
 			}; // a cada minuto
 
 		window.cancelAnimationFrame = window.cancelAnimationFrame
@@ -327,7 +326,7 @@ function plgnotify( sysconfig ) {
 
 		document.querySelector( '.disturb p' ).innerHTML = target.innerHTML;
 
-		localStorage.setItem( events.disturbTime, (Date.now() + parseInt(target.attributes.value.nodeValue)) );
+		localStorage.setItem( events.disturbTime, (Date.now() + parseInt( target.attributes.value.nodeValue )) );
 		localStorage.setItem( events.disturbTimeText, (target.innerHTML) );
 
 		disturbValidator();
@@ -647,7 +646,7 @@ function plgnotify( sysconfig ) {
 
 		btnFechar = footer.getElementsByClassName( 'plgmodal-btn-close' )[0];
 		fecharX   = header.getElementsByClassName( 'plgmodal-xclose' )[0];
-		adiar     = hasOwnProperty(footer.children,'plg-modal-adiar');
+		adiar     = hasOwnProperty( footer.children, 'plg-modal-adiar' );
 
 		adiar.onclick = function ( e ) {
 			e.id = data.id || dom.id;
@@ -719,7 +718,7 @@ function plgnotify( sysconfig ) {
 	function postRead( id ) {
 		console.info( 'Notificação lida:', id );
 		selectedNotification.NotificationId = id;
-		selectedNotification.Read = true;
+		selectedNotification.Read           = true;
 		selectedLaterOption( selectedNotification );
 	}
 
@@ -790,10 +789,12 @@ function plgnotify( sysconfig ) {
 
 		if ( !data ) {
 			console.info( 'notificação vazia' );
-			showSnackbar({
-				header:'Tempo expirou!',
-				body:'Faça o login novamente.'
-						 });
+			showSnackbar(
+				{
+					header:'Tempo expirou!',
+					body  :'Faça o login novamente.'
+				}
+			);
 			return;
 		}
 		obj = JSON.parse( data.response );
@@ -960,10 +961,10 @@ function plgnotify( sysconfig ) {
 			return;
 		}
 		element = document.querySelector( '#' + type + '.plg-list' );
-		loader  = element.getElementsByClassName('plgloader')[0];
+		loader  = element.getElementsByClassName( 'plgloader' )[0];
 
 		if ( loader && loader.classList.contains( 'plgloader' ) ) {
-			element.removeChild(element.childNodes[0]);
+			element.removeChild( element.childNodes[0] );
 		}
 		//
 		//lista = notificationHTML( type, JSON.parse( data ) );
@@ -972,33 +973,58 @@ function plgnotify( sysconfig ) {
 		//
 		//element.appendChild(lista);
 
-
 		lista = notificationHTML( type, JSON.parse( data ) );
 		paginationValidate( type, lista );
 
 		element.innerHTML = lista.join( ' ' );
 
 		if ( paginator[type].total ) {
-			element.appendChild( hasOwnProperty(layout,'domPag' + events[type]) );
+			element.appendChild( hasOwnProperty( layout, 'domPag' + events[type] ) );
 		}
+	}
+
+	/**
+	 * Tratamento de erro para login.
+	 */
+	function getListError(e){
+		var element = document.querySelector( '#' + this.id + '.plg-list' );
+		var loader  = element.getElementsByClassName( 'plgloader' )[0];
+		var title;
+		var msg;
+
+		if ( loader && loader.classList.contains( 'plgloader' ) ) {
+			element.removeChild( element.childNodes[0] );
+		}
+		switch ( e.status){
+			case 404,500,501,502,503,504,505:
+				title="Serviço indisponível";
+				msg="Tente mais tarde.";
+			break;
+			case 200,201,202,204,205: return; break;
+			default:
+				title="É preciso fazer login !";
+				msg="Para poder ver as notificações.";
+				break;
+		}
+		element.innerHTML='<ul class="plgnot"><span>'+title+'</span>' +
+						  '<span><small>'+msg+'</small></span>' +
+						  '</ul>';
+
 	}
 
 	/**
 	 * Mostra conteúdo de um lista.
 	 */
 	function showList( target ) {
-		var fn, bind;
+		var fn;
 
 		fn                         = (target.id === events.unread ) ? getUnreadList : getReadList;
-		bind                       = addNotification.bind( {}, target.id );
 		paginator[target.id].page  = 0;
 		paginator[target.id].total = Infinity;
 
 		fn(
-			bind,
-			function () {
-				console.error( 'lista inválida' );
-			}
+			addNotification.bind( {}, target.id ),
+			getListError.bind( target )
 		);
 	}
 
@@ -1171,7 +1197,13 @@ function plgnotify( sysconfig ) {
 			e.preventDefault();
 			return;
 		}
+		console.log( 'dragging' )
 		addDragging();
+
+
+		if(window.safari){
+			addEventListener( window, events.mousemove, onMove );
+		}
 	}
 
 	/**
@@ -1179,11 +1211,16 @@ function plgnotify( sysconfig ) {
 	 * @param {event} e - evento de dragend.
 	 */
 	function onDragEnd( e ) {
+		console.log( 'onDragEnd' )
 		if ( !dragging ) {
 			return;
 		}
+		if(window.safari){
+			removeEventListener( window, events.mousemove, onMove );
+		}
 		remDragging();
 		dropPosition( e.target, e );
+
 	}
 
 	/**
@@ -1217,7 +1254,7 @@ function plgnotify( sysconfig ) {
 
 		if ( y !== undefined ) {
 			y = ((y + dom.clientHeight) >= innerHeight) ? (innerHeight - dom.clientHeight - layout.paddingY) : y;
-			y = (y < 0) ? 0 : y;
+			y = (y < 0) ? layout.paddingY : y;
 
 			//if(isSafari()){
 			//	y = innerHeight - y ;
@@ -1379,7 +1416,7 @@ function plgnotify( sysconfig ) {
 		layout.domsnackbar.noClick = msg.noClick || false;
 
 		html.getElementsByClassName( 'plgsnackbar-center' )[0].onclick = function ( e ) {
-			if( e.currentTarget.id && e.currentTarget.id  !=="" ){
+			if ( e.currentTarget.id && e.currentTarget.id !== "" ) {
 				postRead( e.currentTarget.id );
 				openNotification( e, e.currentTarget.id );
 			}
@@ -1544,6 +1581,19 @@ function plgnotify( sysconfig ) {
 		setPosition( x, y );
 	}
 
+	var onMove=  (function () {
+		var timeWindow = 41.67; // tempo em ms
+		var timeout;
+		updater();
+		return function (e) {
+			cancelAnimationFrame( timeout );
+			timeout = requestAnimationFrame(
+				function () {
+					dropPosition(layout.domplugin,e);
+				}, timeWindow
+			);
+		};
+	})();
 	/**
 	 * Adicionar evento à um elemento e seus parâmetros.
 	 * @param {ElementDOM} el - elemento dom que recebe o evento.
@@ -1553,6 +1603,17 @@ function plgnotify( sysconfig ) {
 	 */
 	function addEventListener( el, type, callback, listenerConfig ) {
 		el.addEventListener( type, callback, listenerConfig || false );
+	}
+
+	/**
+	 * Remove evento à um elemento e seus parâmetros.
+	 * @param {ElementDOM} el - elemento dom que recebe o evento.
+	 * @param {Event} type - tipo de evento.
+	 * @param {Function} callback - método que dispara quando evento acontecer.
+	 * @param {Object} listenerConfig - configurações para evento.
+	 */
+	function removeEventListener( el, type, callback, listenerConfig ) {
+		el.removeEventListener( type, callback, listenerConfig || false );
 	}
 
 	/**
@@ -1598,6 +1659,7 @@ function plgnotify( sysconfig ) {
 				resize:'resize',
 
 				mousedown:'mousedown',
+				mousemove:'mousemove',
 				mouseup  :'mouseup',
 				click    :'click',
 				select   :'select',
@@ -1783,7 +1845,7 @@ function plgnotify( sysconfig ) {
 		_body.appendChild( dom );
 
 		//adicionar plugin
-		html = '<div draggable="true" class="float-menu plg-notify">' +
+		html = '<div '+((!window.safari)? 'draggable="true"':'')+' class="float-menu plg-notify">' +
 			   '<div class="circulo">' +
 			   '<div class="lateral">' +
 			   '<a class="mover plg-notify-move">' +
@@ -1923,7 +1985,7 @@ function plgnotify( sysconfig ) {
 
 		layout.domlist.onblur = hideList;
 
-		//style = getComputedStyle( layout.domplugin );
+		//style = getComputedrrrtyle( layout.domplugin );
 
 		//pega duração das transições configurado no site, senão usa 300ms.
 		//layout.animationTime = parseFloat( style.transitionDuration.replace( /s|ms/, '' ) ) * (style.transitionDuration.match( 'ms' ) ? 1 : 1000) || 300;
@@ -1965,11 +2027,16 @@ function plgnotify( sysconfig ) {
 		}
 
 		addEventListener( window, events.resize, windowResize );
-		addEventListener( document, events.mousedown, onBlur );
-		addEventListener( document, events.mouseup, onDragEnd );
+		addEventListener( window, events.mouseup, onDragEnd );
+		addEventListener( window, events.mousedown, onBlur );
 
-		addEventListener( document, events.dragstart, onDragStart );
-		addEventListener( document, events.dragend, onDragEnd );
+
+		addEventListener( window, events.mousedown, onDragStart );
+
+		if(!window.safari){
+			addEventListener( window, events.dragstart, onDragStart );
+			addEventListener( window, events.dragend, onDragEnd );
+		}
 
 		updater();
 		disturbValidator();
