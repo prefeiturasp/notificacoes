@@ -94,7 +94,7 @@ namespace Notification.API
                 (credentialBasicAuth.Item2 == password))
             {
                 var claims = new List<Claim> { new Claim("name", username) };
-                claims.Add(new Claim("scope", "mstechapi"));
+                claims.Add(new Claim("scope", scopesIdentityServer));
 
                 return (IEnumerable<Claim>)claims;
             }
