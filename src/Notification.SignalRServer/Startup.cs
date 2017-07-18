@@ -111,7 +111,7 @@ namespace Notification.SignalRServer
                 (SignalRClientBusiness.PasswordCredentialSignalRServer == password))
             {
                 var claims = new List<Claim> { new Claim("name", username) };
-                claims.Add(new Claim("scope", "mstechapi"));
+                claims.Add(new Claim("scope", scopesIdentityServer));
 
                 return (IEnumerable<Claim>)claims;
             }            
