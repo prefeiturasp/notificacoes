@@ -302,7 +302,7 @@ function plgnotify( sysconfig ) {
 			texto.innerHTML = localStorage.getItem( events.disturbTimeText );
 
 			events.disturbId = requestAnimationFrame;
-			layout.domlist.getElementsByClassName( 'cancelar' )[0].classList.remove( 'plg-hide' );
+			layout.domlist.getElementsByClassName( 'plg-cancelar' )[0].classList.remove( 'plg-hide' );
 			console.log( 'HideSnackbar', new Date( _local ) );
 		}
 		else if ( _local ) {
@@ -987,7 +987,7 @@ function plgnotify( sysconfig ) {
 	/**
 	 * Tratamento de erro para login.
 	 */
-	function getListError( e ) {
+	function getListError(e){
 		var element = document.querySelector( '#' + this.id + '.plg-list' );
 		var loader  = element.getElementsByClassName( 'plgloader' )[0];
 		var title;
@@ -996,22 +996,20 @@ function plgnotify( sysconfig ) {
 		if ( loader && loader.classList.contains( 'plgloader' ) ) {
 			element.removeChild( element.childNodes[0] );
 		}
-		switch ( e.status ) {
-			case 404, 500, 501, 502, 503, 504, 505:
-				title = "Serviço indisponível";
-				msg   = "Tente mais tarde.";
-				break;
-			case 200, 201, 202, 204, 205:
-				return;
-				break;
+		switch ( e.status){
+			case 404,500,501,502,503,504,505:
+				title="Serviço indisponível";
+				msg="Tente mais tarde.";
+			break;
+			case 200,201,202,204,205: return; break;
 			default:
-				title = "É preciso fazer login !";
-				msg   = "Para poder ver as notificações.";
+				title="É preciso fazer login !";
+				msg="Para poder ver as notificações.";
 				break;
 		}
-		element.innerHTML = '<ul class="plgnot"><span>' + title + '</span>' +
-							'<span><small>' + msg + '</small></span>' +
-							'</ul>';
+		element.innerHTML='<ul class="plgnot"><span>'+title+'</span>' +
+						  '<span><small>'+msg+'</small></span>' +
+						  '</ul>';
 
 	}
 
@@ -1203,7 +1201,8 @@ function plgnotify( sysconfig ) {
 		console.log( 'dragging' )
 		addDragging();
 
-		if ( window.safari ) {
+
+		if(window.safari){
 			addEventListener( window, events.mousemove, onMove );
 		}
 	}
@@ -1217,7 +1216,7 @@ function plgnotify( sysconfig ) {
 		if ( !dragging ) {
 			return;
 		}
-		if ( window.safari ) {
+		if(window.safari){
 			removeEventListener( window, events.mousemove, onMove );
 		}
 		remDragging();
@@ -1529,7 +1528,7 @@ function plgnotify( sysconfig ) {
 		//todo implementar substituição de classe.
 		if ( counter > 99 ) {
 			document.querySelector( 'span.plg-notify-counter' ).style.fontSize = '11px';
-			layout.domcounter.innerHTML                                        = "99+";
+			layout.domcounter.innerHTML                                                                = "99+";
 		}
 		else if ( counter > 9 ) {
 			document.querySelector( '.span.plg-notify-counter' ).style.fontSize = '14px';
@@ -1583,20 +1582,19 @@ function plgnotify( sysconfig ) {
 		setPosition( x, y );
 	}
 
-	var onMove = (function () {
+	var onMove=  (function () {
 		var timeWindow = 41.67; // tempo em ms
 		var timeout;
 		updater();
-		return function ( e ) {
+		return function (e) {
 			cancelAnimationFrame( timeout );
 			timeout = requestAnimationFrame(
 				function () {
-					dropPosition( layout.domplugin, e );
+					dropPosition(layout.domplugin,e);
 				}, timeWindow
 			);
 		};
 	})();
-
 	/**
 	 * Adicionar evento à um elemento e seus parâmetros.
 	 * @param {ElementDOM} el - elemento dom que recebe o evento.
@@ -1848,7 +1846,7 @@ function plgnotify( sysconfig ) {
 		_body.appendChild( dom );
 
 		//adicionar plugin
-		html = '<div ' + ((!window.safari) ? 'draggable="true"' : '') + ' class="float-menu plg-notify">' +
+		html = '<div '+((!window.safari)? 'draggable="true"':'')+' class="float-menu plg-notify">' +
 			   '<div class="circulo">' +
 			   '<div class="lateral">' +
 			   '<a class="mover plg-notify-move">' +
@@ -1891,8 +1889,8 @@ function plgnotify( sysconfig ) {
 
 		//adiciona eventos de selectionar tab
 		linksTabs = dom.querySelectorAll( 'button.plgtablink' );
-		for ( var i = linksTabs.length ; i-- ; ) {
-			if ( linksTabs[i] ) {
+		for(var i =linksTabs.length;i--;){
+			if(linksTabs[i]){
 				linksTabs[i].onclick = selectTab;
 			}
 		}
@@ -2033,13 +2031,16 @@ function plgnotify( sysconfig ) {
 		addEventListener( window, events.mouseup, onDragEnd );
 		addEventListener( window, events.mousedown, onBlur );
 
-		if ( !window.safari ) {
+
+
+		if(!window.safari){
 			addEventListener( window, events.dragstart, onDragStart );
 			addEventListener( window, events.dragend, onDragEnd );
 		}
-		else {
+		else{
 			//addEventListener( window, events.mousedown, onDragStart );
 		}
+
 
 		updater();
 		disturbValidator();
@@ -2174,187 +2175,182 @@ function plgnotify( sysconfig ) {
 
 /*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
 
-if ( "document" in self ) {
+if ("document" in self) {
 
-	// Full polyfill for browsers with no classList support
-	// Including IE < Edge missing SVGElement.classList
-	if ( !("classList" in document.createElement( "_" ))
-		 || document.createElementNS && !("classList" in document.createElementNS( "http://www.w3.org/2000/svg", "g" )) ) {
+// Full polyfill for browsers with no classList support
+// Including IE < Edge missing SVGElement.classList
+if (!("classList" in document.createElement("_"))
+	|| document.createElementNS && !("classList" in document.createElementNS("http://www.w3.org/2000/svg","g"))) {
 
-		(function ( view ) {
+(function (view) {
 
-			"use strict";
+"use strict";
 
-			if ( !('Element' in view) ) {
-				return;
-			}
+if (!('Element' in view)) return;
 
-			var
-				classListProp           = "classList"
-				, protoProp             = "prototype"
-				, elemCtrProto          = view.Element[protoProp]
-				, objCtr                = Object
-				, strTrim               = String[protoProp].trim || function () {
-						return this.replace( /^\s+|\s+$/g, "" );
-					}
-				, arrIndexOf            = Array[protoProp].indexOf || function ( item ) {
-						var
-							i     = 0
-							, len = this.length
-							;
-						for ( ; i < len ; i++ ) {
-							if ( i in this && this[i] === item ) {
-								return i;
-							}
-						}
-						return -1;
-					}
-				// Vendors: please allow content code to instantiate DOMExceptions
-				, DOMEx                 = function ( type, message ) {
-					this.name    = type;
-					this.code    = DOMException[type];
-					this.message = message;
-				}
-				, checkTokenAndGetIndex = function ( classList, token ) {
-					if ( token === "" ) {
-						throw new DOMEx(
-							"SYNTAX_ERR"
-							, "An invalid or illegal string was specified"
-						);
-					}
-					if ( /\s/.test( token ) ) {
-						throw new DOMEx(
-							"INVALID_CHARACTER_ERR"
-							, "String contains an invalid character"
-						);
-					}
-					return arrIndexOf.call( classList, token );
-				}
-				, ClassList             = function ( elem ) {
-					var
-						trimmedClasses = strTrim.call( elem.getAttribute( "class" ) || "" )
-						, classes      = trimmedClasses ? trimmedClasses.split( /\s+/ ) : []
-						, i            = 0
-						, len          = classes.length
-						;
-					for ( ; i < len ; i++ ) {
-						this.push( classes[i] );
-					}
-					this._updateClassName = function () {
-						elem.setAttribute( "class", this.toString() );
-					};
-				}
-				, classListProto        = ClassList[protoProp] = []
-				, classListGetter = function () {
-					return new ClassList( this );
-				}
-				;
-			// Most DOMException implementations don't allow calling DOMException's toString()
-			// on non-DOMExceptions. Error's toString() is sufficient here.
-			DOMEx[protoProp]        = Error[protoProp];
-			classListProto.item     = function ( i ) {
-				return this[i] || null;
-			};
-			classListProto.contains = function ( token ) {
-				token += "";
-				return checkTokenAndGetIndex( this, token ) !== -1;
-			};
-			classListProto.add      = function () {
-				var
-					tokens    = arguments
-					, i       = 0
-					, l       = tokens.length
-					, token
-					, updated = false
-					;
-				do {
-					token = tokens[i] + "";
-					if ( checkTokenAndGetIndex( this, token ) === -1 ) {
-						this.push( token );
-						updated = true;
-					}
-				}
-				while ( ++i < l );
-
-				if ( updated ) {
-					this._updateClassName();
-				}
-			};
-			classListProto.remove   = function () {
-				var
-					tokens    = arguments
-					, i       = 0
-					, l       = tokens.length
-					, token
-					, updated = false
-					, index
-					;
-				do {
-					token = tokens[i] + "";
-					index = checkTokenAndGetIndex( this, token );
-					while ( index !== -1 ) {
-						this.splice( index, 1 );
-						updated = true;
-						index   = checkTokenAndGetIndex( this, token );
-					}
-				}
-				while ( ++i < l );
-
-				if ( updated ) {
-					this._updateClassName();
-				}
-			};
-			classListProto.toggle   = function ( token, force ) {
-				token += "";
-
-				var
-					result   = this.contains( token )
-					, method = result ?
-							   force !== true && "remove"
-						:
-							   force !== false && "add"
-					;
-
-				if ( method ) {
-					this[method]( token );
-				}
-
-				if ( force === true || force === false ) {
-					return force;
-				}
-				else {
-					return !result;
-				}
-			};
-			classListProto.toString = function () {
-				return this.join( " " );
-			};
-
-			if ( objCtr.defineProperty ) {
-				var classListPropDesc = {
-					get           :classListGetter
-					, enumerable  :true
-					, configurable:true
-				};
-				try {
-					objCtr.defineProperty( elemCtrProto, classListProp, classListPropDesc );
-				}
-				catch ( ex ) { // IE 8 doesn't support enumerable:true
-					// adding undefined to fight this issue https://github.com/eligrey/classList.js/issues/36
-					// modernie IE8-MSW7 machine has IE8 8.0.6001.18702 and is affected
-					if ( ex.number === undefined || ex.number === -0x7FF5EC54 ) {
-						classListPropDesc.enumerable = false;
-						objCtr.defineProperty( elemCtrProto, classListProp, classListPropDesc );
-					}
-				}
-			}
-			else if ( objCtr[protoProp].__defineGetter__ ) {
-				elemCtrProto.__defineGetter__( classListProp, classListGetter );
-			}
-
-		}( self ));
-
+var
+	  classListProp = "classList"
+	, protoProp = "prototype"
+	, elemCtrProto = view.Element[protoProp]
+	, objCtr = Object
+	, strTrim = String[protoProp].trim || function () {
+		return this.replace(/^\s+|\s+$/g, "");
 	}
+	, arrIndexOf = Array[protoProp].indexOf || function (item) {
+		var
+			  i = 0
+			, len = this.length
+		;
+		for (; i < len; i++) {
+			if (i in this && this[i] === item) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	// Vendors: please allow content code to instantiate DOMExceptions
+	, DOMEx = function (type, message) {
+		this.name = type;
+		this.code = DOMException[type];
+		this.message = message;
+	}
+	, checkTokenAndGetIndex = function (classList, token) {
+		if (token === "") {
+			throw new DOMEx(
+				  "SYNTAX_ERR"
+				, "An invalid or illegal string was specified"
+			);
+		}
+		if (/\s/.test(token)) {
+			throw new DOMEx(
+				  "INVALID_CHARACTER_ERR"
+				, "String contains an invalid character"
+			);
+		}
+		return arrIndexOf.call(classList, token);
+	}
+	, ClassList = function (elem) {
+		var
+			  trimmedClasses = strTrim.call(elem.getAttribute("class") || "")
+			, classes = trimmedClasses ? trimmedClasses.split(/\s+/) : []
+			, i = 0
+			, len = classes.length
+		;
+		for (; i < len; i++) {
+			this.push(classes[i]);
+		}
+		this._updateClassName = function () {
+			elem.setAttribute("class", this.toString());
+		};
+	}
+	, classListProto = ClassList[protoProp] = []
+	, classListGetter = function () {
+		return new ClassList(this);
+	}
+;
+// Most DOMException implementations don't allow calling DOMException's toString()
+// on non-DOMExceptions. Error's toString() is sufficient here.
+DOMEx[protoProp] = Error[protoProp];
+classListProto.item = function (i) {
+	return this[i] || null;
+};
+classListProto.contains = function (token) {
+	token += "";
+	return checkTokenAndGetIndex(this, token) !== -1;
+};
+classListProto.add = function () {
+	var
+		  tokens = arguments
+		, i = 0
+		, l = tokens.length
+		, token
+		, updated = false
+	;
+	do {
+		token = tokens[i] + "";
+		if (checkTokenAndGetIndex(this, token) === -1) {
+			this.push(token);
+			updated = true;
+		}
+	}
+	while (++i < l);
+
+	if (updated) {
+		this._updateClassName();
+	}
+};
+classListProto.remove = function () {
+	var
+		  tokens = arguments
+		, i = 0
+		, l = tokens.length
+		, token
+		, updated = false
+		, index
+	;
+	do {
+		token = tokens[i] + "";
+		index = checkTokenAndGetIndex(this, token);
+		while (index !== -1) {
+			this.splice(index, 1);
+			updated = true;
+			index = checkTokenAndGetIndex(this, token);
+		}
+	}
+	while (++i < l);
+
+	if (updated) {
+		this._updateClassName();
+	}
+};
+classListProto.toggle = function (token, force) {
+	token += "";
+
+	var
+		  result = this.contains(token)
+		, method = result ?
+			force !== true && "remove"
+		:
+			force !== false && "add"
+	;
+
+	if (method) {
+		this[method](token);
+	}
+
+	if (force === true || force === false) {
+		return force;
+	} else {
+		return !result;
+	}
+};
+classListProto.toString = function () {
+	return this.join(" ");
+};
+
+if (objCtr.defineProperty) {
+	var classListPropDesc = {
+		  get: classListGetter
+		, enumerable: true
+		, configurable: true
+	};
+	try {
+		objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
+	} catch (ex) { // IE 8 doesn't support enumerable:true
+		// adding undefined to fight this issue https://github.com/eligrey/classList.js/issues/36
+		// modernie IE8-MSW7 machine has IE8 8.0.6001.18702 and is affected
+		if (ex.number === undefined || ex.number === -0x7FF5EC54) {
+			classListPropDesc.enumerable = false;
+			objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
+		}
+	}
+} else if (objCtr[protoProp].__defineGetter__) {
+	elemCtrProto.__defineGetter__(classListProp, classListGetter);
+}
+
+}(self));
+
+}
 }
 
 
