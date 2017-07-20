@@ -136,13 +136,13 @@ function plgnotify( sysconfig ) {
 		span         = this.childNodes[0];
 		this.loading = !this.loading;
 
-		if ( !loader.classList.contains( 'hide' ) ) {
-			loader.classList.add( 'hide' );
-			span.classList.remove( 'hide' );
+		if ( !loader.classList.contains( 'plg-hide' ) ) {
+			loader.classList.add( 'plg-hide' );
+			span.classList.remove( 'plg-hide' );
 		}
 		else {
-			span.classList.add( 'hide' );
-			loader.classList.remove( 'hide' );
+			span.classList.add( 'plg-hide' );
+			loader.classList.remove( 'plg-hide' );
 		}
 	}
 
@@ -164,10 +164,10 @@ function plgnotify( sysconfig ) {
 	function paginationVisibility( t ) {
 		var _layout = hasOwnProperty( layout, 'domPag' + events[t] )
 		if ( paginator[t].total > 0 ) {
-			_layout.classList.remove( 'hide' );
+			_layout.classList.remove( 'plg-hide' );
 		}
 		else {
-			_layout.classList.add( 'hide' );
+			_layout.classList.add( 'plg-hide' );
 		}
 	}
 
@@ -257,7 +257,7 @@ function plgnotify( sysconfig ) {
 
 		hideSnackbar = false;
 
-		layout.domdisturbcancel.classList.add( 'hide' );
+		layout.domdisturbcancel.classList.add( 'plg-hide' );
 		document.querySelector( '.disturb p' ).innerHTML = "Mais opções";
 
 		showSnackbar(
@@ -302,7 +302,7 @@ function plgnotify( sysconfig ) {
 			texto.innerHTML = localStorage.getItem( events.disturbTimeText );
 
 			events.disturbId = requestAnimationFrame;
-			layout.domlist.getElementsByClassName( 'cancelar' )[0].classList.remove( 'hide' );
+			layout.domlist.getElementsByClassName( 'cancelar' )[0].classList.remove( 'plg-hide' );
 			console.log( 'HideSnackbar', new Date( _local ) );
 		}
 		else if ( _local ) {
@@ -586,7 +586,7 @@ function plgnotify( sysconfig ) {
 	function hideList() {
 		listOpened = false;
 		layout.domplugin.classList.remove( 'shake-anime' );
-		layout.domlist.classList.add( 'hide' );
+		layout.domlist.classList.add( 'plg-hide' );
 	}
 
 	/**
@@ -655,7 +655,7 @@ function plgnotify( sysconfig ) {
 		};
 
 		function _onClick() {
-			modal.classList.add( 'hitbot' );
+			modal.classList.add( 'hitbox' );
 			fecharX.onclick();
 		}
 
@@ -987,7 +987,7 @@ function plgnotify( sysconfig ) {
 	/**
 	 * Tratamento de erro para login.
 	 */
-	function getListError(e){
+	function getListError( e ) {
 		var element = document.querySelector( '#' + this.id + '.plg-list' );
 		var loader  = element.getElementsByClassName( 'plgloader' )[0];
 		var title;
@@ -996,20 +996,22 @@ function plgnotify( sysconfig ) {
 		if ( loader && loader.classList.contains( 'plgloader' ) ) {
 			element.removeChild( element.childNodes[0] );
 		}
-		switch ( e.status){
-			case 404,500,501,502,503,504,505:
-				title="Serviço indisponível";
-				msg="Tente mais tarde.";
-			break;
-			case 200,201,202,204,205: return; break;
+		switch ( e.status ) {
+			case 404, 500, 501, 502, 503, 504, 505:
+				title = "Serviço indisponível";
+				msg   = "Tente mais tarde.";
+				break;
+			case 200, 201, 202, 204, 205:
+				return;
+				break;
 			default:
-				title="É preciso fazer login !";
-				msg="Para poder ver as notificações.";
+				title = "É preciso fazer login !";
+				msg   = "Para poder ver as notificações.";
 				break;
 		}
-		element.innerHTML='<ul class="plgnot"><span>'+title+'</span>' +
-						  '<span><small>'+msg+'</small></span>' +
-						  '</ul>';
+		element.innerHTML = '<ul class="plgnot"><span>' + title + '</span>' +
+							'<span><small>' + msg + '</small></span>' +
+							'</ul>';
 
 	}
 
@@ -1097,18 +1099,18 @@ function plgnotify( sysconfig ) {
 
 		//lista é preciso estar na tela para fazer calculo de posicionamento.
 
-		layout.domlist.classList.remove( 'hide' );
+		layout.domlist.classList.remove( 'plg-hide' );
 		// verifica se é possível abrir lista
 		if ( !hasSpace( layout.domlist ) ) {
 			layout.domplugin.classList.add( 'shake-anime' );
-			layout.domlist.classList.add( 'hide' );
+			layout.domlist.classList.add( 'plg-hide' );
 			return;
 		}
 
 		layout.domlist.style.zIndex = layout.zIndex + 1;
 		listOpened                  = true;
 
-		layout.domlist.classList.remove( 'hide' );
+		layout.domlist.classList.remove( 'plg-hide' );
 		var lista = document.querySelector( '.plgtab .visited' );
 
 		if ( !lista.classList.contains( 'plgtablink-setting' ) ) {
@@ -1201,8 +1203,7 @@ function plgnotify( sysconfig ) {
 		console.log( 'dragging' )
 		addDragging();
 
-
-		if(window.safari){
+		if ( window.safari ) {
 			addEventListener( window, events.mousemove, onMove );
 		}
 	}
@@ -1216,7 +1217,7 @@ function plgnotify( sysconfig ) {
 		if ( !dragging ) {
 			return;
 		}
-		if(window.safari){
+		if ( window.safari ) {
 			removeEventListener( window, events.mousemove, onMove );
 		}
 		remDragging();
@@ -1527,14 +1528,14 @@ function plgnotify( sysconfig ) {
 
 		//todo implementar substituição de classe.
 		if ( counter > 99 ) {
-			document.querySelector( '.float-menu a.numeracao span.plg-notify-counter' ).style.fontSize = '11px';
-			layout.domcounter.innerHTML                                                                = "99+";
+			document.querySelector( 'span.plg-notify-counter' ).style.fontSize = '11px';
+			layout.domcounter.innerHTML                                        = "99+";
 		}
 		else if ( counter > 9 ) {
-			document.querySelector( '.float-menu a.numeracao span.plg-notify-counter' ).style.fontSize = '14px';
+			document.querySelector( '.span.plg-notify-counter' ).style.fontSize = '14px';
 		}
 		else {
-			document.querySelector( '.float-menu a.numeracao span.plg-notify-counter' ).style.fontSize = '16px';
+			document.querySelector( 'span.plg-notify-counter' ).style.fontSize = '16px';
 		}
 		layout.domcounter.innerHTML = counter;
 	}
@@ -1582,19 +1583,20 @@ function plgnotify( sysconfig ) {
 		setPosition( x, y );
 	}
 
-	var onMove=  (function () {
+	var onMove = (function () {
 		var timeWindow = 41.67; // tempo em ms
 		var timeout;
 		updater();
-		return function (e) {
+		return function ( e ) {
 			cancelAnimationFrame( timeout );
 			timeout = requestAnimationFrame(
 				function () {
-					dropPosition(layout.domplugin,e);
+					dropPosition( layout.domplugin, e );
 				}, timeWindow
 			);
 		};
 	})();
+
 	/**
 	 * Adicionar evento à um elemento e seus parâmetros.
 	 * @param {ElementDOM} el - elemento dom que recebe o evento.
@@ -1841,12 +1843,12 @@ function plgnotify( sysconfig ) {
 		console.warn( 'Plugin não está na tela.' );
 
 		// adicionar elemntosDOM e styles, se não houver
-		css = '.plg .plgmodal ul,.plg .plgsnackbar-body *,.plg div:not(.plg-list):not(.sino),.plg h1,.plg h2,.plg h3,.plg h4,.plg h5,.plg h6,.plg html,.plg li,.plg p,.plg path,.plg svg .plg ul,.plg ul,.plg ul .hitbox,.plg ul.plgnot *{-webkit-margin-before:0;-webkit-margin-after:0;-webkit-margin-start:0;-webkit-margin-end:0;-webkit-padding-start:0;margin:0;padding:0;text-decoration:none;font-family:Roboto,sans-serif}.plg .plgmodal-body *,.plg h1,.plg h2,.plg h3,.plg h4,.plg h5,.plg h6,.plg strong{font-size:16px;font-weight:400;font-style:normal}.plg ul{list-style:none}.reticencias,.reticencias *{white-space:nowrap;overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis}.disturb.cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;-webkit-box-shadow:0 0 10px 4px rgba(0,0,0,.1);box-shadow:0 0 10px 4px rgba(0,0,0,.1);-webkit-border-radius:10px;border-radius:10px;color:#000!important;border-bottom:1px solid #d3d3d3;overflow-x:hidden;max-height:272px;width:154px}.plg-panel ul{font-size:16px;font-weight:700;padding:8px;color:#000!important;width:initial;display:block}.plg-panel ul:first-letter{text-transform:uppercase}.plg-panel ul:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;-webkit-animation:.5s fadeIn;animation:.5s fadeIn;display:block}@-webkit-keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{-webkit-border-top-left-radius:10px;border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777;cursor:pointer}.plgtablink-setting{-webkit-border-top-right-radius:10px;border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:1150;left:50%;bottom:0;opacity:0;max-height:52px;-webkit-border-radius:10px;border-radius:10px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;font-size:16px;color:#fff;text-transform:lowercase}.plgsnackbar-right{width:36px;-webkit-border-radius:0 10px 10px 0;border-radius:0 10px 10px 0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:214px;-webkit-border-radius:10px 0 0 10px;border-radius:10px 0 0 10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;-webkit-border-radius:10px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;-webkit-border-radius:50%!important;border-radius:50%!important;width:36px;height:36px;margin:2px;-webkit-animation:2s linear infinite spin!important;animation:2s linear infinite spin!important}.fix36{width:36px!important;height:36px!important}.fix24{width:24px!important;height:24px!important}.plg-pag{text-align:center;vertical-align:middle;text-align:-webkit-center}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.plg-notify-bell,.plg-notify-hide,.plg-notify-move,.unselectable{-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.plg-notify-move{cursor:move!important}.hide{display:none!important}.hitbox{pointer-events:none}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;-webkit-box-shadow:0 0 10px 4px rgba(0,0,0,.1);box-shadow:0 0 10px 4px rgba(0,0,0,.1);-webkit-border-radius:10px;border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-o-transition:none!important;transition:none !important margin-bottom: 10px}.plg-list:not(.configuracoes)>ul{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:16px;overflow:hidden;height:auto;cursor:pointer}ul.lida{opacity:.5}.plg-list:not(.configuracoes) ul *{color:#b1b1b1;height:auto;max-height:32px}.plg-list:not(.configuracoes) ul p,.plg-list:not(.configuracoes) ul span{overflow:hidden;max-width:90%;min-width:30%;font-size:20px;display:block;font-weight:900;color:#16688e;padding:10px 0 0 10px}.circulo,.float-menu{-webkit-border-radius:100%;border-radius:100%;width:80px;height:80px}.circulo{overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;-webkit-box-shadow:4px 4px 4px rgba(0,0,0,.3);box-shadow:4px 4px 4px rgba(0,0,0,.3)}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;-webkit-box-sizing:border-box;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:16px;-webkit-border-radius:100%;border-radius:100%;height:40px}span.plg-notify-counter{font-size:16px;color:#fff}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;-webkit-border-radius:100%;border-radius:100%;font-weight:700;z-index:15;-webkit-box-sizing:content-box!important;box-sizing:content-box!important}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;-webkit-border-radius:0 100% 0 0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;-webkit-border-radius:0 0 100%;border-radius:0 0 100%}.sino{width:50px;height:80px;box-sizing:border-box;padding:20px 0 0 10px;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{-webkit-animation:1s cubic-bezier(.36,.07,.19,.97) both shake;animation:1s cubic-bezier(.36,.07,.19,.97) both shake;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-perspective:1000px;perspective:1000px}@-webkit-keyframes shake{10%,90%{-webkit-transform:translate3d(-1px,0,0);transform:translate3d(-1px,0,0)}20%,80%{-webkit-transform:translate3d(2px,0,0);transform:translate3d(2px,0,0)}30%,50%,70%{-webkit-transform:translate3d(-4px,0,0);transform:translate3d(-4px,0,0)}40%,60%{-webkit-transform:translate3d(4px,0,0);transform:translate3d(4px,0,0)}}@keyframes shake{10%,90%{-webkit-transform:translate3d(-1px,0,0);transform:translate3d(-1px,0,0)}20%,80%{-webkit-transform:translate3d(2px,0,0);transform:translate3d(2px,0,0)}30%,50%,70%{-webkit-transform:translate3d(-4px,0,0);transform:translate3d(-4px,0,0)}40%,60%{-webkit-transform:translate3d(4px,0,0);transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;-webkit-border-radius:3px;border-radius:3px;color:#fff!important;display:inline-block;font-size:16px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;-webkit-transition:color .1s ease;-o-transition:color .1s ease;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-xclose:hover{color:#000}.plgmodal-xclose{color:#aaa;font-size:30px;text-decoration:none;position:absolute;top:0;right:0;height:30px;width:30px;vertical-align:middle;text-align:center}.plgmodal{display:block;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.4)}.plgmodal-dialog{z-index:1211;width:80%;min-width:300px;max-width:600px;height:auto;max-height:600px;left:0;top:-100%;position:relative;padding:0;margin:auto;margin-top:5%;-webkit-box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);border:1px solid #333;-webkit-border-radius:5px;border-radius:5px;background:#fefefe;overflow:hidden}.plgmodal *{color:#aaa}.plgmodal-dialog a{cursor:pointer}.plgmodal-body,.plgmodal-footer,.plgmodal-header{overflow:hidden;color:#16688e;width:auto;height:auto;text-align:justify;word-break:break-all}.plgmodal-header{border-bottom:1px solid #eee;max-height:70px}.plgmodal-body{max-height:330px;overflow-x:hidden;overflow-y:auto;padding:10px}.plgmodal-footer{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;border-top:1px solid #eee;height:70px}.plgmodal-header .title{font-size:20px;font-weight:700;line-height:24px;margin:0 0 10px;color:grey;overflow:hidden;height:auto;padding:10px 35px 10px 10px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute;bottom:10px}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.sender{bottom:46px;font-size:20px;position:absolute;left:10px;max-width:90%;height:20px}.plg-list{margin-top:48px;padding-bottom:10px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb,.disturb *{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px;line-height:38px;font-weight:700}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;-webkit-border-bottom-left-radius:10px;border-bottom-left-radius:10px;-webkit-border-top-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px!important;width:18px!important;-webkit-box-sizing:content-box!important;box-sizing:content-box!important}.cancelar p:hover,.disturb p:hover,.disturb svg:hover{background-color:#fff}.cancelar p:active,.disturb p:active,.disturb svg:active{border-color:#f5f5f5}.disturb p{height:18px;border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;padding:10px;-webkit-border-bottom-right-radius:10px;border-bottom-right-radius:10px;margin:0;-webkit-border-top-right-radius:10px;border-top-right-radius:10px;float:left;font-size:16px;vertical-align:middle;text-align:center;-webkit-box-sizing:content-box!important;box-sizing:content-box!important}.cancelar p{border:1px solid gray;margin:0 10px;-webkit-border-radius:10px;border-radius:10px}ul.plgnot{height:auto}ul.plgnot>*{padding:5px}ul.plgnot>*{overflow:hidden;pointer-events:none}ul.plgnot:hover{opacity:1;background-color:rgba(112,128,144,.42)!important}ul.plgnot:hover>*{color:#000!important}.plg-nu{float:right!important;padding:5px!important}.plgsnackbar-body *,ul.plgnot *,ul.plgnot p *,ul.plgnot span *{margin:0;padding:0}.plg,.plg>*{-webkit-box-sizing:initial!important;box-sizing:initial!important;z-index:1400}.plg-list>*{padding-bottom:10px}.plg-panel>*{margin:0}';
+		css = '.plg .plgmodal ul,.plg .plgsnackbar-body *,.plg div:not(.plg-list):not(.sino),.plg h1,.plg h2,.plg h3,.plg h4,.plg h5,.plg h6,.plg html,.plg li,.plg p,.plg path,.plg svg .plg ul,.plg ul,.plg ul .hitbox,.plg ul.plgnot *{-webkit-margin-before:0;-webkit-margin-after:0;-webkit-margin-start:0;-webkit-margin-end:0;-webkit-padding-start:0;margin:0;padding:0;text-decoration:none;font-family:Roboto,sans-serif}.plg .plgmodal-body *,.plg h1,.plg h2,.plg h3,.plg h4,.plg h5,.plg h6,.plg strong{font-size:16px;font-weight:400;font-style:normal}.plg ul{list-style:none}.reticencias,.reticencias *{white-space:nowrap;overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis}.disturb.plg-cancelar{display:block}.plg-panel{position:fixed;display:inline-block;text-align:center;background:#fff;-webkit-box-shadow:0 0 10px 4px rgba(0,0,0,.1);box-shadow:0 0 10px 4px rgba(0,0,0,.1);-webkit-border-radius:10px;border-radius:10px;color:#000!important;border-bottom:1px solid #d3d3d3;overflow-x:hidden;max-height:272px;width:154px}.plg-panel ul{font-size:16px;font-weight:700;padding:8px;color:#000!important;width:initial;display:block}.plg-panel ul:first-letter{text-transform:uppercase}.plg-panel ul:hover{background-color:#d3d3d3}.plgtab{position:fixed;width:inherit}.plgtablink{background-color:#555;color:#fff;float:left;border:none;outline:0;padding:14px 16px;font-size:17px;width:40%;height:48px}.plgtablink.visited{background-color:#a9a9a9!important}.plgtablink-setting.visited~.plg-list.configuracoes,.plgtablink.lidas.visited~.plg-list.lidas,.plgtablink.novas.visited~.plg-list.novas{opacity:1;-webkit-animation:.5s fadeIn;animation:.5s fadeIn;display:block}@-webkit-keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.plgtablink:first-child{-webkit-border-top-left-radius:10px;border-top-left-radius:10px}.plgtablink:active,.plgtablink:hover{background-color:#777;cursor:pointer}.plgtablink-setting{-webkit-border-top-right-radius:10px;border-top-right-radius:10px;width:20%}.tabcontent{color:#fff;display:none;padding:50px;text-align:center}.plgsnackbar{visibility:hidden;width:250px;margin-left:-125px;background-color:#333;text-align:center;position:fixed;z-index:1150;left:50%;bottom:0;opacity:0;max-height:52px;-webkit-border-radius:10px;border-radius:10px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex}.plg-icon-btn,.plgsnackbar button{overflow:hidden;background-color:transparent;border:none;outline:0}.plgsnackbar span{display:block;font-size:16px;color:#fff;text-transform:lowercase}.plgsnackbar-right{width:36px;-webkit-border-radius:0 10px 10px 0;border-radius:0 10px 10px 0}.plgsnackbar-center{padding:8px 4px 8px 8px;width:214px;-webkit-border-radius:10px 0 0 10px;border-radius:10px 0 0 10px}.plgsnackbar-center span::first-letter{text-transform:uppercase}.plg-icon-btn:hover,.plgsnackbar-center:hover,.plgsnackbar-left:hover,.plgsnackbar-right:hover{background-color:#505050;cursor:pointer}.plgsnackbar-header{font-weight:700}.plg-icon-btn{height:24px;-webkit-border-radius:10px;border-radius:10px;background-color:transparent;width:24px}.plg-icon-btn:hover path{color:#d3d3d3;fill:#fff}.plgloader{border:8px solid #f3f3f3!important;border-top:8px solid #3498db!important;-webkit-border-radius:50%!important;border-radius:50%!important;width:36px;height:36px;margin:2px;-webkit-animation:2s linear infinite spin!important;animation:2s linear infinite spin!important}.fix36{width:36px!important;height:36px!important}.fix24{width:24px!important;height:24px!important}.plg-pag{text-align:center;vertical-align:middle;text-align:-webkit-center}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.plg-notify-bell,.plg-notify-hide,.plg-notify-move,.unselectable{-webkit-user-select:none;-ms-user-select:none;-moz-user-select:none;user-select:none;cursor:pointer}[draggable]{-khtml-user-drag:element;-webkit-user-drag:element}.draggable{position:absolute}.draggable,.draggable>*{display:inline-block}.plg-notify-move{cursor:move!important}.plg-hide{display:none!important}.hitbox{pointer-events:none}.interactive,.interactive>*{pointer-events:auto}.plg-notificacoes{list-style-type:none;position:fixed;background:#fff;width:320px;display:inline-block;border:1px solid #ddd;-webkit-box-shadow:0 0 10px 4px rgba(0,0,0,.1);box-shadow:0 0 10px 4px rgba(0,0,0,.1);-webkit-border-radius:10px;border-radius:10px;overflow:hidden;height:420px;color:#000;-webkit-transition:none!important;-o-transition:none!important;transition:none !important margin-bottom: 10px}.plg-list:not(.configuracoes)>ul{width:100%;border-bottom:1px solid rgba(235,238,240,.31);font-size:16px;overflow:hidden;height:auto;cursor:pointer}ul.lida{opacity:.5}.plg-list:not(.configuracoes) ul *{color:#b1b1b1;height:auto;max-height:32px}.plg-list:not(.configuracoes) ul p,.plg-list:not(.configuracoes) ul span{overflow:hidden;max-width:90%;min-width:30%;font-size:20px;display:block;font-weight:900;color:#16688e;padding:10px 0 0 10px}.circulo,.float-menu{-webkit-border-radius:100%;border-radius:100%;width:80px;height:80px}.circulo{overflow:hidden}.float-menu{display:block;position:fixed;color:#fff;-webkit-box-shadow:4px 4px 4px rgba(0,0,0,.3);box-shadow:4px 4px 4px rgba(0,0,0,.3)}.float-menu .lateral{width:38px;left:42px;position:absolute;height:40px}.float-menu .lateral a{display:inline-block;width:100%;text-align:center;padding:7px;-webkit-box-sizing:border-box;box-sizing:border-box;background:#f32f2f;font-weight:600;font-size:16px;-webkit-border-radius:100%;border-radius:100%;height:40px}span.plg-notify-counter{font-size:16px;color:#fff}.float-menu a.numeracao{background:#ff9800;cursor:default;position:absolute;right:0;top:-10px;height:16px;width:16px;padding:5px;margin:auto;-webkit-border-radius:100%;border-radius:100%;font-weight:700;z-index:15;-webkit-box-sizing:content-box!important;box-sizing:content-box!important}.float-menu a.numeracao:hover{background:#ffd200;color:#000}.float-menu .lateral a.esconder svg{margin-top:0}.float-menu .lateral a:hover{background:#a91b1b}.float-menu .lateral a svg{fill:#fff;margin-top:7px}.float-menu .lateral a:first-child{border-bottom:0;-webkit-border-radius:0 100% 0 0;border-radius:0 100% 0 0}.float-menu .lateral a:last-child{border-bottom:0;-webkit-border-radius:0 0 100%;border-radius:0 0 100%}.sino{width:50px;height:80px;box-sizing:border-box;padding:20px 0 0 10px;position:relative;background-color:#232b38}.sino svg{fill:#fff}.sino:hover{background:#3d4d60}.shake-anime{-webkit-animation:1s cubic-bezier(.36,.07,.19,.97) both shake;animation:1s cubic-bezier(.36,.07,.19,.97) both shake;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;backface-visibility:hidden;-webkit-perspective:1000px;perspective:1000px}@-webkit-keyframes shake{10%,90%{-webkit-transform:translate3d(-1px,0,0);transform:translate3d(-1px,0,0)}20%,80%{-webkit-transform:translate3d(2px,0,0);transform:translate3d(2px,0,0)}30%,50%,70%{-webkit-transform:translate3d(-4px,0,0);transform:translate3d(-4px,0,0)}40%,60%{-webkit-transform:translate3d(4px,0,0);transform:translate3d(4px,0,0)}}@keyframes shake{10%,90%{-webkit-transform:translate3d(-1px,0,0);transform:translate3d(-1px,0,0)}20%,80%{-webkit-transform:translate3d(2px,0,0);transform:translate3d(2px,0,0)}30%,50%,70%{-webkit-transform:translate3d(-4px,0,0);transform:translate3d(-4px,0,0)}40%,60%{-webkit-transform:translate3d(4px,0,0);transform:translate3d(4px,0,0)}}.plgmodal-btn{background:#428bca;border:1px solid #357ebd;-webkit-border-radius:3px;border-radius:3px;color:#fff!important;display:inline-block;font-size:16px;padding:8px 15px;text-decoration:none;text-align:center;min-width:60px;position:relative;-webkit-transition:color .1s ease;-o-transition:color .1s ease;transition:color .1s ease}.plgmodal-btn:hover{background:#357ebd}.plgmodal-xclose:hover{color:#000}.plgmodal-xclose{color:#aaa;font-size:30px;text-decoration:none;position:absolute;top:0;right:0;height:30px;width:30px;vertical-align:middle;text-align:center}.plgmodal{display:block;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.4)}.plgmodal-dialog{z-index:1211;width:80%;min-width:300px;max-width:600px;height:auto;max-height:600px;left:0;top:-100%;position:relative;padding:0;margin:auto;margin-top:5%;-webkit-box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);box-shadow:0 4px 8px 0 rgba(0,0,0,.2),0 6px 20px 0 rgba(0,0,0,.19);border:1px solid #333;-webkit-border-radius:5px;border-radius:5px;background:#fefefe;overflow:hidden}.plgmodal *{color:#aaa}.plgmodal-dialog a{cursor:pointer}.plgmodal-body,.plgmodal-footer,.plgmodal-header{overflow:hidden;color:#16688e;width:auto;height:auto;text-align:justify;word-break:break-all}.plgmodal-header{border-bottom:1px solid #eee;max-height:70px}.plgmodal-body{max-height:330px;overflow-x:hidden;overflow-y:auto;padding:10px}.plgmodal-footer{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;border-top:1px solid #eee;height:70px}.plgmodal-header .title{font-size:20px;font-weight:700;line-height:24px;margin:0 0 10px;color:grey;overflow:hidden;height:auto;padding:10px 35px 10px 10px}.plgmodal-left,.plgmodal-right{text-align:right;position:absolute;bottom:10px}.plgmodal-right{right:10px}.plgmodal-left{left:10px}.sender{bottom:46px;font-size:20px;position:absolute;left:10px;max-width:90%;height:20px}.plg-list{margin-top:48px;padding-bottom:10px;overflow-y:auto;overflow-x:hidden;height:376px;opacity:0;display:none}.configuracoes{padding:10px}.disturb,.disturb *{cursor:pointer;color:#696969;display:block}.disturb strong{cursor:default;display:block;margin-bottom:5px;line-height:38px;font-weight:700}.disturb svg{border:1px solid gray;display:inline;background-color:#f5f5f5;-webkit-border-bottom-left-radius:10px;border-bottom-left-radius:10px;-webkit-border-top-left-radius:10px;border-top-left-radius:10px;padding:10px;float:left;height:18px!important;width:18px!important;-webkit-box-sizing:content-box!important;box-sizing:content-box!important}.disturb p:hover,.disturb svg:hover,.plg-cancelar p:hover{background-color:#fff}.disturb p:active,.disturb svg:active,.plg-cancelar p:active{border-color:#f5f5f5}.disturb p{height:18px;border:1px solid gray;border-left:none;display:block;color:#000;background-color:#f5f5f5;padding:10px;-webkit-border-bottom-right-radius:10px;border-bottom-right-radius:10px;margin:0;-webkit-border-top-right-radius:10px;border-top-right-radius:10px;float:left;font-size:16px;vertical-align:middle;text-align:center;-webkit-box-sizing:content-box!important;box-sizing:content-box!important}.plg-cancelar p{border:1px solid gray;margin:0 10px;-webkit-border-radius:10px;border-radius:10px}ul.plgnot{height:auto}ul.plgnot>*{padding:5px}ul.plgnot>*{overflow:hidden;pointer-events:none}ul.plgnot:hover{opacity:1;background-color:rgba(112,128,144,.42)!important}ul.plgnot:hover>*{color:#000!important}.plg-nu{float:right!important;padding:5px!important}.plgsnackbar-body *,ul.plgnot *,ul.plgnot p *,ul.plgnot span *{margin:0;padding:0}.plg,.plg>*{-webkit-box-sizing:initial!important;box-sizing:initial!important;z-index:1400}.plg-list>*{padding-bottom:10px}.plg-panel>*{margin:0}';
 		dom = addContentHTML( 'style', css );
 		_body.appendChild( dom );
 
 		//adicionar plugin
-		html = '<div '+((!window.safari)? 'draggable="true"':'')+' class="float-menu plg-notify">' +
+		html = '<div ' + ((!window.safari) ? 'draggable="true"' : '') + ' class="float-menu plg-notify">' +
 			   '<div class="circulo">' +
 			   '<div class="lateral">' +
 			   '<a class="mover plg-notify-move">' +
@@ -1861,7 +1863,7 @@ function plgnotify( sysconfig ) {
 			   '</div>' +
 			   '<a class="numeracao hitbox"><span class="plg-notify-counter">0</span></a>' +
 			   '</div>' +
-			   '<div class="hide plg-notificacoes plgtab">' +
+			   '<div class="plg-hide plg-notificacoes plgtab">' +
 			   '<button class="plgtablink novas visited" id="' + events.unread + '">Novas</button>' +
 			   '<button class="plgtablink lidas "id="' + events.read + '">Lidas</button>' +
 			   '<button class="plgtablink-setting plgtablink " title="Configurações">' +
@@ -1878,7 +1880,7 @@ function plgnotify( sysconfig ) {
 			   '</svg>' +
 			   '<p>Mais opções</p>' +
 			   '</ul>' +
-			   '<ul title="Cancelar não perturbe" class="disturb cancelar hide"><p>Cancelar</p></ul>' +
+			   '<ul title="Cancelar não perturbe" class="disturb plg-cancelar plg-hide"><p>Cancelar</p></ul>' +
 			   '</div>' +
 			   '</div>' +
 			   '</div>';
@@ -1889,8 +1891,8 @@ function plgnotify( sysconfig ) {
 
 		//adiciona eventos de selectionar tab
 		linksTabs = dom.querySelectorAll( 'button.plgtablink' );
-		for(var i =linksTabs.length;i--;){
-			if(linksTabs[i]){
+		for ( var i = linksTabs.length ; i-- ; ) {
+			if ( linksTabs[i] ) {
 				linksTabs[i].onclick = selectTab;
 			}
 		}
@@ -1902,7 +1904,7 @@ function plgnotify( sysconfig ) {
 		};
 
 		//aplica função de cancelar 'não perturbe'
-		layout.domdisturbcancel = domdisturbcancel = dom.querySelector( '.disturb.cancelar' );
+		layout.domdisturbcancel = domdisturbcancel = dom.querySelector( '.disturb.plg-cancelar' );
 		domdisturbcancel.onclick = disturbCancel;
 
 		_body.appendChild( dom );
@@ -1911,7 +1913,7 @@ function plgnotify( sysconfig ) {
 		//Cria layout paginação, uma instancia para cada lista.
 		var loadMore = '<ul class="plgnot plg-pag">' +
 					   '<span> Carregar mais</span>' +
-					   '<div class="plgloader fix24 hide"></div>' +
+					   '<div class="plgloader fix24 plg-hide"></div>' +
 					   '</ul>';
 
 		pagread = layout['domPag' + events.read] = addContentHTML( 'div', loadMore, true ).childNodes[0];
@@ -2031,16 +2033,13 @@ function plgnotify( sysconfig ) {
 		addEventListener( window, events.mouseup, onDragEnd );
 		addEventListener( window, events.mousedown, onBlur );
 
-
-
-		if(!window.safari){
+		if ( !window.safari ) {
 			addEventListener( window, events.dragstart, onDragStart );
 			addEventListener( window, events.dragend, onDragEnd );
 		}
-		else{
+		else {
 			//addEventListener( window, events.mousedown, onDragStart );
 		}
-
 
 		updater();
 		disturbValidator();
@@ -2104,7 +2103,7 @@ function plgnotify( sysconfig ) {
 	 */
 	function publish() {
 		//Exibe plugin quanto todos os outros métodos tiver terminados.
-		layout.domplugin.classList.remove( 'hide' );
+		layout.domplugin.classList.remove( 'plg-hide' );
 
 		//Pega total de itens não lidos.
 		getUnreadList(
@@ -2175,182 +2174,187 @@ function plgnotify( sysconfig ) {
 
 /*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
 
-if ("document" in self) {
+if ( "document" in self ) {
 
-// Full polyfill for browsers with no classList support
-// Including IE < Edge missing SVGElement.classList
-if (!("classList" in document.createElement("_")) 
-	|| document.createElementNS && !("classList" in document.createElementNS("http://www.w3.org/2000/svg","g"))) {
+	// Full polyfill for browsers with no classList support
+	// Including IE < Edge missing SVGElement.classList
+	if ( !("classList" in document.createElement( "_" ))
+		 || document.createElementNS && !("classList" in document.createElementNS( "http://www.w3.org/2000/svg", "g" )) ) {
 
-(function (view) {
+		(function ( view ) {
 
-"use strict";
+			"use strict";
 
-if (!('Element' in view)) return;
-
-var
-	  classListProp = "classList"
-	, protoProp = "prototype"
-	, elemCtrProto = view.Element[protoProp]
-	, objCtr = Object
-	, strTrim = String[protoProp].trim || function () {
-		return this.replace(/^\s+|\s+$/g, "");
-	}
-	, arrIndexOf = Array[protoProp].indexOf || function (item) {
-		var
-			  i = 0
-			, len = this.length
-		;
-		for (; i < len; i++) {
-			if (i in this && this[i] === item) {
-				return i;
+			if ( !('Element' in view) ) {
+				return;
 			}
-		}
-		return -1;
-	}
-	// Vendors: please allow content code to instantiate DOMExceptions
-	, DOMEx = function (type, message) {
-		this.name = type;
-		this.code = DOMException[type];
-		this.message = message;
-	}
-	, checkTokenAndGetIndex = function (classList, token) {
-		if (token === "") {
-			throw new DOMEx(
-				  "SYNTAX_ERR"
-				, "An invalid or illegal string was specified"
-			);
-		}
-		if (/\s/.test(token)) {
-			throw new DOMEx(
-				  "INVALID_CHARACTER_ERR"
-				, "String contains an invalid character"
-			);
-		}
-		return arrIndexOf.call(classList, token);
-	}
-	, ClassList = function (elem) {
-		var
-			  trimmedClasses = strTrim.call(elem.getAttribute("class") || "")
-			, classes = trimmedClasses ? trimmedClasses.split(/\s+/) : []
-			, i = 0
-			, len = classes.length
-		;
-		for (; i < len; i++) {
-			this.push(classes[i]);
-		}
-		this._updateClassName = function () {
-			elem.setAttribute("class", this.toString());
-		};
-	}
-	, classListProto = ClassList[protoProp] = []
-	, classListGetter = function () {
-		return new ClassList(this);
-	}
-;
-// Most DOMException implementations don't allow calling DOMException's toString()
-// on non-DOMExceptions. Error's toString() is sufficient here.
-DOMEx[protoProp] = Error[protoProp];
-classListProto.item = function (i) {
-	return this[i] || null;
-};
-classListProto.contains = function (token) {
-	token += "";
-	return checkTokenAndGetIndex(this, token) !== -1;
-};
-classListProto.add = function () {
-	var
-		  tokens = arguments
-		, i = 0
-		, l = tokens.length
-		, token
-		, updated = false
-	;
-	do {
-		token = tokens[i] + "";
-		if (checkTokenAndGetIndex(this, token) === -1) {
-			this.push(token);
-			updated = true;
-		}
-	}
-	while (++i < l);
 
-	if (updated) {
-		this._updateClassName();
+			var
+				classListProp           = "classList"
+				, protoProp             = "prototype"
+				, elemCtrProto          = view.Element[protoProp]
+				, objCtr                = Object
+				, strTrim               = String[protoProp].trim || function () {
+						return this.replace( /^\s+|\s+$/g, "" );
+					}
+				, arrIndexOf            = Array[protoProp].indexOf || function ( item ) {
+						var
+							i     = 0
+							, len = this.length
+							;
+						for ( ; i < len ; i++ ) {
+							if ( i in this && this[i] === item ) {
+								return i;
+							}
+						}
+						return -1;
+					}
+				// Vendors: please allow content code to instantiate DOMExceptions
+				, DOMEx                 = function ( type, message ) {
+					this.name    = type;
+					this.code    = DOMException[type];
+					this.message = message;
+				}
+				, checkTokenAndGetIndex = function ( classList, token ) {
+					if ( token === "" ) {
+						throw new DOMEx(
+							"SYNTAX_ERR"
+							, "An invalid or illegal string was specified"
+						);
+					}
+					if ( /\s/.test( token ) ) {
+						throw new DOMEx(
+							"INVALID_CHARACTER_ERR"
+							, "String contains an invalid character"
+						);
+					}
+					return arrIndexOf.call( classList, token );
+				}
+				, ClassList             = function ( elem ) {
+					var
+						trimmedClasses = strTrim.call( elem.getAttribute( "class" ) || "" )
+						, classes      = trimmedClasses ? trimmedClasses.split( /\s+/ ) : []
+						, i            = 0
+						, len          = classes.length
+						;
+					for ( ; i < len ; i++ ) {
+						this.push( classes[i] );
+					}
+					this._updateClassName = function () {
+						elem.setAttribute( "class", this.toString() );
+					};
+				}
+				, classListProto        = ClassList[protoProp] = []
+				, classListGetter = function () {
+					return new ClassList( this );
+				}
+				;
+			// Most DOMException implementations don't allow calling DOMException's toString()
+			// on non-DOMExceptions. Error's toString() is sufficient here.
+			DOMEx[protoProp]        = Error[protoProp];
+			classListProto.item     = function ( i ) {
+				return this[i] || null;
+			};
+			classListProto.contains = function ( token ) {
+				token += "";
+				return checkTokenAndGetIndex( this, token ) !== -1;
+			};
+			classListProto.add      = function () {
+				var
+					tokens    = arguments
+					, i       = 0
+					, l       = tokens.length
+					, token
+					, updated = false
+					;
+				do {
+					token = tokens[i] + "";
+					if ( checkTokenAndGetIndex( this, token ) === -1 ) {
+						this.push( token );
+						updated = true;
+					}
+				}
+				while ( ++i < l );
+
+				if ( updated ) {
+					this._updateClassName();
+				}
+			};
+			classListProto.remove   = function () {
+				var
+					tokens    = arguments
+					, i       = 0
+					, l       = tokens.length
+					, token
+					, updated = false
+					, index
+					;
+				do {
+					token = tokens[i] + "";
+					index = checkTokenAndGetIndex( this, token );
+					while ( index !== -1 ) {
+						this.splice( index, 1 );
+						updated = true;
+						index   = checkTokenAndGetIndex( this, token );
+					}
+				}
+				while ( ++i < l );
+
+				if ( updated ) {
+					this._updateClassName();
+				}
+			};
+			classListProto.toggle   = function ( token, force ) {
+				token += "";
+
+				var
+					result   = this.contains( token )
+					, method = result ?
+							   force !== true && "remove"
+						:
+							   force !== false && "add"
+					;
+
+				if ( method ) {
+					this[method]( token );
+				}
+
+				if ( force === true || force === false ) {
+					return force;
+				}
+				else {
+					return !result;
+				}
+			};
+			classListProto.toString = function () {
+				return this.join( " " );
+			};
+
+			if ( objCtr.defineProperty ) {
+				var classListPropDesc = {
+					get           :classListGetter
+					, enumerable  :true
+					, configurable:true
+				};
+				try {
+					objCtr.defineProperty( elemCtrProto, classListProp, classListPropDesc );
+				}
+				catch ( ex ) { // IE 8 doesn't support enumerable:true
+					// adding undefined to fight this issue https://github.com/eligrey/classList.js/issues/36
+					// modernie IE8-MSW7 machine has IE8 8.0.6001.18702 and is affected
+					if ( ex.number === undefined || ex.number === -0x7FF5EC54 ) {
+						classListPropDesc.enumerable = false;
+						objCtr.defineProperty( elemCtrProto, classListProp, classListPropDesc );
+					}
+				}
+			}
+			else if ( objCtr[protoProp].__defineGetter__ ) {
+				elemCtrProto.__defineGetter__( classListProp, classListGetter );
+			}
+
+		}( self ));
+
 	}
-};
-classListProto.remove = function () {
-	var
-		  tokens = arguments
-		, i = 0
-		, l = tokens.length
-		, token
-		, updated = false
-		, index
-	;
-	do {
-		token = tokens[i] + "";
-		index = checkTokenAndGetIndex(this, token);
-		while (index !== -1) {
-			this.splice(index, 1);
-			updated = true;
-			index = checkTokenAndGetIndex(this, token);
-		}
-	}
-	while (++i < l);
-
-	if (updated) {
-		this._updateClassName();
-	}
-};
-classListProto.toggle = function (token, force) {
-	token += "";
-
-	var
-		  result = this.contains(token)
-		, method = result ?
-			force !== true && "remove"
-		:
-			force !== false && "add"
-	;
-
-	if (method) {
-		this[method](token);
-	}
-
-	if (force === true || force === false) {
-		return force;
-	} else {
-		return !result;
-	}
-};
-classListProto.toString = function () {
-	return this.join(" ");
-};
-
-if (objCtr.defineProperty) {
-	var classListPropDesc = {
-		  get: classListGetter
-		, enumerable: true
-		, configurable: true
-	};
-	try {
-		objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
-	} catch (ex) { // IE 8 doesn't support enumerable:true
-		// adding undefined to fight this issue https://github.com/eligrey/classList.js/issues/36
-		// modernie IE8-MSW7 machine has IE8 8.0.6001.18702 and is affected
-		if (ex.number === undefined || ex.number === -0x7FF5EC54) {
-			classListPropDesc.enumerable = false;
-			objCtr.defineProperty(elemCtrProto, classListProp, classListPropDesc);
-		}
-	}
-} else if (objCtr[protoProp].__defineGetter__) {
-	elemCtrProto.__defineGetter__(classListProp, classListGetter);
-}
-
-}(self));
-
-} 
 }
 
 
