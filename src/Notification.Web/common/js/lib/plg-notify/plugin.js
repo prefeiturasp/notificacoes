@@ -2038,7 +2038,7 @@ function plgnotify( sysconfig ) {
 			addEventListener( window, events.dragend, onDragEnd );
 		}
 		else{
-			addEventListener( window, events.mousedown, onDragStart );
+			//addEventListener( window, events.mousedown, onDragStart );
 		}
 
 
