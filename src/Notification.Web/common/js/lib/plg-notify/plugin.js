@@ -59,6 +59,7 @@ function plgnotify( sysconfig ) {
 			alert( 'Não é possível fazer XHR.' );
 			return false;
 		}
+
 		xhr.open( method, url, true );
 
 		if ( config ) {
@@ -2031,12 +2032,15 @@ function plgnotify( sysconfig ) {
 		addEventListener( window, events.mousedown, onBlur );
 
 
-		addEventListener( window, events.mousedown, onDragStart );
 
 		if(!window.safari){
 			addEventListener( window, events.dragstart, onDragStart );
 			addEventListener( window, events.dragend, onDragEnd );
 		}
+		else{
+			addEventListener( window, events.mousedown, onDragStart );
+		}
+
 
 		updater();
 		disturbValidator();
