@@ -81,6 +81,9 @@ namespace Notification.Repository.SGP
         [System.Obsolete("desuso. substituindo a função do core de permissões")]
         public IEnumerable<School> GetBySuperior(Guid userId, Guid groupId, Guid schoolSuperiorId)
         {
+            var groupRep = new GroupRepository();
+            var groupUser = groupRep.GetById(groupId);
+
             IEnumerable<Guid> ltAUPermission = GetAUByPermission(userId, groupId);
 
             using (var context = new SqlConnection(stringConnection))
@@ -93,8 +96,9 @@ namespace Notification.Repository.SGP
                     FROM 
 	                    ESC_Escola esc WITH(NOLOCK)
                     WHERE
-	                    esc.esc_situacao <> 3
-	                    AND esc.uad_id IN @idsUADPermissao");
+	                    esc.esc_situacao <> 3");
+                if(groupUser.VisionId >1)
+	                    sb.Append(" AND esc.uad_id IN @idsUADPermissao");
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
 
                 sb.Append(" AND esc.uad_idSuperiorGestao = @idDre");
