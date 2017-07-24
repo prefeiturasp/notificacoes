@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Notification.Entity.API.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -14,6 +15,9 @@ namespace Notification.Repository.SGP
     {
         public IEnumerable<SchoolClassification> Get(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior)
         {
+            var groupRep = new GroupRepository();
+            var groupUser = groupRep.GetById(groupId);
+
             using (var context = new SqlConnection(stringConnection))
             {
                 SchoolRepository school = new SchoolRepository();
@@ -41,8 +45,11 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_id = ISNULL(esc.uad_idSuperiorGestao, uad.uad_idSuperior) 
 		                    AND uadSuperior.uad_situacao <> 3 
                     WHERE
-	                    esc.esc_situacao <> 3 
-	                    AND uad.uad_id IN @idsUADPermissao");
+	                    esc.esc_situacao <> 3");
+
+                if (groupUser.VisionId > 1)
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (ltSchoolSuperior != null && ltSchoolSuperior.Any())

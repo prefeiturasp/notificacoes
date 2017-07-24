@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Notification.Entity.API.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,6 +17,8 @@ namespace Notification.Repository.SGP
 
         public IEnumerable<School> Get(Guid userId, Guid groupId, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<int> listClassificationTypeSchool)
         {
+            var groupRep = new GroupRepository();
+            var groupUser = groupRep.GetById(groupId);
 
             IEnumerable<Guid> ltAUPermission = GetAUByPermission(userId, groupId, ltSchoolSuperior);
 
@@ -25,7 +28,7 @@ namespace Notification.Repository.SGP
                 sb.Append(
                     @"SELECT
 	                    esc.esc_id 'Id',
-	                    esc.esc_nome 'Name',
+	                    esc.esc_nome 'Name'
                     FROM
 	                    ESC_Escola esc WITH(NOLOCK)
 	                    INNER JOIN ESC_EscolaClassificacao ecl WITH(NOLOCK)
@@ -42,8 +45,11 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_id = ISNULL(esc.uad_idSuperiorGestao, uad.uad_idSuperior)
 		                    AND uadSuperior.uad_situacao <> 3
                     WHERE
-	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN @idsUADPermissao");
+	                    esc.esc_situacao <> 3");
+
+                if (groupUser.VisionId > 1)
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (ltSchoolSuperior != null && ltSchoolSuperior.Any())
