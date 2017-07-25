@@ -1529,7 +1529,7 @@ function plgnotify( sysconfig ) {
 		//todo implementar substituição de classe.
 		if ( counter > 99 ) {
 			document.querySelector( '.plg-notify-counter' ).style.fontSize = '11px';
-			layout.domcounter.innerHTML                                        = "99+";
+			layout.domcounter.innerHTML                                    = "99+";
 		}
 		else if ( counter > 9 ) {
 			document.querySelector( '.plg-notify-counter' ).style.fontSize = '14px';
@@ -2067,35 +2067,34 @@ function plgnotify( sysconfig ) {
 			return console.warn( 'ws já instânciado.' );
 		}
 
-		if ( !socket || socket && socket.hasHubs ) {
+		if ( !socket || socket ) {
 			socket = _config.ws;
 
-			if ( !socket.hasHubs ) {
-				var hubs    = addContentHTML( 'script', 'hubs' );
-				hubs.src    = socket.url + ( socket.url[socket.url.length-1] === '/' ? 'hubs' : '/' + 'hubs');
-				hubs.onload = function () {
-					socket.hasHubs = true;
-					hubs.onload    = undefined;
-					startSocket();
-				};
-				_body.appendChild( hubs );
-				return;
-			}
+			//if ( !socket.hasHubs ) {
+			//	var hubs    = addContentHTML( 'script', 'hubs' );
+			//	hubs.src    = socket.url + ( socket.url[socket.url.length - 1] === '/' ? 'hubs' : '/' + 'hubs');
+			//	hubs.onload = function () {
+			//		socket.hasHubs = true;
+			//		hubs.onload    = undefined;
+			//		startSocket();
+			//	};
+			//	_body.appendChild( hubs );
+			//	return;
+			//}
 
-			socket.connection    = jQuery.connection.notificationHub;
-			jQuery.connection.hub.qs  = 'authtoken=' + _config.token;
+			socket.connection        = jQuery.connection.notificationHub;
+			jQuery.connection.hub.qs = 'authtoken=' + _config.token;
 			try {
 				jQuery.connection.hub.start( { transport:['webSockets', 'longPolling'] } ).done(
-					function(){
+					function () {
 						socket.connection.client.receiveNotification = (onSocketMessage);
-				}
-			)
-			.fail( resetSocketListeners );
+					}
+					  )
+					  .fail( resetSocketListeners );
 			}
 			catch ( e ) {
 				console.error( 'não foi possível conectar no socket.\n', e );
 			}
-
 
 			jQuery.connection.hub.url = socket.url;
 		}
@@ -2356,20 +2355,20 @@ function plgnotify( sysconfig ) {
 		"undefined" != typeof window ? window : this, function ( a, b ) {
 			var c = [], d = c.slice, e = c.concat, f = c.push, g = c.indexOf, h = {}, i = h.toString, j = h.hasOwnProperty, k = {}, l = a.document, m = "2.1.4", n = function ( a, b ) {
 				return new n.fn.init( a, b )
-			}, o = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, p = /^-ms-/, q = /-([\da-z])/gi, r = function ( a, b ) {
+			}, o                                                                                                                                                   = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, p                                                                                                         = /^-ms-/, q = /-([\da-z])/gi, r = function ( a, b ) {
 				return b.toUpperCase()
 			};
 			n.fn = n.prototype = {
 				jquery:m, constructor:n, selector:"", length:0, toArray:function () {
 					return d.call( this )
-				}, get:function ( a ) {
+				}, get                                                 :function ( a ) {
 					return null != a ? 0 > a ? this[a + this.length] : this[a] : d.call( this )
-				}, pushStack:function ( a ) {
+				}, pushStack                                           :function ( a ) {
 					var b = n.merge( this.constructor(), a );
 					return b.prevObject = this, b.context = this.context, b
-				}, each:function ( a, b ) {
+				}, each                                                :function ( a, b ) {
 					return n.each( this, a, b )
-				}, map:function ( a ) {
+				}, map                                                 :function ( a ) {
 					return this.pushStack(
 						n.map(
 							this, function ( b, c ) {
@@ -2377,49 +2376,51 @@ function plgnotify( sysconfig ) {
 							}
 						)
 					)
-				}, slice:function () {
+				}, slice                                               :function () {
 					return this.pushStack( d.apply( this, arguments ) )
-				}, first:function () {
+				}, first                                               :function () {
 					return this.eq( 0 )
-				}, last:function () {
+				}, last                                                :function () {
 					return this.eq( -1 )
-				}, eq:function ( a ) {
+				}, eq                                                  :function ( a ) {
 					var b = this.length, c = +a + (0 > a ? b : 0);
 					return this.pushStack( c >= 0 && b > c ? [this[c]] : [] )
-				}, end:function () {
+				}, end                                                 :function () {
 					return this.prevObject || this.constructor( null )
-				}, push:f, sort:c.sort, splice:c.splice
+				}, push                                                :f, sort:c.sort, splice:c.splice
 			}, n.extend = n.fn.extend = function () {
 				var a, b, c, d, e, f, g = arguments[0] || {}, h = 1, i = arguments.length, j = !1;
-				for ( "boolean" == typeof g && (j = g, g = arguments[h] || {}, h++), "object" == typeof g || n.isFunction( g ) || (g = {}), h === i && (g = this, h--) ; i > h ; h++ )if ( null != (a = arguments[h]) )for ( b in a )c = g[b], d = a[b], g !== d && (j && d && (n.isPlainObject( d ) || (e = n.isArray( d ))) ? (e ? (e = !1, f = c && n.isArray( c ) ? c : []) : f = c && n.isPlainObject( c ) ? c : {}, g[b] = n.extend( j, f, d )) : void 0 !== d && (g[b] = d));
+				for ( "boolean" == typeof g && (j = g, g = arguments[h] || {}, h++), "object" == typeof g || n.isFunction( g ) || (g = {}), h === i && (g = this, h--) ; i > h ; h++ )if ( null != (a = arguments[h]) )for ( b in a ) {
+					c = g[b], d = a[b], g !== d && (j && d && (n.isPlainObject( d ) || (e = n.isArray( d ))) ? (e ? (e = !1, f = c && n.isArray( c ) ? c : []) : f = c && n.isPlainObject( c ) ? c : {}, g[b] = n.extend( j, f, d )) : void 0 !== d && (g[b] = d));
+				}
 				return g
 			}, n.extend(
 				{
 					expando:"jQuery" + (m + Math.random()).replace( /\D/g, "" ), isReady:!0, error:function ( a ) {
 					throw new Error( a )
-				}, noop:function () {
-				}, isFunction:function ( a ) {
+				}, noop                                                                           :function () {
+				}, isFunction                                                                     :function ( a ) {
 					return "function" === n.type( a )
-				}, isArray:Array.isArray, isWindow:function ( a ) {
+				}, isArray                                                                        :Array.isArray, isWindow:function ( a ) {
 					return null != a && a === a.window
-				}, isNumeric:function ( a ) {
+				}, isNumeric                                                                      :function ( a ) {
 					return !n.isArray( a ) && a - parseFloat( a ) + 1 >= 0
-				}, isPlainObject:function ( a ) {
+				}, isPlainObject                                                                  :function ( a ) {
 					return "object" !== n.type( a ) || a.nodeType || n.isWindow( a ) ? !1 : a.constructor && !j.call( a.constructor.prototype, "isPrototypeOf" ) ? !1 : !0
-				}, isEmptyObject:function ( a ) {
+				}, isEmptyObject                                                                  :function ( a ) {
 					var b;
 					for ( b in a )return !1;
 					return !0
-				}, type:function ( a ) {
+				}, type                                                                           :function ( a ) {
 					return null == a ? a + "" : "object" == typeof a || "function" == typeof a ? h[i.call( a )] || "object" : typeof a
-				}, globalEval:function ( a ) {
+				}, globalEval                                                                     :function ( a ) {
 					var b, c = eval;
 					a = n.trim( a ), a && (1 === a.indexOf( "use strict" ) ? (b = l.createElement( "script" ), b.text = a, l.head.appendChild( b ).parentNode.removeChild( b )) : c( a ))
-				}, camelCase:function ( a ) {
+				}, camelCase                                                                      :function ( a ) {
 					return a.replace( p, "ms-" ).replace( q, r )
-				}, nodeName:function ( a, b ) {
+				}, nodeName                                                                       :function ( a, b ) {
 					return a.nodeName && a.nodeName.toLowerCase() === b.toLowerCase()
-				}, each:function ( a, b, c ) {
+				}, each                                                                           :function ( a, b, c ) {
 					var d, e = 0, f = a.length, g = s( a );
 					if ( c ) {
 						if ( g ) {
@@ -2432,30 +2433,30 @@ function plgnotify( sysconfig ) {
 					}
 					else for ( e in a )if ( d = b.call( a[e], e, a[e] ), d === !1 )break;
 					return a
-				}, trim:function ( a ) {
+				}, trim                                                                           :function ( a ) {
 					return null == a ? "" : (a + "").replace( o, "" )
-				}, makeArray:function ( a, b ) {
+				}, makeArray                                                                      :function ( a, b ) {
 					var c = b || [];
 					return null != a && (s( Object( a ) ) ? n.merge( c, "string" == typeof a ? [a] : a ) : f.call( c, a )), c
-				}, inArray:function ( a, b, c ) {
+				}, inArray                                                                        :function ( a, b, c ) {
 					return null == b ? -1 : g.call( b, a, c )
-				}, merge:function ( a, b ) {
+				}, merge                                                                          :function ( a, b ) {
 					for ( var c = +b.length, d = 0, e = a.length ; c > d ; d++ )a[e++] = b[d];
 					return a.length = e, a
-				}, grep:function ( a, b, c ) {
+				}, grep                                                                           :function ( a, b, c ) {
 					for ( var d, e = [], f = 0, g = a.length, h = !c ; g > f ; f++ )d = !b( a[f], f ), d !== h && e.push( a[f] );
 					return e
-				}, map:function ( a, b, c ) {
+				}, map                                                                            :function ( a, b, c ) {
 					var d, f = 0, g = a.length, h = s( a ), i = [];
 					if ( h )for ( ; g > f ; f++ )d = b( a[f], f, c ), null != d && i.push( d );
 					else for ( f in a )d = b( a[f], f, c ), null != d && i.push( d );
 					return e.apply( [], i )
-				}, guid:1, proxy:function ( a, b ) {
+				}, guid                                                                           :1, proxy                                                                  :function ( a, b ) {
 					var c, e, f;
 					return "string" == typeof b && (c = a[b], b = a, a = c), n.isFunction( a ) ? (e = d.call( arguments, 2 ), f = function () {
 						return a.apply( b || this, e.concat( d.call( arguments ) ) )
 					}, f.guid = a.guid = a.guid || n.guid++, f) : void 0
-				}, now:Date.now, support:k
+				}, now                                                                            :Date.now, support                                                          :k
 				}
 			), n.each(
 				"Boolean Number String Function Array Date RegExp Object Error".split( " " ), function ( a, b ) {
@@ -2468,9 +2469,9 @@ function plgnotify( sysconfig ) {
 			}
 
 			var t = function ( a ) {
-				var b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u = "sizzle" + 1 * new Date, v = a.document, w = 0, x = 0, y = ha(), z = ha(), A = ha(), B = function ( a, b ) {
+				var b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                = "sizzle" + 1 * new Date, v                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   = a.document, w = 0, x = 0, y = ha(), z = ha(), A = ha(), B = function ( a, b ) {
 					return a === b && (l = !0), 0
-				}, C = 1 << 31, D = {}.hasOwnProperty, E = [], F = E.pop, G = E.push, H = E.push, I = E.slice, J = function ( a, b ) {
+				}, C                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          = 1 << 31, D                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             = {}.hasOwnProperty, E = [], F = E.pop, G = E.push, H = E.push, I = E.slice, J = function ( a, b ) {
 					for ( var c = 0, d = a.length ; d > c ; c++ )if ( a[c] === b )return c;
 					return -1
 				}, K = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped", L = "[\\x20\\t\\r\\n\\f]", M = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+", N = M.replace( "w", "w#" ), O = "\\[" + L + "*(" + M + ")(?:" + L + "*([*^$|!~]?=)" + L + "*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + N + "))|)" + L + "*\\]", P = ":(" + M + ")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|" + O + ")*)|.*)\\)|)", Q = new RegExp( L + "+", "g" ), R = new RegExp( "^" + L + "+|((?:^|[^\\\\])(?:\\\\.)*)" + L + "+$", "g" ), S = new RegExp( "^" + L + "*," + L + "*" ), T = new RegExp( "^" + L + "*([>+~]|" + L + ")" + L + "*" ), U = new RegExp( "=" + L + "*([^\\]'\"]*?)" + L + "*\\]", "g" ), V = new RegExp( P ), W = new RegExp( "^" + N + "$" ), X = { ID:new RegExp( "^#(" + M + ")" ), CLASS:new RegExp( "^\\.(" + M + ")" ), TAG:new RegExp( "^(" + M.replace( "w", "w*" ) + ")" ), ATTR:new RegExp( "^" + O ), PSEUDO:new RegExp( "^" + P ), CHILD:new RegExp( "^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + L + "*(even|odd|(([+-]|)(\\d*)n|)" + L + "*(?:([+-]|)" + L + "*(\\d+)|))" + L + "*\\)|)", "i" ), bool:new RegExp( "^(?:" + K + ")$", "i" ), needsContext:new RegExp( "^" + L + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" + L + "*((?:-\\d)?\\d*)" + L + "*\\)|)(?=[^-]|$)", "i" ) }, Y = /^(?:input|select|textarea|button)$/i, Z = /^h\d$/i, $ = /^[^{]+\{\s*\[native \w/, _ = /^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/, aa = /[+~]/, ba = /'|\\/g, ca = new RegExp( "\\\\([\\da-f]{1,6}" + L + "?|(" + L + ")|.)", "ig" ), da = function (
@@ -2480,7 +2481,7 @@ function plgnotify( sysconfig ) {
 				) {
 					var d = "0x" + b - 65536;
 					return d !== d || c ? b : 0 > d ? String.fromCharCode( d + 65536 ) : String.fromCharCode( d >> 10 | 55296, 1023 & d | 56320 )
-				}, ea = function () {
+				}, ea                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         = function () {
 					m()
 				};
 				try {
@@ -2718,35 +2719,35 @@ function plgnotify( sysconfig ) {
 					return c
 				}, d = ga.selectors = {
 					cacheLength:50, createPseudo:ia, match:X, attrHandle:{}, find:{}, relative:{ ">":{ dir:"parentNode", first:!0 }, " ":{ dir:"parentNode" }, "+":{ dir:"previousSibling", first:!0 }, "~":{ dir:"previousSibling" } }, preFilter:{
-						ATTR:function ( a ) {
+						ATTR     :function ( a ) {
 							return a[1] = a[1].replace( ca, da ), a[3] = (a[3] || a[4] || a[5] || "").replace( ca, da ), "~=" === a[2] && (a[3] = " " + a[3] + " "), a.slice( 0, 4 )
-						}, CHILD:function ( a ) {
+						}, CHILD :function ( a ) {
 							return a[1] = a[1].toLowerCase(), "nth" === a[1].slice( 0, 3 ) ? (a[3] || ga.error( a[0] ), a[4] = +(a[4] ? a[5] + (a[6] || 1) : 2 * ("even" === a[3] || "odd" === a[3])), a[5] = +(a[7] + a[8] || "odd" === a[3])) : a[3] && ga.error( a[0] ), a
 						}, PSEUDO:function ( a ) {
 							var b, c = !a[6] && a[2];
 							return X.CHILD.test( a[0] ) ? null : (a[3] ? a[2] = a[4] || a[5] || "" : c && V.test( c ) && (b = g( c, !0 )) && (b = c.indexOf( ")", c.length - b ) - c.length) && (a[0] = a[0].slice( 0, b ), a[2] = c.slice( 0, b )), a.slice( 0, 3 ))
 						}
-					}, filter:{
-						TAG:function ( a ) {
+					}, filter                                                                                                                                                                                                                     :{
+						TAG      :function ( a ) {
 							var b = a.replace( ca, da ).toLowerCase();
 							return "*" === a ? function () {
 								return !0
 							} : function ( a ) {
 								return a.nodeName && a.nodeName.toLowerCase() === b
 							}
-						}, CLASS:function ( a ) {
+						}, CLASS :function ( a ) {
 							var b = y[a + " "];
 							return b || (b = new RegExp( "(^|" + L + ")" + a + "(" + L + "|$)" )) && y(
 									a, function ( a ) {
 										return b.test( "string" == typeof a.className && a.className || "undefined" != typeof a.getAttribute && a.getAttribute( "class" ) || "" )
 									}
 								)
-						}, ATTR:function ( a, b, c ) {
+						}, ATTR  :function ( a, b, c ) {
 							return function ( d ) {
 								var e = ga.attr( d, a );
 								return null == e ? "!=" === b : b ? (e += "", "=" === b ? e === c : "!=" === b ? e !== c : "^=" === b ? c && 0 === e.indexOf( c ) : "*=" === b ? c && e.indexOf( c ) > -1 : "$=" === b ? c && e.slice( -c.length ) === c : "~=" === b ? (" " + e.replace( Q, " " ) + " ").indexOf( c ) > -1 : "|=" === b ? e === c || e.slice( 0, c.length + 1 ) === c + "-" : !1) : !0
 							}
-						}, CHILD:function ( a, b, c, d, e ) {
+						}, CHILD :function ( a, b, c, d, e ) {
 							var f = "nth" !== a.slice( 0, 3 ), g = "last" !== a.slice( -4 ), h = "of-type" === b;
 							return 1 === d && 0 === e ? function ( a ) {
 								return !!a.parentNode
@@ -2784,8 +2785,8 @@ function plgnotify( sysconfig ) {
 								return e( a, 0, c )
 							}) : e
 						}
-					}, pseudos:{
-						not:ia(
+					}, pseudos                                                                                                                                                                                                                    :{
+						not        :ia(
 							function ( a ) {
 								var b = [], c = [], d = h( a.replace( R, "$1" ) );
 								return d[u] ? ia(
@@ -2797,7 +2798,7 @@ function plgnotify( sysconfig ) {
 									return b[0] = a, d( b, null, f, c ), b[0] = null, !c.pop()
 								}
 							}
-						), has:ia(
+						), has     :ia(
 							function ( a ) {
 								return function ( b ) {
 									return ga( a, b ).length > 0
@@ -2809,7 +2810,7 @@ function plgnotify( sysconfig ) {
 									return (b.textContent || b.innerText || e( b )).indexOf( a ) > -1
 								}
 							}
-						), lang:ia(
+						), lang    :ia(
 							function ( a ) {
 								return W.test( a || "" ) || ga.error( "unsupported lang: " + a ), a = a.replace( ca, da ).toLowerCase(), function ( b ) {
 									var c;
@@ -2818,65 +2819,65 @@ function plgnotify( sysconfig ) {
 									return !1
 								}
 							}
-						), target:function ( b ) {
+						), target  :function ( b ) {
 							var c = a.location && a.location.hash;
 							return c && c.slice( 1 ) === b.id
-						}, root:function ( a ) {
+						}, root    :function ( a ) {
 							return a === o
-						}, focus:function ( a ) {
+						}, focus   :function ( a ) {
 							return a === n.activeElement && (!n.hasFocus || n.hasFocus()) && !!(a.type || a.href || ~a.tabIndex)
-						}, enabled:function ( a ) {
+						}, enabled :function ( a ) {
 							return a.disabled === !1
 						}, disabled:function ( a ) {
 							return a.disabled === !0
-						}, checked:function ( a ) {
+						}, checked :function ( a ) {
 							var b = a.nodeName.toLowerCase();
 							return "input" === b && !!a.checked || "option" === b && !!a.selected
 						}, selected:function ( a ) {
 							return a.parentNode && a.parentNode.selectedIndex, a.selected === !0
-						}, empty:function ( a ) {
+						}, empty   :function ( a ) {
 							for ( a = a.firstChild ; a ; a = a.nextSibling )if ( a.nodeType < 6 )return !1;
 							return !0
-						}, parent:function ( a ) {
+						}, parent  :function ( a ) {
 							return !d.pseudos.empty( a )
-						}, header:function ( a ) {
+						}, header  :function ( a ) {
 							return Z.test( a.nodeName )
-						}, input:function ( a ) {
+						}, input   :function ( a ) {
 							return Y.test( a.nodeName )
-						}, button:function ( a ) {
+						}, button  :function ( a ) {
 							var b = a.nodeName.toLowerCase();
 							return "input" === b && "button" === a.type || "button" === b
-						}, text:function ( a ) {
+						}, text    :function ( a ) {
 							var b;
 							return "input" === a.nodeName.toLowerCase() && "text" === a.type && (null == (b = a.getAttribute( "type" )) || "text" === b.toLowerCase())
-						}, first:oa(
+						}, first   :oa(
 							function () {
 								return [0]
 							}
-						), last:oa(
+						), last    :oa(
 							function ( a, b ) {
 								return [b - 1]
 							}
-						), eq:oa(
+						), eq      :oa(
 							function ( a, b, c ) {
 								return [0 > c ? c + b : c]
 							}
-						), even:oa(
+						), even    :oa(
 							function ( a, b ) {
 								for ( var c = 0 ; b > c ; c += 2 )a.push( c );
 								return a
 							}
-						), odd:oa(
+						), odd     :oa(
 							function ( a, b ) {
 								for ( var c = 1 ; b > c ; c += 2 )a.push( c );
 								return a
 							}
-						), lt:oa(
+						), lt      :oa(
 							function ( a, b, c ) {
 								for ( var d = 0 > c ? c + b : c ; --d >= 0 ; )a.push( d );
 								return a
 							}
-						), gt:oa(
+						), gt      :oa(
 							function ( a, b, c ) {
 								for ( var d = 0 > c ? c + b : c ; ++d < b ; )a.push( d );
 								return a
@@ -2968,11 +2969,11 @@ function plgnotify( sysconfig ) {
 						function ( a ) {
 							return a === b
 						}, h, !0
-					), l = sa(
+					), l                                                                                                   = sa(
 						function ( a ) {
 							return J( b, a ) > -1
 						}, h, !0
-					), m = [
+					), m                                                                                                   = [
 						function ( a, c, d ) {
 							var e = !g && (d || c !== j) || ((b = c).nodeType ? k( a, c, d ) : l( a, c, d ));
 							return b = null, e
@@ -3108,7 +3109,7 @@ function plgnotify( sysconfig ) {
 				)
 			}, n.fn.extend(
 				{
-					find:function ( a ) {
+					find     :function ( a ) {
 						var b, c = this.length, d = [], e = this;
 						if ( "string" != typeof a )return this.pushStack(
 							n( a ).filter(
@@ -3121,9 +3122,9 @@ function plgnotify( sysconfig ) {
 						return d = this.pushStack( c > 1 ? n.unique( d ) : d ), d.selector = this.selector ? this.selector + " " + a : a, d
 					}, filter:function ( a ) {
 					return this.pushStack( x( this, a || [], !1 ) )
-				}, not:function ( a ) {
+				}, not       :function ( a ) {
 					return this.pushStack( x( this, a || [], !0 ) )
-				}, is:function ( a ) {
+				}, is        :function ( a ) {
 					return !!x( this, "string" == typeof a && u.test( a ) ? n( a ) : a || [], !1 ).length
 				}
 				}
@@ -3145,7 +3146,7 @@ function plgnotify( sysconfig ) {
 			var B = /^(?:parents|prev(?:Until|All))/, C = { children:!0, contents:!0, next:!0, prev:!0 };
 			n.extend(
 				{
-					dir:function ( a, b, c ) {
+					dir       :function ( a, b, c ) {
 						var d = [], e = void 0 !== c;
 						while ( (a = a[b]) && 9 !== a.nodeType )if ( 1 === a.nodeType ) {
 							if ( e && n( a ).is( c ) )break;
@@ -3159,7 +3160,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					has:function ( a ) {
+					has       :function ( a ) {
 						var b = n( a, this ), c = b.length;
 						return this.filter(
 							function () {
@@ -3172,11 +3173,11 @@ function plgnotify( sysconfig ) {
 						break
 					}
 					return this.pushStack( f.length > 1 ? n.unique( f ) : f )
-				}, index:function ( a ) {
+				}, index      :function ( a ) {
 					return a ? "string" == typeof a ? g.call( n( a ), this[0] ) : g.call( this, a.jquery ? a[0] : a ) : this[0] && this[0].parentNode ? this.first().prevAll().length : -1
-				}, add:function ( a, b ) {
+				}, add        :function ( a, b ) {
 					return this.pushStack( n.unique( n.merge( this.get(), n( a, b ) ) ) )
-				}, addBack:function ( a ) {
+				}, addBack    :function ( a ) {
 					return this.add( null == a ? this.prevObject : this.prevObject.filter( a ) )
 				}
 				}
@@ -3188,30 +3189,30 @@ function plgnotify( sysconfig ) {
 
 			n.each(
 				{
-					parent:function ( a ) {
+					parent     :function ( a ) {
 						var b = a.parentNode;
 						return b && 11 !== b.nodeType ? b : null
-					}, parents:function ( a ) {
+					}, parents :function ( a ) {
 					return n.dir( a, "parentNode" )
 				}, parentsUntil:function ( a, b, c ) {
 					return n.dir( a, "parentNode", c )
-				}, next:function ( a ) {
+				}, next        :function ( a ) {
 					return D( a, "nextSibling" )
-				}, prev:function ( a ) {
+				}, prev        :function ( a ) {
 					return D( a, "previousSibling" )
-				}, nextAll:function ( a ) {
+				}, nextAll     :function ( a ) {
 					return n.dir( a, "nextSibling" )
-				}, prevAll:function ( a ) {
+				}, prevAll     :function ( a ) {
 					return n.dir( a, "previousSibling" )
-				}, nextUntil:function ( a, b, c ) {
+				}, nextUntil   :function ( a, b, c ) {
 					return n.dir( a, "nextSibling", c )
-				}, prevUntil:function ( a, b, c ) {
+				}, prevUntil   :function ( a, b, c ) {
 					return n.dir( a, "previousSibling", c )
-				}, siblings:function ( a ) {
+				}, siblings    :function ( a ) {
 					return n.sibling( (a.parentNode || {}).firstChild, a )
-				}, children:function ( a ) {
+				}, children    :function ( a ) {
 					return n.sibling( a.firstChild )
-				}, contents:function ( a ) {
+				}, contents    :function ( a ) {
 					return a.contentDocument || n.merge( [], a.childNodes )
 				}
 				}, function ( a, b ) {
@@ -3233,15 +3234,15 @@ function plgnotify( sysconfig ) {
 			}
 
 			n.Callbacks = function ( a ) {
-				a = "string" == typeof a ? F[a] || G( a ) : n.extend( {}, a );
+				a                                                  = "string" == typeof a ? F[a] || G( a ) : n.extend( {}, a );
 				var b, c, d, e, f, g, h = [], i = !a.once && [], j = function ( l ) {
 					for ( b = a.memory && l, c = !0, g = e || 0, e = 0, f = h.length, d = !0 ; h && f > g ; g++ )if ( h[g].apply( l[0], l[1] ) === !1 && a.stopOnFalse ) {
 						b = !1;
 						break
 					}
 					d = !1, h && (i ? i.length && j( i.shift() ) : b ? h = [] : k.disable())
-				}, k = {
-					add:function () {
+				}, k                                               = {
+					add        :function () {
 						if ( h ) {
 							var c = h.length;
 							!function g( b ) {
@@ -3254,30 +3255,30 @@ function plgnotify( sysconfig ) {
 							}( arguments ), d ? f = h.length : b && (e = c, j( b ))
 						}
 						return this
-					}, remove:function () {
+					}, remove  :function () {
 						return h && n.each(
 							arguments, function ( a, b ) {
 								var c;
 								while ( (c = n.inArray( b, h, c )) > -1 )h.splice( c, 1 ), d && (f >= c && f--, g >= c && g--)
 							}
 						), this
-					}, has:function ( a ) {
+					}, has     :function ( a ) {
 						return a ? n.inArray( a, h ) > -1 : !(!h || !h.length)
-					}, empty:function () {
+					}, empty   :function () {
 						return h = [], f = 0, this
-					}, disable:function () {
+					}, disable :function () {
 						return h = i = b = void 0, this
 					}, disabled:function () {
 						return !h
-					}, lock:function () {
+					}, lock    :function () {
 						return i = void 0, b || k.disable(), this
-					}, locked:function () {
+					}, locked  :function () {
 						return !i
 					}, fireWith:function ( a, b ) {
 						return !h || c && !i || (b = b || [], b = [a, b.slice ? b.slice() : b], d ? i.push( b ) : j( b )), this
-					}, fire:function () {
+					}, fire    :function () {
 						return k.fireWith( this, arguments ), this
-					}, fired:function () {
+					}, fired   :function () {
 						return !!c
 					}
 				};
@@ -3286,11 +3287,11 @@ function plgnotify( sysconfig ) {
 				{
 					Deferred:function ( a ) {
 						var b = [["resolve", "done", n.Callbacks( "once memory" ), "resolved"], ["reject", "fail", n.Callbacks( "once memory" ), "rejected"], ["notify", "progress", n.Callbacks( "memory" )]], c = "pending", d = {
-							state:function () {
+							state     :function () {
 								return c
-							}, always:function () {
+							}, always :function () {
 								return e.done( arguments ).fail( arguments ), this
-							}, then:function () {
+							}, then   :function () {
 								var a = arguments;
 								return n.Deferred(
 									function ( c ) {
@@ -3310,7 +3311,7 @@ function plgnotify( sysconfig ) {
 							}, promise:function ( a ) {
 								return null != a ? n.extend( a, d ) : d
 							}
-						}, e = {};
+						}, e                                                                                                                                                                                                     = {};
 						return d.pipe = d.then, n.each(
 							b, function ( a, f ) {
 								var g = f[2], h = f[3];
@@ -3323,7 +3324,7 @@ function plgnotify( sysconfig ) {
 								}, e[f[0] + "With"] = g.fireWith
 							}
 						), d.promise( e ), a && a.call( e, e ), e
-					}, when:function ( a ) {
+					}, when :function ( a ) {
 					var b = 0, c = d.call( arguments ), e = c.length, f = 1 !== e || a && n.isFunction( a.promise ) ? e : 0, g = 1 === f ? a : n.Deferred(), h = function ( a, b, c ) {
 						return function ( e ) {
 							b[a] = this, c[a] = arguments.length > 1 ? d.call( arguments ) : e, c === i ? g.notifyWith( b, c ) : --f || g.resolveWith( b, c )
@@ -3341,7 +3342,7 @@ function plgnotify( sysconfig ) {
 				{
 					isReady:!1, readyWait:1, holdReady:function ( a ) {
 					a ? n.readyWait++ : n.ready( !0 )
-				}, ready:function ( a ) {
+				}, ready                              :function ( a ) {
 					(a === !0 ? --n.readyWait : n.isReady) || (n.isReady = !0, a !== !0 && --n.readyWait > 0 || (H.resolveWith( l, [n] ), n.fn.triggerHandler && (n( l ).triggerHandler( "ready" ), n( l ).off( "ready" ))))
 				}
 				}
@@ -3378,7 +3379,7 @@ function plgnotify( sysconfig ) {
 			}
 
 			K.uid = 1, K.accepts = n.acceptData, K.prototype = {
-				key:function ( a ) {
+				key       :function ( a ) {
 					if ( !K.accepts( a ) )return 0;
 					var b = {}, c = a[this.expando];
 					if ( !c ) {
@@ -3391,19 +3392,19 @@ function plgnotify( sysconfig ) {
 						}
 					}
 					return this.cache[c] || (this.cache[c] = {}), c
-				}, set:function ( a, b, c ) {
+				}, set    :function ( a, b, c ) {
 					var d, e = this.key( a ), f = this.cache[e];
 					if ( "string" == typeof b )f[b] = c;
 					else if ( n.isEmptyObject( f ) )n.extend( this.cache[e], b );
 					else for ( d in b )f[d] = b[d];
 					return f
-				}, get:function ( a, b ) {
+				}, get    :function ( a, b ) {
 					var c = this.cache[this.key( a )];
 					return void 0 === b ? c : c[b]
-				}, access:function ( a, b, c ) {
+				}, access :function ( a, b, c ) {
 					var d;
 					return void 0 === b || b && "string" == typeof b && void 0 === c ? (d = this.get( a, b ), void 0 !== d ? d : this.get( a, n.camelCase( b ) )) : (this.set( a, b, c ), void 0 !== c ? c : b)
-				}, remove:function ( a, b ) {
+				}, remove :function ( a, b ) {
 					var c, d, e, f = this.key( a ), g = this.cache[f];
 					if ( void 0 === b )this.cache[f] = {};
 					else {
@@ -3438,9 +3439,9 @@ function plgnotify( sysconfig ) {
 						return M.hasData( a ) || L.hasData( a )
 					}, data   :function ( a, b, c ) {
 					return M.access( a, b, c )
-				}, removeData:function ( a, b ) {
+				}, removeData :function ( a, b ) {
 					M.remove( a, b )
-				}, _data:function ( a, b, c ) {
+				}, _data      :function ( a, b, c ) {
 					return L.access( a, b, c )
 				}, _removeData:function ( a, b ) {
 					L.remove( a, b )
@@ -3448,7 +3449,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					data:function ( a, b ) {
+					data         :function ( a, b ) {
 						var c, d, e, f = this[0], g = f && f.attributes;
 						if ( void 0 === a ) {
 							if ( this.length && (e = M.get( f ), 1 === f.nodeType && !L.get( f, "hasDataAttrs" )) ) {
@@ -3488,11 +3489,11 @@ function plgnotify( sysconfig ) {
 				}
 			), n.extend(
 				{
-					queue:function ( a, b, c ) {
+					queue     :function ( a, b, c ) {
 						var d;
 						return a ? (b = (b || "fx") + "queue", d = L.get( a, b ), c && (!d || n.isArray( c ) ? d = L.access( a, b, n.makeArray( c ) ) : d.push( c )), d || []) : void 0
 					}, dequeue:function ( a, b ) {
-					b = b || "fx";
+					b                                                                                  = b || "fx";
 					var c = n.queue( a, b ), d = c.length, e = c.shift(), f = n._queueHooks( a, b ), g = function () {
 						n.dequeue( a, b )
 					};
@@ -3512,7 +3513,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					queue:function ( a, b ) {
+					queue     :function ( a, b ) {
 						var c = 2;
 						return "string" != typeof a && (b = a, a = "fx", c--), arguments.length < c ? n.queue( this[0], a ) : void 0 === b ? this : this.each(
 							function () {
@@ -3526,9 +3527,9 @@ function plgnotify( sysconfig ) {
 							n.dequeue( this, a )
 						}
 					)
-				}, clearQueue:function ( a ) {
+				}, clearQueue :function ( a ) {
 					return this.queue( a || "fx", [] )
-				}, promise:function ( a, b ) {
+				}, promise    :function ( a, b ) {
 					var c, d = 1, e = n.Deferred(), f = this, g = this.length, h = function () {
 						--d || e.resolveWith( f, [f] )
 					};
@@ -3540,13 +3541,13 @@ function plgnotify( sysconfig ) {
 			);
 			var Q = /[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source, R = ["Top", "Right", "Bottom", "Left"], S = function ( a, b ) {
 				return a = b || a, "none" === n.css( a, "display" ) || !n.contains( a.ownerDocument, a )
-			}, T = /^(?:checkbox|radio)$/i;
+			}, T                                                                                            = /^(?:checkbox|radio)$/i;
 			!function () {
 				var a = l.createDocumentFragment(), b = a.appendChild( l.createElement( "div" ) ), c = l.createElement( "input" );
 				c.setAttribute( "type", "radio" ), c.setAttribute( "checked", "checked" ), c.setAttribute( "name", "t" ), b.appendChild( c ), k.checkClone = b.cloneNode( !0 ).cloneNode( !0 ).lastChild.checked, b.innerHTML = "<textarea>x</textarea>", k.noCloneChecked = !!b.cloneNode( !0 ).lastChild.defaultValue
 			}();
-			var U = "undefined";
-			k.focusinBubbles = "onfocusin" in a;
+			var U                                                                                                = "undefined";
+			k.focusinBubbles                                                                                     = "onfocusin" in a;
 			var V = /^key/, W = /^(?:mouse|pointer|contextmenu)|click/, X = /^(?:focusinfocus|focusoutblur)$/, Y = /^([^.]*)(?:\.(.+)|)$/;
 
 			function Z() {
@@ -3566,7 +3567,7 @@ function plgnotify( sysconfig ) {
 			}
 
 			n.event = {
-				global:{}, add:function ( a, b, c, d, e ) {
+				global                                                                                                                                                              :{}, add:function ( a, b, c, d, e ) {
 					var f, g, h, i, j, k, l, m, o, p, q, r = L.get( a );
 					if ( r ) {
 						c.handler && (f = c, c = f.handler, e = f.selector), c.guid || (c.guid = n.guid++), (i = r.events) || (i = r.events = {}), (g = r.handle) || (g = r.handle = function ( b ) {
@@ -3575,7 +3576,7 @@ function plgnotify( sysconfig ) {
 						while ( j-- )h = Y.exec( b[j] ) || [], o = q = h[1], p = (h[2] || "").split( "." )
 																							 .sort(), o && (l = n.event.special[o] || {}, o = (e ? l.delegateType : l.bindType) || o, l = n.event.special[o] || {}, k = n.extend( { type:o, origType:q, data:d, handler:c, guid:c.guid, selector:e, needsContext:e && n.expr.match.needsContext.test( e ), namespace:p.join( "." ) }, f ), (m = i[o]) || (m = i[o] = [], m.delegateCount = 0, l.setup && l.setup.call( a, d, p, g ) !== !1 || a.addEventListener && a.addEventListener( o, g, !1 )), l.add && (l.add.call( a, k ), k.handler.guid || (k.handler.guid = c.guid)), e ? m.splice( m.delegateCount++, 0, k ) : m.push( k ), n.event.global[o] = !0)
 					}
-				}, remove:function ( a, b, c, d, e ) {
+				}, remove                                                                                                                                                           :function ( a, b, c, d, e ) {
 					var f, g, h, i, j, k, l, m, o, p, q, r = L.hasData( a ) && L.get( a );
 					if ( r && (i = r.events) ) {
 						b = (b || "").match( E ) || [""], j = b.length;
@@ -3587,7 +3588,7 @@ function plgnotify( sysconfig ) {
 						else for ( o in i )n.event.remove( a, o + b[j], c, d, !0 );
 						n.isEmptyObject( i ) && (delete r.handle, L.remove( a, "events" ))
 					}
-				}, trigger:function ( b, c, d, e ) {
+				}, trigger                                                                                                                                                          :function ( b, c, d, e ) {
 					var f, g, h, i, k, m, o, p = [d || l], q = j.call( b, "type" ) ? b.type : b, r = j.call( b, "namespace" ) ? b.namespace.split( "." ) : [];
 					if ( g = h = d = d || l, 3 !== d.nodeType && 8 !== d.nodeType && !X.test( q + n.event.triggered ) && (q.indexOf( "." ) >= 0 && (r = q.split( "." ), q = r.shift(), r.sort()), k = q.indexOf( ":" ) < 0 && "on" + q, b = b[n.expando] ? b : new n.Event( q, "object" == typeof b && b ), b.isTrigger = e ? 2 : 3, b.namespace = r.join( "." ), b.namespace_re = b.namespace ? new RegExp( "(^|\\.)" + r.join( "\\.(?:.*\\.|)" ) + "(\\.|$)" ) : null, b.result = void 0, b.target || (b.target = d), c = null == c ? [b] : n.makeArray( c, [b] ), o = n.event.special[q] || {}, e || !o.trigger || o.trigger.apply( d, c ) !== !1) ) {
 						if ( !e && !o.noBubble && !n.isWindow( d ) ) {
@@ -3598,8 +3599,8 @@ function plgnotify( sysconfig ) {
 						while ( (g = p[f++]) && !b.isPropagationStopped() )b.type = f > 1 ? i : o.bindType || q, m = (L.get( g, "events" ) || {})[b.type] && L.get( g, "handle" ), m && m.apply( g, c ), m = k && g[k], m && m.apply && n.acceptData( g ) && (b.result = m.apply( g, c ), b.result === !1 && b.preventDefault());
 						return b.type = q, e || b.isDefaultPrevented() || o._default && o._default.apply( p.pop(), c ) !== !1 || !n.acceptData( d ) || k && n.isFunction( d[q] ) && !n.isWindow( d ) && (h = d[k], h && (d[k] = null), n.event.triggered = q, d[q](), n.event.triggered = void 0, h && (d[k] = h)), b.result
 					}
-				}, dispatch:function ( a ) {
-					a = n.event.fix( a );
+				}, dispatch                                                                                                                                                         :function ( a ) {
+					a                                                                                                        = n.event.fix( a );
 					var b, c, e, f, g, h = [], i = d.call( arguments ), j = (L.get( this, "events" ) || {})[a.type] || [], k = n.event.special[a.type] || {};
 					if ( i[0] = a, a.delegateTarget = this, !k.preDispatch || k.preDispatch.call( this, a ) !== !1 ) {
 						h = n.event.handlers.call( this, a, j ), b = 0;
@@ -3609,7 +3610,7 @@ function plgnotify( sysconfig ) {
 						}
 						return k.postDispatch && k.postDispatch.call( this, a ), a.result
 					}
-				}, handlers:function ( a, b ) {
+				}, handlers                                                                                                                                                         :function ( a, b ) {
 					var c, d, e, f, g = [], h = b.delegateCount, i = a.target;
 					if ( h && i.nodeType && (!a.button || "click" !== a.type) )for ( ; i !== this ; i = i.parentNode || this )if ( i.disabled !== !0 || "click" !== a.type ) {
 						for ( d = [], c = 0 ; h > c ; c++ )f = b[c], e = f.selector + " ", void 0 === d[e] && (d[e] = f.needsContext ? n( e, this ).index( i ) >= 0 : n.find( e, this, null, [i] ).length), d[e] && d.push( f );
@@ -3620,38 +3621,38 @@ function plgnotify( sysconfig ) {
 					props:"char charCode key keyCode".split( " " ), filter:function ( a, b ) {
 						return null == a.which && (a.which = null != b.charCode ? b.charCode : b.keyCode), a
 					}
-				}, mouseHooks:{
+				}, mouseHooks                                                                                                                                                       :{
 					props:"button buttons clientX clientY offsetX offsetY pageX pageY screenX screenY toElement".split( " " ), filter:function ( a, b ) {
 						var c, d, e, f = b.button;
 						return null == a.pageX && null != b.clientX && (c = a.target.ownerDocument || l, d = c.documentElement, e = c.body, a.pageX = b.clientX + (d && d.scrollLeft || e && e.scrollLeft || 0) - (d && d.clientLeft || e && e.clientLeft || 0), a.pageY = b.clientY + (d && d.scrollTop || e && e.scrollTop || 0) - (d && d.clientTop || e && e.clientTop || 0)), a.which || void 0 === f || (a.which = 1 & f ? 1 : 2 & f ? 3 : 4 & f ? 2 : 0), a
 					}
-				}, fix:function ( a ) {
+				}, fix                                                                                                                                                              :function ( a ) {
 					if ( a[n.expando] )return a;
 					var b, c, d, e = a.type, f = a, g = this.fixHooks[e];
 					g || (this.fixHooks[e] = g = W.test( e ) ? this.mouseHooks : V.test( e ) ? this.keyHooks : {}), d = g.props ? this.props.concat( g.props ) : this.props, a = new n.Event( f ), b = d.length;
 					while ( b-- )c = d[b], a[c] = f[c];
 					return a.target || (a.target = l), 3 === a.target.nodeType && (a.target = a.target.parentNode), g.filter ? g.filter( a, f ) : a
-				}, special:{
+				}, special                                                                                                                                                          :{
 					load:{ noBubble:!0 }, focus:{
-						trigger:function () {
+						trigger        :function () {
 							return this !== _() && this.focus ? (this.focus(), !1) : void 0
 						}, delegateType:"focusin"
-					}, blur:{
-						trigger:function () {
+					}, blur                    :{
+						trigger        :function () {
 							return this === _() && this.blur ? (this.blur(), !1) : void 0
 						}, delegateType:"focusout"
-					}, click:{
-						trigger:function () {
+					}, click                   :{
+						trigger    :function () {
 							return "checkbox" === this.type && this.click && n.nodeName( this, "input" ) ? (this.click(), !1) : void 0
 						}, _default:function ( a ) {
 							return n.nodeName( a.target, "a" )
 						}
-					}, beforeunload:{
+					}, beforeunload            :{
 						postDispatch:function ( a ) {
 							void 0 !== a.result && a.originalEvent && (a.originalEvent.returnValue = a.result)
 						}
 					}
-				}, simulate:function ( a, b, c, d ) {
+				}, simulate                                                                                                                                                         :function ( a, b, c, d ) {
 					var e = n.extend( new n.Event, c, { type:a, isSimulated:!0, originalEvent:{} } );
 					d ? n.event.trigger( e, null, b ) : n.event.dispatch.call( b, e ), e.isDefaultPrevented() && c.preventDefault()
 				}
@@ -3663,10 +3664,10 @@ function plgnotify( sysconfig ) {
 				isDefaultPrevented:$, isPropagationStopped:$, isImmediatePropagationStopped:$, preventDefault:function () {
 					var a = this.originalEvent;
 					this.isDefaultPrevented = Z, a && a.preventDefault && a.preventDefault()
-				}, stopPropagation:function () {
+				}, stopPropagation                                                                           :function () {
 					var a = this.originalEvent;
 					this.isPropagationStopped = Z, a && a.stopPropagation && a.stopPropagation()
-				}, stopImmediatePropagation:function () {
+				}, stopImmediatePropagation                                                                  :function () {
 					var a = this.originalEvent;
 					this.isImmediatePropagationStopped = Z, a && a.stopImmediatePropagation && a.stopImmediatePropagation(), this.stopPropagation()
 				}
@@ -3681,11 +3682,11 @@ function plgnotify( sysconfig ) {
 				}
 			), k.focusinBubbles || n.each(
 				{ focus:"focusin", blur:"focusout" }, function ( a, b ) {
-					var c = function ( a ) {
+					var c              = function ( a ) {
 						n.event.simulate( b, a.target, n.event.fix( a ), !0 )
 					};
 					n.event.special[b] = {
-						setup:function () {
+						setup      :function () {
 							var d = this.ownerDocument || this, e = L.access( d, b );
 							e || d.addEventListener( a, c, !0 ), L.access( d, b, (e || 0) + 1 )
 						}, teardown:function () {
@@ -3696,7 +3697,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					on:function ( a, b, c, d, e ) {
+					on           :function ( a, b, c, d, e ) {
 						var f, g;
 						if ( "object" == typeof a ) {
 							"string" != typeof b && (c = c || b, b = void 0);
@@ -3712,9 +3713,9 @@ function plgnotify( sysconfig ) {
 								n.event.add( this, a, d, c, b )
 							}
 						)
-					}, one:function ( a, b, c, d ) {
+					}, one       :function ( a, b, c, d ) {
 					return this.on( a, b, c, d, 1 )
-				}, off:function ( a, b, c ) {
+				}, off           :function ( a, b, c ) {
 					var d, e;
 					if ( a && a.preventDefault && a.handleObj )return d = a.handleObj, n( a.delegateTarget ).off( d.namespace ? d.origType + "." + d.namespace : d.origType, d.selector, d.handler ), this;
 					if ( "object" == typeof a ) {
@@ -3726,7 +3727,7 @@ function plgnotify( sysconfig ) {
 							n.event.remove( this, a, c, b )
 						}
 					)
-				}, trigger:function ( a, b ) {
+				}, trigger       :function ( a, b ) {
 					return this.each(
 						function () {
 							n.event.trigger( a, b, this )
@@ -3743,7 +3744,7 @@ function plgnotify( sysconfig ) {
 					2,
 					"<table><tbody>",
 					"</tbody></table>"
-				], td:[3, "<table><tbody><tr>", "</tr></tbody></table>"], _default:[0, "", ""]
+				], td                                                                                                                                             :[3, "<table><tbody><tr>", "</tr></tbody></table>"], _default:[0, "", ""]
 			};
 			ia.optgroup = ia.option, ia.tbody = ia.tfoot = ia.colgroup = ia.caption = ia.thead, ia.th = ia.td;
 			function ja( a, b ) {
@@ -3786,7 +3787,7 @@ function plgnotify( sysconfig ) {
 
 			n.extend(
 				{
-					clone:function ( a, b, c ) {
+					clone           :function ( a, b, c ) {
 						var d, e, f, g, h = a.cloneNode( !0 ), i = n.contains( a.ownerDocument, a );
 						if ( !(k.noCloneChecked || 1 !== a.nodeType && 11 !== a.nodeType || n.isXMLDoc( a )) )for ( g = oa( h ), f = oa( a ), d = 0, e = f.length ; e > d ; d++ )pa( f[d], g[d] );
 						if ( b )if ( c )for ( f = f || oa( a ), g = g || oa( h ), d = 0, e = f.length ; e > d ; d++ )na( f[d], g[d] );
@@ -3806,7 +3807,7 @@ function plgnotify( sysconfig ) {
 						while ( e = f[j++] )fa.test( e.type || "" ) && c.push( e )
 					}
 					return k
-				}, cleanData:function ( a ) {
+				}, cleanData        :function ( a ) {
 					for ( var b, c, d, e, f = n.event.special, g = 0 ; void 0 !== (c = a[g]) ; g++ ) {
 						if ( n.acceptData( c ) && (e = c[L.expando], e && (b = L.cache[e])) ) {
 							if ( b.events )for ( d in b.events )f[d] ? n.event.remove( c, d ) : n.removeEvent( c, d, b.handle );
@@ -3818,7 +3819,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					text:function ( a ) {
+					text      :function ( a ) {
 						return J(
 							this, function ( a ) {
 								return void 0 === a ? n.text( this ) : this.empty().each(
@@ -3828,7 +3829,7 @@ function plgnotify( sysconfig ) {
 								)
 							}, null, a, arguments.length
 						)
-					}, append:function () {
+					}, append :function () {
 					return this.domManip(
 						arguments, function ( a ) {
 							if ( 1 === this.nodeType || 11 === this.nodeType || 9 === this.nodeType ) {
@@ -3837,7 +3838,7 @@ function plgnotify( sysconfig ) {
 							}
 						}
 					)
-				}, prepend:function () {
+				}, prepend    :function () {
 					return this.domManip(
 						arguments, function ( a ) {
 							if ( 1 === this.nodeType || 11 === this.nodeType || 9 === this.nodeType ) {
@@ -3846,31 +3847,31 @@ function plgnotify( sysconfig ) {
 							}
 						}
 					)
-				}, before:function () {
+				}, before     :function () {
 					return this.domManip(
 						arguments, function ( a ) {
 							this.parentNode && this.parentNode.insertBefore( a, this )
 						}
 					)
-				}, after:function () {
+				}, after      :function () {
 					return this.domManip(
 						arguments, function ( a ) {
 							this.parentNode && this.parentNode.insertBefore( a, this.nextSibling )
 						}
 					)
-				}, remove:function ( a, b ) {
+				}, remove     :function ( a, b ) {
 					for ( var c, d = a ? n.filter( a, this ) : this, e = 0 ; null != (c = d[e]) ; e++ )b || 1 !== c.nodeType || n.cleanData( oa( c ) ), c.parentNode && (b && n.contains( c.ownerDocument, c ) && ma( oa( c, "script" ) ), c.parentNode.removeChild( c ));
 					return this
-				}, empty:function () {
+				}, empty      :function () {
 					for ( var a, b = 0 ; null != (a = this[b]) ; b++ )1 === a.nodeType && (n.cleanData( oa( a, !1 ) ), a.textContent = "");
 					return this
-				}, clone:function ( a, b ) {
+				}, clone      :function ( a, b ) {
 					return a = null == a ? !1 : a, b = null == b ? a : b, this.map(
 						function () {
 							return n.clone( this, a, b )
 						}
 					)
-				}, html:function ( a ) {
+				}, html       :function ( a ) {
 					return J(
 						this, function ( a ) {
 							var b = this[0] || {}, c = 0, d = this.length;
@@ -3894,10 +3895,10 @@ function plgnotify( sysconfig ) {
 							a = this.parentNode, n.cleanData( oa( this ) ), a && a.replaceChild( b, this )
 						}
 					), a && (a.length || a.nodeType) ? this : this.remove()
-				}, detach:function ( a ) {
+				}, detach     :function ( a ) {
 					return this.remove( a, !0 )
-				}, domManip:function ( a, b ) {
-					a = e.apply( [], a );
+				}, domManip   :function ( a, b ) {
+					a                                                                              = e.apply( [], a );
 					var c, d, f, g, h, i, j = 0, l = this.length, m = this, o = l - 1, p = a[0], q = n.isFunction( p );
 					if ( q || l > 1 && "string" == typeof p && !k.checkClone && ea.test( p ) )return this.each(
 						function ( c ) {
@@ -3961,9 +3962,9 @@ function plgnotify( sysconfig ) {
 
 					a.getComputedStyle && n.extend(
 						k, {
-							pixelPosition:function () {
+							pixelPosition         :function () {
 								return g(), b
-							}, boxSizingReliable:function () {
+							}, boxSizingReliable  :function () {
 								return null == c && g(), c
 							}, reliableMarginRight:function () {
 								var b, c = f.appendChild( l.createElement( "div" ) );
@@ -4015,7 +4016,7 @@ function plgnotify( sysconfig ) {
 
 			n.extend(
 				{
-					cssHooks:{
+					cssHooks                                                                                                                                                                                                          :{
 						opacity:{
 							get:function ( a, b ) {
 								if ( b ) {
@@ -4029,7 +4030,7 @@ function plgnotify( sysconfig ) {
 						var e, f, g, h = n.camelCase( b ), i = a.style;
 						return b = n.cssProps[h] || (n.cssProps[h] = Fa( i, h )), g = n.cssHooks[b] || n.cssHooks[h], void 0 === c ? g && "get" in g && void 0 !== (e = g.get( a, !1, d )) ? e : i[b] : (f = typeof c, "string" === f && (e = Ba.exec( c )) && (c = (e[1] + 1) * e[2] + parseFloat( n.css( a, b ) ), f = "number"), null != c && c === c && ("number" !== f || n.cssNumber[h] || (c += "px"), k.clearCloneStyle || "" !== c || 0 !== b.indexOf( "background" ) || (i[b] = "inherit"), g && "set" in g && void 0 === (c = g.set( a, c, d )) || (i[b] = c)), void 0)
 					}
-				}, css:function ( a, b, c, d ) {
+				}, css                                                                                                                                                                                                                :function ( a, b, c, d ) {
 					var e, f, g, h = n.camelCase( b );
 					return b = n.cssProps[h] || (n.cssProps[h] = Fa( a.style, h )), g = n.cssHooks[b] || n.cssHooks[h], g && "get" in g && (e = g.get( a, !0, c )), void 0 === e && (e = xa( a, b, d )), "normal" === e && b in Da && (e = Da[b]), "" === c || c ? (f = parseFloat( e ), c === !0 || n.isNumeric( f ) ? f || 0 : e) : e
 				}
@@ -4037,7 +4038,7 @@ function plgnotify( sysconfig ) {
 			), n.each(
 				["height", "width"], function ( a, b ) {
 					n.cssHooks[b] = {
-						get:function ( a, c, d ) {
+						get   :function ( a, c, d ) {
 							return c ? za.test( n.css( a, "display" ) ) && 0 === a.offsetWidth ? n.swap(
 								a, Ca, function () {
 									return Ia( a, b, d )
@@ -4064,7 +4065,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					css:function ( a, b ) {
+					css    :function ( a, b ) {
 						return J(
 							this, function ( a, b, c ) {
 								var d, e, f = {}, g = 0;
@@ -4077,9 +4078,9 @@ function plgnotify( sysconfig ) {
 						)
 					}, show:function () {
 					return Ja( this, !0 )
-				}, hide:function () {
+				}, hide    :function () {
 					return Ja( this )
-				}, toggle:function ( a ) {
+				}, toggle  :function ( a ) {
 					return "boolean" == typeof a ? a ? this.show() : this.hide() : this.each(
 						function () {
 							S( this ) ? n( this ).show() : n( this ).hide()
@@ -4095,16 +4096,16 @@ function plgnotify( sysconfig ) {
 			n.Tween = Ka, Ka.prototype = {
 				constructor:Ka, init:function ( a, b, c, d, e, f ) {
 					this.elem = a, this.prop = c, this.easing = e || "swing", this.options = b, this.start = this.now = this.cur(), this.end = d, this.unit = f || (n.cssNumber[c] ? "" : "px")
-				}, cur:function () {
+				}, cur              :function () {
 					var a = Ka.propHooks[this.prop];
 					return a && a.get ? a.get( this ) : Ka.propHooks._default.get( this )
-				}, run:function ( a ) {
+				}, run              :function ( a ) {
 					var b, c = Ka.propHooks[this.prop];
 					return this.options.duration ? this.pos = b = n.easing[this.easing]( a, this.options.duration * a, 0, 1, this.options.duration ) : this.pos = b = a, this.now = (this.end - this.start) * b + this.start, this.options.step && this.options.step.call( this.elem, this.now, this ), c && c.set ? c.set( this ) : Ka.propHooks._default.set( this ), this
 				}
 			}, Ka.prototype.init.prototype = Ka.prototype, Ka.propHooks = {
 				_default:{
-					get:function ( a ) {
+					get   :function ( a ) {
 						var b;
 						return null == a.elem[a.prop] || a.elem.style && null != a.elem.style[a.prop] ? (b = n.css( a.elem, a.prop, "" ), b && "auto" !== b ? b : 0) : a.elem[a.prop]
 					}, set:function ( a ) {
@@ -4116,7 +4117,7 @@ function plgnotify( sysconfig ) {
 					a.elem.nodeType && a.elem.parentNode && (a.elem[a.prop] = a.now)
 				}
 			}, n.easing = {
-				linear:function ( a ) {
+				linear  :function ( a ) {
 					return a
 				}, swing:function ( a ) {
 					return .5 - Math.cos( a * Math.PI ) / 2
@@ -4210,30 +4211,30 @@ function plgnotify( sysconfig ) {
 					function () {
 						delete i.elem
 					}
-				), i = function () {
+				), i                              = function () {
 					if ( e )return !1;
 					for ( var b = La || Sa(), c = Math.max( 0, j.startTime + j.duration - b ), d = c / j.duration || 0, f = 1 - d, g = 0, i = j.tweens.length ; i > g ; g++ )j.tweens[g].run( f );
 					return h.notifyWith( a, [j, f, c] ), 1 > f && i ? c : (h.resolveWith( a, [j] ), !1)
-				}, j = h.promise(
+				}, j                              = h.promise(
 					{
 						elem:a, props:n.extend( {}, b ), opts:n.extend( !0, { specialEasing:{} }, c ), originalProperties:b, originalOptions:c, startTime:La || Sa(), duration:c.duration, tweens:[], createTween:function ( b, c ) {
 						var d = n.Tween( a, j.opts, b, c, j.opts.specialEasing[b] || j.opts.easing );
 						return j.tweens.push( d ), d
-					}, stop:function ( b ) {
+					}, stop                                                                                                                                                                                      :function ( b ) {
 						var c = 0, d = b ? j.tweens.length : 0;
 						if ( e )return this;
 						for ( e = !0 ; d > c ; c++ )j.tweens[c].run( 1 );
 						return b ? h.resolveWith( a, [j, b] ) : h.rejectWith( a, [j, b] ), this
 					}
 					}
-				), k = j.props;
+				), k                              = j.props;
 				for ( Wa( k, j.opts.specialEasing ) ; g > f ; f++ )if ( d = Qa[f].call( j, a, k, j.opts ) )return d;
 				return n.map( k, Ua, j ), n.isFunction( j.opts.start ) && j.opts.start.call( a, j ), n.fx.timer( n.extend( i, { elem:a, anim:j, queue:j.opts.queue } ) ), j.progress( j.opts.progress ).done( j.opts.done, j.opts.complete ).fail( j.opts.fail ).always( j.opts.always )
 			}
 
 			n.Animation = n.extend(
 				Xa, {
-					tweener:function ( a, b ) {
+					tweener     :function ( a, b ) {
 						n.isFunction( a ) ? (b = a, a = ["*"]) : a = a.split( " " );
 						for ( var c, d = 0, e = a.length ; e > d ; d++ )c = a[d], Ra[c] = Ra[c] || [], Ra[c].unshift( b )
 					}, prefilter:function ( a, b ) {
@@ -4247,7 +4248,7 @@ function plgnotify( sysconfig ) {
 				}, d
 			}, n.fn.extend(
 				{
-					fadeTo:function ( a, b, c, d ) {
+					fadeTo    :function ( a, b, c, d ) {
 						return this.filter( S ).css( "opacity", 0 ).show().end().animate( { opacity:b }, a, c, d )
 					}, animate:function ( a, b, c, d ) {
 					var e = n.isEmptyObject( a ), f = n.speed( b, c, d ), g = function () {
@@ -4255,7 +4256,7 @@ function plgnotify( sysconfig ) {
 						(e || L.get( this, "finish" )) && b.stop( !0 )
 					};
 					return g.finish = g, e || f.queue === !1 ? this.each( g ) : this.queue( f.queue, g )
-				}, stop:function ( a, b, c ) {
+				}, stop       :function ( a, b, c ) {
 					var d = function ( a ) {
 						var b = a.stop;
 						delete a.stop, b( c )
@@ -4269,7 +4270,7 @@ function plgnotify( sysconfig ) {
 							(b || !c) && n.dequeue( this, a )
 						}
 					)
-				}, finish:function ( a ) {
+				}, finish     :function ( a ) {
 					return a !== !1 && (a = a || "fx"), this.each(
 						function () {
 							var b, c = L.get( this ), d = c[a + "queue"], e = c[a + "queueHooks"], f = n.timers, g = d ? d.length : 0;
@@ -4282,7 +4283,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.each(
 				["toggle", "show", "hide"], function ( a, b ) {
-					var c = n.fn[b];
+					var c   = n.fn[b];
 					n.fn[b] = function ( a, d, e ) {
 						return null == a || "boolean" == typeof a ? c.apply( this, arguments ) : this.animate( Ta( b, !0 ), a, d, e )
 					}
@@ -4306,7 +4307,7 @@ function plgnotify( sysconfig ) {
 			}, n.fx.speeds = { slow:600, fast:200, _default:400 }, n.fn.delay = function ( a, b ) {
 				return a = n.fx ? n.fx.speeds[a] || a : a, b = b || "fx", this.queue(
 					b, function ( b, c ) {
-						var d = setTimeout( b, a );
+						var d  = setTimeout( b, a );
 						c.stop = function () {
 							clearTimeout( d )
 						}
@@ -4319,7 +4320,7 @@ function plgnotify( sysconfig ) {
 			var Ya, Za, $a = n.expr.attrHandle;
 			n.fn.extend(
 				{
-					attr:function ( a, b ) {
+					attr         :function ( a, b ) {
 						return J( this, n.attr, a, b, arguments.length > 1 )
 					}, removeAttr:function ( a ) {
 					return this.each(
@@ -4338,7 +4339,7 @@ function plgnotify( sysconfig ) {
 					}, removeAttr:function ( a, b ) {
 					var c, d, e = 0, f = b && b.match( E );
 					if ( f && 1 === a.nodeType )while ( c = f[e++] )d = n.propFix[c] || c, n.expr.match.bool.test( c ) && (a[d] = !1), a.removeAttribute( c )
-				}, attrHooks:{
+				}, attrHooks     :{
 					type:{
 						set:function ( a, b ) {
 							if ( !k.radioValue && "radio" === b && n.nodeName( a, "input" ) ) {
@@ -4365,7 +4366,7 @@ function plgnotify( sysconfig ) {
 			var _a = /^(?:input|select|textarea|button)$/i;
 			n.fn.extend(
 				{
-					prop:function ( a, b ) {
+					prop         :function ( a, b ) {
 						return J( this, n.prop, a, b, arguments.length > 1 )
 					}, removeProp:function ( a ) {
 					return this.each(
@@ -4380,7 +4381,7 @@ function plgnotify( sysconfig ) {
 					propFix:{ "for":"htmlFor", "class":"className" }, prop:function ( a, b, c ) {
 					var d, e, f, g = a.nodeType;
 					if ( a && 3 !== g && 8 !== g && 2 !== g )return f = 1 !== g || !n.isXMLDoc( a ), f && (b = n.propFix[b] || b, e = n.propHooks[b]), void 0 !== c ? e && "set" in e && void 0 !== (d = e.set( a, c, b )) ? d : a[b] = c : e && "get" in e && null !== (d = e.get( a, b )) ? d : a[b]
-				}, propHooks:{
+				}, propHooks                                              :{
 					tabIndex:{
 						get:function ( a ) {
 							return a.hasAttribute( "tabindex" ) || _a.test( a.nodeName ) || a.href ? a.tabIndex : -1
@@ -4401,7 +4402,7 @@ function plgnotify( sysconfig ) {
 			var ab = /[\t\r\n\f]/g;
 			n.fn.extend(
 				{
-					addClass:function ( a ) {
+					addClass      :function ( a ) {
 						var b, c, d, e, f, g, h = "string" == typeof a && a, i = 0, j = this.length;
 						if ( n.isFunction( a ) )return this.each(
 							function ( b ) {
@@ -4427,7 +4428,7 @@ function plgnotify( sysconfig ) {
 						g = a ? n.trim( d ) : "", c.className !== g && (c.className = g)
 					}
 					return this
-				}, toggleClass:function ( a, b ) {
+				}, toggleClass    :function ( a, b ) {
 					var c = typeof a;
 					return "boolean" == typeof b && "string" === c ? b ? this.addClass( a ) : this.removeClass( a ) : this.each(
 						n.isFunction( a ) ? function ( c ) {
@@ -4440,7 +4441,7 @@ function plgnotify( sysconfig ) {
 							else(c === U || "boolean" === c) && (this.className && L.set( this, "__className__", this.className ), this.className = this.className || a === !1 ? "" : L.get( this, "__className__" ) || "")
 						}
 					)
-				}, hasClass:function ( a ) {
+				}, hasClass       :function ( a ) {
 					for ( var b = " " + a + " ", c = 0, d = this.length ; d > c ; c++ )if ( 1 === this[c].nodeType && (" " + this[c].className + " ").replace( ab, " " ).indexOf( b ) >= 0 )return !0;
 					return !1
 				}
@@ -4469,13 +4470,13 @@ function plgnotify( sysconfig ) {
 			), n.extend(
 				{
 					valHooks:{
-						option:{
+						option   :{
 							get:function ( a ) {
 								var b = n.find.attr( a, "value" );
 								return null != b ? b : n.trim( n.text( a ) )
 							}
 						}, select:{
-							get:function ( a ) {
+							get   :function ( a ) {
 								for ( var b, c, d = a.options, e = a.selectedIndex, f = "select-one" === a.type || 0 > e, g = f ? null : [], h = f ? e + 1 : d.length, i = 0 > e ? h : f ? e : 0 ; h > i ; i++ )if ( c = d[i], !(!c.selected && i !== e || (k.optDisabled ? c.disabled : null !== c.getAttribute( "disabled" )) || c.parentNode.disabled && n.nodeName( c.parentNode, "optgroup" )) ) {
 									if ( b = n( c ).val(), f )return b;
 									g.push( b )
@@ -4507,13 +4508,13 @@ function plgnotify( sysconfig ) {
 				}
 			), n.fn.extend(
 				{
-					hover:function ( a, b ) {
+					hover    :function ( a, b ) {
 						return this.mouseenter( a ).mouseleave( b || a )
-					}, bind:function ( a, b, c ) {
+					}, bind  :function ( a, b, c ) {
 					return this.on( a, null, b, c )
-				}, unbind:function ( a, b ) {
+				}, unbind    :function ( a, b ) {
 					return this.off( a, null, b )
-				}, delegate:function ( a, b, c, d ) {
+				}, delegate  :function ( a, b, c, d ) {
 					return this.on( b, a, c, d )
 				}, undelegate:function ( a, b, c ) {
 					return 1 === arguments.length ? this.off( a, "**" ) : this.off( b, a || "**", c )
@@ -4615,7 +4616,7 @@ function plgnotify( sysconfig ) {
 					b
 				) {
 					return b ? sb( sb( a, n.ajaxSettings ), b ) : sb( n.ajaxSettings, a )
-				}, ajaxPrefilter:qb( lb ), ajaxTransport:qb( mb ), ajax:function ( a, b ) {
+				}, ajaxPrefilter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               :qb( lb ), ajaxTransport                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       :qb( mb ), ajax:function ( a, b ) {
 					"object" == typeof a && (b = a, a = void 0), b = b || {};
 					var c, d, e, f, g, h, i, j, k = n.ajaxSetup( {}, b ), l = k.context || k, m = k.context && (l.nodeType || l.jquery) ? n( l ) : n.event, o = n.Deferred(), p = n.Callbacks( "once memory" ), q = k.statusCode || {}, r = {}, s = {}, t = 0, u = "canceled", v = {
 						readyState:0, getResponseHeader:function ( a ) {
@@ -4628,19 +4629,19 @@ function plgnotify( sysconfig ) {
 								b = f[a.toLowerCase()]
 							}
 							return null == b ? null : b
-						}, getAllResponseHeaders:function () {
+						}, getAllResponseHeaders       :function () {
 							return 2 === t ? e : null
-						}, setRequestHeader:function ( a, b ) {
+						}, setRequestHeader            :function ( a, b ) {
 							var c = a.toLowerCase();
 							return t || (a = s[c] = s[c] || a, r[a] = b), this
-						}, overrideMimeType:function ( a ) {
+						}, overrideMimeType            :function ( a ) {
 							return t || (k.mimeType = a), this
-						}, statusCode:function ( a ) {
+						}, statusCode                  :function ( a ) {
 							var b;
 							if ( a )if ( 2 > t )for ( b in a )q[b] = [q[b], a[b]];
 							else v.always( a[v.status] );
 							return this
-						}, abort:function ( a ) {
+						}, abort                       :function ( a ) {
 							var b = a || u;
 							return c && c.abort( b ), x( 0, b ), this
 						}
@@ -4680,9 +4681,9 @@ function plgnotify( sysconfig ) {
 					}
 
 					return v
-				}, getJSON:function ( a, b, c ) {
+				}, getJSON                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     :function ( a, b, c ) {
 					return n.get( a, b, c, "json" )
-				}, getScript:function ( a, b ) {
+				}, getScript                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   :function ( a, b ) {
 					return n.get( a, void 0, b, "script" )
 				}
 				}
@@ -4696,7 +4697,7 @@ function plgnotify( sysconfig ) {
 				return n.ajax( { url:a, type:"GET", dataType:"script", async:!1, global:!1, "throws":!0 } )
 			}, n.fn.extend(
 				{
-					wrapAll:function ( a ) {
+					wrapAll     :function ( a ) {
 						var b;
 						return n.isFunction( a ) ? this.each(
 							function ( b ) {
@@ -4718,14 +4719,14 @@ function plgnotify( sysconfig ) {
 							c.length ? c.wrapAll( a ) : b.append( a )
 						}
 					)
-				}, wrap:function ( a ) {
+				}, wrap         :function ( a ) {
 					var b = n.isFunction( a );
 					return this.each(
 						function ( c ) {
 							n( this ).wrapAll( b ? a.call( this, c ) : a )
 						}
 					)
-				}, unwrap:function () {
+				}, unwrap       :function () {
 					return this.parent().each(
 						function () {
 							n.nodeName( this, "body" ) || n( this ).replaceWith( this.childNodes )
@@ -4764,7 +4765,7 @@ function plgnotify( sysconfig ) {
 				return d.join( "&" ).replace( vb, "+" )
 			}, n.fn.extend(
 				{
-					serialize:function () {
+					serialize        :function () {
 						return n.param( this.serializeArray() )
 					}, serializeArray:function () {
 					return this.map(
@@ -4805,7 +4806,7 @@ function plgnotify( sysconfig ) {
 				function ( a ) {
 					var b;
 					return k.cors || Eb && !a.crossDomain ? {
-						send:function ( c, d ) {
+						send    :function ( c, d ) {
 							var e, f = a.xhr(), g = ++Bb;
 							if ( f.open( a.type, a.url, a.async, a.username, a.password ), a.xhrFields )for ( e in a.xhrFields )f[e] = a.xhrFields[e];
 							a.mimeType && f.overrideMimeType && f.overrideMimeType( a.mimeType ), a.crossDomain || c["X-Requested-With"] || (c["X-Requested-With"] = "XMLHttpRequest");
@@ -4843,7 +4844,7 @@ function plgnotify( sysconfig ) {
 					if ( a.crossDomain ) {
 						var b, c;
 						return {
-							send:function ( d, e ) {
+							send    :function ( d, e ) {
 								b = n( "<script>" ).prop( { async:!0, charset:a.scriptCharset, src:a.url } ).on(
 									"load error", c = function ( a ) {
 										b.remove(), c = null, a && e( "error" === a.type ? 404 : 200, a.type )
@@ -4922,7 +4923,7 @@ function plgnotify( sysconfig ) {
 				}
 			}, n.fn.extend(
 				{
-					offset:function ( a ) {
+					offset     :function ( a ) {
 						if ( arguments.length )return void 0 === a ? this : this.each(
 							function ( b ) {
 								n.offset.setOffset( this, a, b )
@@ -4947,7 +4948,7 @@ function plgnotify( sysconfig ) {
 				}
 			), n.each(
 				{ scrollLeft:"pageXOffset", scrollTop:"pageYOffset" }, function ( b, c ) {
-					var d = "pageYOffset" === c;
+					var d   = "pageYOffset" === c;
 					n.fn[b] = function ( e ) {
 						return J(
 							this, function ( b, e, f ) {
@@ -5202,7 +5203,7 @@ function plgnotify( sysconfig ) {
 					a, {
 						url:k, error:function ( n, t ) {
 							t !== c ? g( n, a ) : y.reject( r._.error( f.stoppedWhileNegotiating, null, a._.negotiateRequest ) )
-						}, success:function ( t ) {
+						}, success  :function ( t ) {
 							var i, e, h, o = [], s = [];
 							try {
 								i = a._parseResponse( t )
@@ -5401,7 +5402,7 @@ function plgnotify( sysconfig ) {
 								return
 							}
 							u.Response === "pong" ? i.resolve() : i.reject( r._.transportError( r._.format( r.resources.pingServerFailedInvalidResponse, n ), t.transport, null, f ) )
-						}, error:function ( n ) {
+						}, error      :function ( n ) {
 							n.status === 401 || n.status === 403 ? (i.reject( r._.transportError( r._.format( r.resources.pingServerFailedStatusCode, n.status ), t.transport, n, f ) ), t.stop()) : i.reject( r._.transportError( r.resources.pingServerFailed, t.transport, n, f ) )
 						}
 					}
@@ -5443,7 +5444,7 @@ function plgnotify( sysconfig ) {
 								}
 								u.triggerReceived( t, i )
 							}
-						}, error:function ( n, i ) {
+						}, error                                                                                                             :function ( n, i ) {
 							i !== "abort" && i !== "parsererror" && s( n, t )
 						}
 					}
@@ -5477,7 +5478,7 @@ function plgnotify( sysconfig ) {
 								return
 							}
 							e.Response === "started" ? i() : s( r._.error( r._.format( r.resources.invalidStartResponse, n ), null, f ) )
-						}, error:function ( n, i, u ) {
+						}, error                     :function ( n, i, u ) {
 							i !== o ? s( r._.error( r.resources.errorDuringStartRequest, u, n ) ) : (t.log( "The start request aborted because connection.stop() was called." ), h( r._.error( r.resources.stoppedDuringStartRequest, null, n ) ))
 						}
 					}
@@ -5783,7 +5784,7 @@ function plgnotify( sysconfig ) {
 							var g = s.messageId, nt = g === null, k = !nt, tt = !h, d = i.getUrl( s, a.name, k, tt, !0 ), b = {};
 							(s.messageId && (b.messageId = s.messageId), s.groupsToken && (b.groupsToken = s.groupsToken), f( s ) !== !0) && (o.log( "Opening long polling request to '" + d + "'." ), s.pollXhr = i.ajax(
 								o, {
-									xhrFields:{
+									xhrFields                                                                                          :{
 										onprogress:function () {
 											i.markLastMessage( o )
 										}
@@ -5803,7 +5804,7 @@ function plgnotify( sysconfig ) {
 												e( s, a )
 											}, w
 										) : e( s, a ))
-									}, error:function ( f, h ) {
+									}, error                                                                                           :function ( f, h ) {
 										var v = r._.transportError( r.resources.longPollFailed, o.transport, f, s.pollXhr );
 										if ( t.clearTimeout( c.reconnectTimeoutId ), c.reconnectTimeoutId = null, h === "abort" ) {
 											o.log( "Aborted xhr request." );
@@ -5969,14 +5970,104 @@ function plgnotify( sysconfig ) {
 		n.signalR.version = "2.2.2"
 	}( jQuery );
 
+	/*
+	 * ASP.NET SignalR JavaScript Library v2.2.2
+	 * http://signalr.net/
+	 *
+	 * Copyright (c) .NET Foundation. All rights reserved.
+	 * Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+	 *
+	 */
+	(function ($, window, undefined) {
+		/// <param name="$" type="jQuery" />
+		"use strict";
+
+		if (typeof ($.signalR) !== "function") {
+			throw new Error("SignalR: SignalR is not loaded. Please ensure jquery.signalR-x.js is referenced before ~/signalr/js.");
+		}
+
+		var signalR = $.signalR;
+
+		function makeProxyCallback(hub, callback) {
+			return function () {
+				// Call the client hub method
+				callback.apply(hub, $.makeArray(arguments));
+			};
+		}
+
+		function registerHubProxies(instance, shouldSubscribe) {
+			var key, hub, memberKey, memberValue, subscriptionMethod;
+
+			for (key in instance) {
+				if (instance.hasOwnProperty(key)) {
+					hub = instance[key];
+
+					if (!(hub.hubName)) {
+						// Not a client hub
+						continue;
+					}
+
+					if (shouldSubscribe) {
+						// We want to subscribe to the hub events
+						subscriptionMethod = hub.on;
+					} else {
+						// We want to unsubscribe from the hub events
+						subscriptionMethod = hub.off;
+					}
+
+					// Loop through all members on the hub and find client hub functions to subscribe/unsubscribe
+					for (memberKey in hub.client) {
+						if (hub.client.hasOwnProperty(memberKey)) {
+							memberValue = hub.client[memberKey];
+
+							if (!$.isFunction(memberValue)) {
+								// Not a client hub function
+								continue;
+							}
+
+							subscriptionMethod.call(hub, memberKey, makeProxyCallback(hub, memberValue));
+						}
+					}
+				}
+			}
+		}
+
+		$.hubConnection.prototype.createHubProxies = function () {
+			var proxies = {};
+			this.starting(function () {
+				// Register the hub proxies as subscribed
+				// (instance, shouldSubscribe)
+				registerHubProxies(proxies, true);
+
+				this._registerSubscribedHubs();
+			}).disconnected(function () {
+				// Unsubscribe all hub proxies when we "disconnect".  This is to ensure that we do not re-add functional call backs.
+				// (instance, shouldSubscribe)
+				registerHubProxies(proxies, false);
+			});
+
+			proxies['notificationHub'] = this.createHubProxy('notificationHub');
+			proxies['notificationHub'].client = { };
+			proxies['notificationHub'].server = {
+				sendNotification: function (users, notification) {
+					return proxies['notificationHub'].invoke.apply(proxies['notificationHub'], $.merge(["SendNotification"], $.makeArray(arguments)));
+				}
+			};
+
+			return proxies;
+		};
+
+		signalR.hub = $.hubConnection("/signalr", { useDefaultPath: false });
+		$.extend(signalR, signalR.hub.createHubProxies());
+
+	}(jQuery, window));
+
 	console.warn( 'jQuery', jQuery.fn.jquery );
 
 	window.$ = oldJQuery;
 	if ( oldJQuery ) {
 		console.warn( 'oldJQuery', oldJQuery.fn.jquery );
 	}
-
-
 
 	/**
 	 * Inicia plugin
