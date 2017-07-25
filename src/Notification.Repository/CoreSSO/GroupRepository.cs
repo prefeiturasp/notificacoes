@@ -32,6 +32,7 @@ namespace Notification.Repository.CoreSSO
                         AND GP.gru_situacao=1
                         AND G.sis_id = @systemId 
                         AND UG.usu_id = @userId
+                        GROUP BY GP.gru_id, GP.gru_nome, GP.sis_id, GP.vis_id
                         ORDER BY GP.gru_nome",
                     new { systemId = systemId, userId = userId});
                 return query;

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Notification.Entity.API.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -15,17 +16,20 @@ namespace Notification.Repository.SGP
         public IEnumerable<Team> Get(
             Guid userId,
             Guid groupId,
-            string calendarYear, 
-            IEnumerable<Guid> ltSchoolSuperior, 
-            IEnumerable<int> schoolClassificationId, 
-            IEnumerable<int> ltSchoolID, 
-            IEnumerable<int> courseId, 
-            IEnumerable<string> coursePeriodId, 
+            string calendarYear,
+            IEnumerable<Guid> ltSchoolSuperior,
+            IEnumerable<int> schoolClassificationId,
+            IEnumerable<int> ltSchoolID,
+            IEnumerable<int> courseId,
+            IEnumerable<string> coursePeriodId,
             IEnumerable<int> disciplineId)
         {
 
+            var groupRep = new GroupRepository();
+            var groupUser = groupRep.GetById(groupId);
+
             SchoolRepository school = new SchoolRepository();
-            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID );
+            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
 
             var ltCoursePeriod = coursePeriodId.Select(c => new { curId = c.Split('|')[0], crrId = c.Split('|')[1], crpId = c.Split('|')[2] });
 
@@ -42,7 +46,7 @@ namespace Notification.Repository.SGP
                     INNER JOIN TUR_TurmaRelTurmaDisciplina relTud WITH(NOLOCK) ON relTud.tur_id = tur.tur_id
                     INNER JOIN TUR_TurmaDisciplinaRelDisciplina relDis WITH(NOLOCK) ON relDis.tud_id = relTud.tud_id
                     INNER JOIN ACA_Disciplina dis WITH(NOLOCK) ON dis.dis_id = relDis.dis_id AND dis.dis_situacao <> 3");
-            
+
             if (ltCoursePeriod.Any())
             {
                 sb.Append(" INNER JOIN (");
@@ -56,8 +60,10 @@ namespace Notification.Repository.SGP
                 sb.Append(") AS T1 ON T1.cur_id = tcr.cur_id AND T1.crr_id = tcr.crr_id AND T1.crp_id = tcr.crp_id");
             }
 
-            sb.Append(@" WHERE tur.tur_situacao <> 3 AND cal.cal_ano = @calendarYear
-                AND uad.uad_id IN @idsUADPermissao");
+            sb.Append(@" WHERE tur.tur_situacao <> 3 AND cal.cal_ano = @calendarYear");
+
+            if (groupUser.VisionId > 1)
+                sb.Append(" AND uad.uad_id IN @idsUADPermissao");
             //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@userId, @groupId))");
 
             if (ltSchoolSuperior != null && ltSchoolSuperior.Any())

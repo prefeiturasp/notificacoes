@@ -2,6 +2,7 @@
 using Notification.Entity.API.CoreSSO;
 using Notification.Entity.API.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -40,25 +41,25 @@ namespace Notification.Repository.SGP
         //    {
         //        var query = context.Query<SchoolSuperior>(
         //            @"SELECT
-	       //             uadSuperior.ent_id,
-	       //             uadSuperior.uad_id,
-	       //             uadSuperior.uad_codigo,
-	       //             uadSuperior.uad_nome,
-	       //             uadSuperior.uad_sigla,
-	       //             uadSuperior.uad_codigoInep
+        //             uadSuperior.ent_id,
+        //             uadSuperior.uad_id,
+        //             uadSuperior.uad_codigo,
+        //             uadSuperior.uad_nome,
+        //             uadSuperior.uad_sigla,
+        //             uadSuperior.uad_codigoInep
         //            FROM 
-	       //             ESC_Escola esc WITH(NOLOCK)
-	       //             INNER JOIN Synonym_SYS_UnidadeAdministrativa uad WITH(NOLOCK)
-		      //              ON uad.ent_id = esc.ent_id
-		      //              AND uad.uad_id = esc.uad_id
-		      //              AND uad.uad_situacao <> 3
-	       //             INNER JOIN Synonym_SYS_UnidadeAdministrativa uadSuperior WITH(NOLOCK)
-		      //              ON uadSuperior.ent_id = uad.ent_id
-		      //              AND uadSuperior.uad_id = ISNULL(esc.uad_idSuperiorGestao, uad.uad_idSuperior)
-		      //              AND uadSuperior.uad_situacao  <> 3
+        //             ESC_Escola esc WITH(NOLOCK)
+        //             INNER JOIN Synonym_SYS_UnidadeAdministrativa uad WITH(NOLOCK)
+        //              ON uad.ent_id = esc.ent_id
+        //              AND uad.uad_id = esc.uad_id
+        //              AND uad.uad_situacao <> 3
+        //             INNER JOIN Synonym_SYS_UnidadeAdministrativa uadSuperior WITH(NOLOCK)
+        //              ON uadSuperior.ent_id = uad.ent_id
+        //              AND uadSuperior.uad_id = ISNULL(esc.uad_idSuperiorGestao, uad.uad_idSuperior)
+        //              AND uadSuperior.uad_situacao  <> 3
         //            WHERE
-	       //             esc.esc_situacao <> 3
-	       //             AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))",
+        //             esc.esc_situacao <> 3
+        //             AND uad.uad_id IN (SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))",
         //             new { usu_idLogado = userId, gru_idLogado = groupId }
         //            );
         //        return query;
@@ -67,13 +68,16 @@ namespace Notification.Repository.SGP
 
         public IEnumerable<SchoolSuperior> Get(Guid userId, Guid groupId)
         {
+            var groupRep = new GroupRepository();
+            var groupUser = groupRep.GetById(groupId);
+
             SchoolRepository school = new SchoolRepository();
             IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId);
 
             using (var context = new SqlConnection(stringConnection))
             {
-                var query = context.Query<SchoolSuperior>(
-                    @"SELECT DISTINCT
+                StringBuilder sb = new StringBuilder();
+                sb.Append(@"SELECT DISTINCT
 	                     uadSuperior.uad_id 'Id'
 	                    , uadSuperior.uad_nome 'Name'
 
@@ -88,16 +92,30 @@ namespace Notification.Repository.SGP
 		                    AND uadSuperior.uad_id = ISNULL(esc.uad_idSuperiorGestao, uad.uad_idSuperior)
 		                    AND uadSuperior.uad_situacao  <> 3
                     WHERE
-	                    esc.esc_situacao <> 3
-	                    AND uad.uad_id IN @idsUADPermissao 
-                    ORDER BY uadSuperior.uad_nome",
-                     new { usu_idLogado = userId
-                     , gru_idLogado = groupId
-                     , idsUADPermissao = ltAUPermission
+	                    esc.esc_situacao <> 3");
+
+                //Se não for administrador, usa a lista filtrada de usuarioGrupoUA
+                if (groupUser.VisionId > 1)
+                {
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+                }
+                sb.Append("ORDER BY uadSuperior.uad_nome");
+
+                var query = context.Query<SchoolSuperior>(
+                    sb.ToString(),
+                     new
+                     {
+                         usu_idLogado = userId
+                     ,
+                         gru_idLogado = groupId
+                     ,
+                         idsUADPermissao = ltAUPermission
                      }
                     );
                 return query;
             }
+
+
         }
     }
 }
