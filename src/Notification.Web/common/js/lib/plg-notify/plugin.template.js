@@ -2067,31 +2067,18 @@ function plgnotify( sysconfig ) {
 			return console.warn( 'ws já instânciado.' );
 		}
 
-		if ( !socket || socket ) {
+		if ( !socket ) {
 			socket = _config.ws;
 
-			//if ( !socket.hasHubs ) {
-			//	var hubs    = addContentHTML( 'script', 'hubs' );
-			//	hubs.src    = socket.url + ( socket.url[socket.url.length - 1] === '/' ? 'hubs' : '/' + 'hubs');
-			//	hubs.onload = function () {
-			//		socket.hasHubs = true;
-			//		hubs.onload    = undefined;
-			//		startSocket();
-			//	};
-			//	_body.appendChild( hubs );
-			//	return;
-			//}
-
-			socket.connection        = jQuery.connection.notificationHub;
-			jQuery.connection.hub.qs = 'authtoken=' + _config.token;
+			socket.connection    = jQuery.connection.notificationHub;
+			jQuery.connection.hub.qs  = 'authtoken=' + _config.token;
 			jQuery.connection.hub.url = socket.url;
+
+			socket.connection.client.receiveNotification = (onSocketMessage);
+
 			try {
-				jQuery.connection.hub.start( { transport:['webSockets','foreverFrame','serverSentEvents','longPolling'] } ).done(
-					function () {
-						socket.connection.client.receiveNotification = (onSocketMessage);
-					}
-					  )
-					  .fail( resetSocketListeners );
+				jQuery.connection.hub.start( { transport:['webSockets', 'longPolling'] } )
+				 .fail( resetSocketListeners );
 			}
 			catch ( e ) {
 				console.error( 'não foi possível conectar no socket.\n', e );
