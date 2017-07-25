@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Notification.Entity.API.SGP;
 using Notification.Repository.Connections;
+using Notification.Repository.CoreSSO;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -18,11 +19,16 @@ namespace Notification.Repository.SGP
         /// <returns></returns>
         public IEnumerable<Teacher> Get(Guid userId, Guid groupId, string calendarName, IEnumerable<Guid> ltSchoolSuperior, IEnumerable<int> listClassificationTypeSchool, IEnumerable<int> ltSchoolID, IEnumerable<int> listPosition, IEnumerable<int> listCourse, IEnumerable<int> listCoursePeriod, IEnumerable<int> listDiscipline, IEnumerable<int> listTeam )
         {
+            var groupRep = new GroupRepository();
+            var groupUser = groupRep.GetById(groupId);
+
             using (var context = new SqlConnection(stringConnection))
             {
 
                 SchoolRepository school = new SchoolRepository();
-                IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
+                IEnumerable<Guid> ltAUPermission = null;
+                if (groupUser.VisionId > 1)
+                    ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
 
                 StringBuilder sb = new StringBuilder();
                 sb.Append(
@@ -75,8 +81,11 @@ namespace Notification.Repository.SGP
 		                    AND uad.ent_id=cal.ent_id
 		                    AND cal.cal_situacao<>3
                     WHERE
-	                    tur.tur_situacao <> 3
-	                    AND uad.uad_id IN @idsUADPermissao");
+	                    tur.tur_situacao <> 3");
+
+                if (groupUser.VisionId > 1)
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (!String.IsNullOrEmpty(calendarName))

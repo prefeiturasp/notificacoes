@@ -216,10 +216,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Thinktecture.IdentityModel.Owin.BasicAuthentication, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Thinktecture.IdentityModel.Owin.BasicAuthentication.1.0.1\lib\net45\Thinktecture.IdentityModel.Owin.BasicAuthentication.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -348,6 +344,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Properties\PublishProfiles\api_iis01.pubxml" />
     <None Include="Properties\PublishProfiles\API-IIS03.pubxml" />
+    <None Include="Properties\PublishProfiles\publish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -388,6 +385,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IdentityModel.Owin.BasicAuthentication\IdentityModel.Owin.BasicAuthentication.csproj">
+      <Project>{46ff27d2-98cb-4a12-9712-a8a00b36479c}</Project>
+      <Name>IdentityModel.Owin.BasicAuthentication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Notification.Business\Notification.Business.csproj">
       <Project>{ab8ac362-4955-46d1-8532-f39ffc943ed2}</Project>
       <Name>Notification.Business</Name>

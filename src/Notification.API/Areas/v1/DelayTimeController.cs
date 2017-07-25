@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
@@ -16,6 +17,7 @@ namespace Notification.API.Areas.v1
         [HttpGet]
         [Route("api/v1/DelayTime")]
         [ResponseType(typeof(IEnumerable<DelayTime>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get()
         {
             try
@@ -33,6 +35,7 @@ namespace Notification.API.Areas.v1
         [HttpPost]
         [Route("api/v1/DelayTime")]
         [ResponseType(typeof(IEnumerable<DelayTime>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Save()
         {
             try

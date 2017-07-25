@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 
@@ -20,6 +21,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/Discipline")]
         [ResponseType(typeof(IEnumerable<Discipline>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get(string calendarYear, [ModelBinder(typeof(Ints))] IEnumerable<int> courseId = null, [ModelBinder(typeof(Strings))] IEnumerable<string> coursePeriodId = null)
         {
             try

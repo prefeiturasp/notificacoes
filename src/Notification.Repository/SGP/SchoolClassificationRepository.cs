@@ -21,7 +21,9 @@ namespace Notification.Repository.SGP
             using (var context = new SqlConnection(stringConnection))
             {
                 SchoolRepository school = new SchoolRepository();
-                IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior);
+                IEnumerable<Guid> ltAUPermission = null;
+                if (groupUser.VisionId > 1)
+                    ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior);
 
 
                 StringBuilder sb = new StringBuilder();

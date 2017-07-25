@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Notification.API.Areas
 {
@@ -13,6 +14,7 @@ namespace Notification.API.Areas
         [HttpGet]
         [Route("api/v1/Signal/{id:guid}")]
         [Authorize]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetById(Guid id)
         {
             try

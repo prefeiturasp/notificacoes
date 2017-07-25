@@ -49,7 +49,6 @@
             };
 
             $scope.typeUser = null;
-            $scope.YearSelected = null;
             $scope.listCalendar = [];
             $scope.redirect = $window.sessionStorage.redirect == "false" ? false : true;
 
@@ -180,6 +179,7 @@
             };
 
             $scope.TeacherRecipient = {
+                Calendar: $scope.listCalendar[$scope.listCalendar.length - 1],
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -191,6 +191,7 @@
             };
 
             $scope.ContributorRecipient = {
+                Calendar: $scope.listCalendar[$scope.listCalendar.length - 1],
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -199,6 +200,7 @@
 
             $scope.TeacherRecipientClone = {
                 userType: null,
+                Calendar: [],
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -211,6 +213,7 @@
 
             $scope.ContributorRecipientClone = {
                 userType: null,
+                Calendar: [],
                 SchoolSuperior:[],
                 SchoolClassification:[],
                 School:[],
@@ -540,7 +543,8 @@
                 if($scope.listCalendar && $scope.listCalendar.length ==  0){
                     toastr.warning("Não existe uma lista de de datas!");
                 }else{
-                    $scope.YearSelected = $scope.listCalendar[$scope.listCalendar.length - 1];
+                    $scope.TeacherRecipient.Calendar = $scope.listCalendar[$scope.listCalendar.length - 1];
+                    $scope.ContributorRecipient.Calendar = $scope.listCalendar[$scope.listCalendar.length - 1];
                 }
 
                 $scope.load = false;
@@ -572,7 +576,7 @@
             $scope.change.checkedCourse = !$scope.change.checkedCourse;
             if(!$scope.change.checkedCourse) {
                 $scope.load = true;
-                HttpServices.getListCorse($scope.YearSelected.Name, function (data) {
+                HttpServices.getListCorse($scope.TeacherRecipient.Calendar.Name, function (data) {
                     $scope.listCorse = data;
                     $scope.load = false;
                 });
@@ -626,7 +630,7 @@
             if(!$scope.change.checkedCoursePeriod) {
                 $scope.load = true;
                 var params = {
-                    calendarYear: $scope.YearSelected.Name,
+                    calendarYear: $scope.TeacherRecipient.Calendar.Name,
                     courseId: $scope.TeacherRecipient.Course
                 };
 
@@ -645,7 +649,7 @@
             if(!$scope.change.checkedDiscipline) {
 
                 var params = {
-                    calendarYear: $scope.YearSelected.Name,
+                    calendarYear: $scope.TeacherRecipient.Calendar.Name,
                     courseId: $scope.TeacherRecipient.Course,
                     coursePeriodId: $scope.TeacherRecipient.CoursePeriod
                 };
@@ -668,7 +672,7 @@
 
                     var params = {
                         groupSid: $scope.VisionSystem.Id,
-                        calendarYear: $scope.YearSelected.Name,
+                        calendarYear: $scope.TeacherRecipient.Calendar.Name,
                         schoolSuperiorId: $scope.TeacherRecipient.SchoolSuperior,
                         schoolClassificationId: $scope.TeacherRecipient.SchoolClassification,
                         schoolId: $scope.TeacherRecipient.School,

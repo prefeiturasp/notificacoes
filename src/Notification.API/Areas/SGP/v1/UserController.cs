@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 
@@ -23,6 +24,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/Teacher")]
         [ResponseType(typeof(IEnumerable<Teacher>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetTeacher(
            string calendarYear,
             [ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null,
@@ -50,6 +52,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/Contributor")]
         [ResponseType(typeof(IEnumerable<Contributor>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetContributor(
             string calendarYear,
             [ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null,
@@ -76,6 +79,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/User")]
         [ResponseType(typeof(User))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetUser()
         {
             try

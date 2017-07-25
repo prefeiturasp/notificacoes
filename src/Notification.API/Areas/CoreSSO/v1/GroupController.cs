@@ -15,6 +15,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace Notification.API.Areas.CoreSSO.v1
@@ -31,6 +32,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         [HttpGet]
         [Route("api/CoreSSO/v1/GroupDown")]
         [ResponseType(typeof(IEnumerable<Group>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get(int systemId)
         {
             try
@@ -53,6 +55,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         [HttpGet]
         [Route("api/CoreSSO/v1/Group")]
         [ResponseType(typeof(IEnumerable<Group>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetAll()
         {
             try

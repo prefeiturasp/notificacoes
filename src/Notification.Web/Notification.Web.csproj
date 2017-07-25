@@ -66,10 +66,16 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="common\css\jquery-ui.min.css" />
     <Content Include="common\css\redactor.css" />
     <Content Include="common\fonts\fontawesome-webfont.svg" />
+    <Content Include="common\js\lib\date.js" />
+    <Content Include="common\js\lib\jquery-ui.min.js" />
     <Content Include="common\js\lib\pt_br.js" />
     <Content Include="Gruntfile.js" />
+    <Content Include="node_modules\angular-animate\angular-animate.js" />
+    <Content Include="node_modules\angular-animate\angular-animate.min.js" />
+    <Content Include="node_modules\angular-animate\index.js" />
     <Content Include="node_modules\angular-resource\angular-resource.js" />
     <Content Include="node_modules\angular-resource\angular-resource.min.js" />
     <Content Include="node_modules\angular-resource\index.js" />
@@ -79,6 +85,21 @@
     <Content Include="node_modules\angular-sanitize\angular-sanitize.js" />
     <Content Include="node_modules\angular-sanitize\angular-sanitize.min.js" />
     <Content Include="node_modules\angular-sanitize\index.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.css" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.min.css" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.min.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.tpls.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.tpls.min.js" />
+    <Content Include="node_modules\angular-toastr\gulpfile.js" />
+    <Content Include="node_modules\angular-toastr\index.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\progressbar\progressbar.directive.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\progressbar\progressbar.html" />
+    <Content Include="node_modules\angular-toastr\src\directives\toast\toast.controller.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\toast\toast.directive.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\toast\toast.html" />
+    <Content Include="node_modules\angular-toastr\src\toastr.config.js" />
+    <Content Include="node_modules\angular-toastr\src\toastr.js" />
     <Content Include="node_modules\angular\angular-csp.css" />
     <Content Include="node_modules\angular\angular.js" />
     <Content Include="node_modules\angular\angular.min.js" />
@@ -112,6 +133,21 @@
     <Content Include="common\fonts\fontawesome-webfont.woff" />
     <Content Include="common\fonts\fontawesome-webfont.woff2" />
     <Content Include="common\fonts\FontAwesome.otf" />
+    <Content Include="node_modules\angular-toastr\.jshintrc" />
+    <Content Include="node_modules\angular-toastr\.npmignore" />
+    <Content Include="node_modules\angular-toastr\.travis.yml" />
+    <Content Include="node_modules\angular-toastr\bower.json" />
+    <Content Include="node_modules\angular-toastr\CHANGELOG.md" />
+    <Content Include="node_modules\angular-toastr\CONTRIBUTING.md" />
+    <Content Include="node_modules\angular-toastr\LICENSE" />
+    <Content Include="node_modules\angular-toastr\package.json" />
+    <Content Include="node_modules\angular-toastr\README.md" />
+    <Content Include="node_modules\angular-toastr\src\toastr.less" />
+    <Content Include="node_modules\angular-animate\angular-animate.min.js.map" />
+    <Content Include="node_modules\angular-animate\bower.json" />
+    <Content Include="node_modules\angular-animate\LICENSE.md" />
+    <Content Include="node_modules\angular-animate\package.json" />
+    <Content Include="node_modules\angular-animate\README.md" />
     <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
     <Content Include="common\js\lib\plg-notify.min.js.map" />
     <None Include="Web.Debug.config">
@@ -169,7 +205,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>6164</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:6164/</IISUrl>
+          <IISUrl>http://localhost:5003/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
