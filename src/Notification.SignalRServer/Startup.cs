@@ -4,7 +4,7 @@ using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
-using Thinktecture.IdentityModel.Owin;
+using IdentityModel.Owin;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Notification.SignalRServer.Auth;
@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Protocols;
 using System.Configuration;
 using Notification.Business;
 using Notification.Business.Signal;
+using IdentityModel.Owin.BasicAuthentication;
 //using Microsoft.Owin.Cors;
 
 [assembly: OwinStartup(typeof(Notification.SignalRServer.Startup))]
