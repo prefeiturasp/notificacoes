@@ -99,9 +99,9 @@ namespace Notification.Repository.SGP
                 //Se não for administrador, usa a lista filtrada de usuarioGrupoUA
                 if (groupUser.VisionId > 1)
                 {
-                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao ");
                 }
-                sb.Append("ORDER BY uadSuperior.uad_nome");
+                sb.Append(" ORDER BY uadSuperior.uad_nome");
 
                 var query = context.Query<SchoolSuperior>(
                     sb.ToString(),

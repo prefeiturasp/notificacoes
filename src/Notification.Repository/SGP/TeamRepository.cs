@@ -65,7 +65,7 @@ namespace Notification.Repository.SGP
             sb.Append(@" WHERE tur.tur_situacao <> 3 AND cal.cal_ano = @calendarYear");
 
             if (groupUser.VisionId > 1)
-                sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+                sb.Append(" AND uad.uad_id IN @idsUADPermissao ");
             //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@userId, @groupId))");
 
             if (ltSchoolSuperior != null && ltSchoolSuperior.Any())

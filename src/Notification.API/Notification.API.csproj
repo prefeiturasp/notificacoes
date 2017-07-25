@@ -249,7 +249,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Areas\SignalController.cs" />
+    <Compile Include="Areas\v1\SignalController.cs" />
     <Compile Include="Areas\v1\BaseController.cs" />
     <Compile Include="Attributes\PaginateActionFilterAttribute.cs" />
     <Compile Include="Attributes\UserActionFilterAttribute.cs" />

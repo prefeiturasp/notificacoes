@@ -126,7 +126,7 @@ namespace Notification.Repository.CoreSSO
                 }
 
                 //Buscar todas uad's que ele possui permissão, incluindo uad's filhas (se houverem)
-                sb.Append(@" AND ugua.uad_id IN @idsUADPermissao");
+                sb.Append(@" AND ugua.uad_id IN @idsUADPermissao ");
                 
                 var query = context.Query<User>(
                    sb.ToString()

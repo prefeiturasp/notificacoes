@@ -78,7 +78,7 @@ namespace Notification.Repository.SGP
                     col.col_situacao <> 3");
 
                 if (groupUser.VisionId > 1)
-                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao ");
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (!String.IsNullOrEmpty(calendarName))
@@ -140,7 +140,7 @@ namespace Notification.Repository.SGP
                         col.col_situacao <> 3");
 
                     if (groupUser.VisionId > 1)
-                        sb.Append(" AND esc.uad_id IN @idsUADPermissao");
+                        sb.Append(" AND esc.uad_id IN @idsUADPermissao ");
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
                 if (!String.IsNullOrEmpty(calendarName))

@@ -50,7 +50,7 @@ namespace Notification.Repository.SGP
 	                    esc.esc_situacao <> 3");
 
                 if (groupUser.VisionId > 1)
-                    sb.Append(" AND uad.uad_id IN @idsUADPermissao");
+                    sb.Append(" AND uad.uad_id IN @idsUADPermissao ");
 
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))");
 
@@ -102,7 +102,7 @@ namespace Notification.Repository.SGP
                     WHERE
 	                    esc.esc_situacao <> 3");
                 if(groupUser.VisionId >1)
-	                    sb.Append(" AND esc.uad_id IN @idsUADPermissao");
+	                    sb.Append(" AND esc.uad_id IN @idsUADPermissao ");
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
 
                 sb.Append(" AND esc.uad_idSuperiorGestao = @idDre");
