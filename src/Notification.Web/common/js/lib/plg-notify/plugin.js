@@ -2084,8 +2084,9 @@ function plgnotify( sysconfig ) {
 
 			socket.connection        = jQuery.connection.notificationHub;
 			jQuery.connection.hub.qs = 'authtoken=' + _config.token;
+			jQuery.connection.hub.url = socket.url;
 			try {
-				jQuery.connection.hub.start( { transport:['webSockets', 'longPolling'] } ).done(
+				jQuery.connection.hub.start( { transport:['webSockets','foreverFrame','serverSentEvents','longPolling'] } ).done(
 					function () {
 						socket.connection.client.receiveNotification = (onSocketMessage);
 					}
@@ -2096,7 +2097,6 @@ function plgnotify( sysconfig ) {
 				console.error( 'não foi possível conectar no socket.\n', e );
 			}
 
-			jQuery.connection.hub.url = socket.url;
 		}
 	}
 
