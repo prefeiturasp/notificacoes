@@ -12,7 +12,7 @@ using MongoDB.Driver;
 using Notification.Business;
 using System.Threading.Tasks;
 using System.Security.Claims;
-using Thinktecture.IdentityModel.Owin;
+using IdentityModel.Owin.BasicAuthentication;
 
 [assembly: OwinStartup(typeof(Notification.API.Startup))]
 
@@ -29,9 +29,10 @@ namespace Notification.API
             LoadIdenityServerConfiguration();
             LoadCredentialBasicAuthConfiguration();
 
-            app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureAPI",
-                async (username, password) =>
-                await Authenticate(username, password)));
+            app.UseBasicAuthentication(
+                new BasicAuthenticationOptions(
+                "SecureAPI",
+                async (username, password) => await Authenticate(username, password)));
 
             JwtSecurityTokenHandler.InboundClaimTypeMap.Clear();
 
