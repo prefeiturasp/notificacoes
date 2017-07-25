@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace Notification.API.Areas.CoreSSO.v1
@@ -22,6 +23,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         [HttpGet]
         [Route("api/CoreSSO/v1/System")]
         [ResponseType(typeof(IEnumerable<Notification.Entity.API.CoreSSO.System>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get()
         {
             try

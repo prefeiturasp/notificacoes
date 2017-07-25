@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
@@ -19,6 +20,7 @@ namespace Notification.API.Areas.v1
         /// <returns></returns>
         [HttpGet]
         [Route("api/v1/Timestamp/")]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetTimeStamp()
         {
             try

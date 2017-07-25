@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
@@ -18,6 +19,7 @@ namespace Notification.API.Areas.v1
         [Route("api/v1/Log")]
         [ResponseType(typeof(IEnumerable<Log>))]
         [PaginateActionFilter]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get()
         {
             try
@@ -35,6 +37,7 @@ namespace Notification.API.Areas.v1
         [HttpGet]
         [Route("api/v1/Log/{id:guid}")]
         [ResponseType(typeof(IEnumerable<Log>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetById(Guid id)
         {
             try

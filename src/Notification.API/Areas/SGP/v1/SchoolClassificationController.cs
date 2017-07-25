@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 
@@ -25,6 +26,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/SchoolClassification")]
         [ResponseType(typeof(IEnumerable<SchoolClassification>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get([ModelBinder(typeof(Guids))] IEnumerable<Guid> schoolSuperiorId = null)
         {
             try

@@ -12,6 +12,7 @@ using System.Linq;
 using Notification.API.Areas.v1;
 using Notification.Business;
 using Notification.API.Models;
+using System.Web.Http.Cors;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
@@ -21,6 +22,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         [HttpGet]
         [Route("api/CoreSSO/v1/GroupAU")]
         [ResponseType(typeof(IEnumerable<GroupAU>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get(Guid groupId)
         {
             try

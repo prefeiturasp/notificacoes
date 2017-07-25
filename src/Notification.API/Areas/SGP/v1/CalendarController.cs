@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Cors;
 
 namespace Notification.API.Areas.SGP.v1
 {
@@ -22,6 +23,7 @@ namespace Notification.API.Areas.SGP.v1
         [HttpGet]
         [Route("api/SGP/v1/Calendar")]
         [ResponseType(typeof(IEnumerable<Calendar>))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Get()
         {
             try

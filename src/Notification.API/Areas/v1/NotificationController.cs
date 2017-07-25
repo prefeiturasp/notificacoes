@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace Notification.API.Areas.v1
@@ -21,6 +22,7 @@ namespace Notification.API.Areas.v1
         [Route("api/v1/Notification")]        
         [ResponseType(typeof(Notification.Entity.API.Notification))]
         [UserGroupActionFilter]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Save(Notification.Entity.API.Notification entity)
         {
             try
@@ -45,7 +47,8 @@ namespace Notification.API.Areas.v1
 
         [HttpPost]
         [Route("api/v2/Notification")]
-        [ResponseType(typeof(Notification.Entity.API.Notification))]        
+        [ResponseType(typeof(Notification.Entity.API.Notification))]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage Save2(Notification.Entity.API.Notification entity)
         {
             try
@@ -72,6 +75,7 @@ namespace Notification.API.Areas.v1
         [Route("api/v1/Notification/{id:guid}")]
         [ResponseType(typeof(Notification.Entity.API.NotificationPlugin))]
         [UserActionFilter]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage GetById(Guid id)
         {
             try
@@ -95,6 +99,7 @@ namespace Notification.API.Areas.v1
         [Route("api/v1/Notification/")]
         [ResponseType(typeof(IEnumerable<NotificationPlugin>))]
         [UserActionFilter]
+        [EnableCors("*", "*", "*", "Total")]
         public HttpResponseMessage GetByUserId(Guid userId, bool read)
         {
             try
@@ -122,6 +127,7 @@ namespace Notification.API.Areas.v1
         [Route("api/v1/Notification/{id:guid}/Action")]
         [ResponseType(typeof(bool))]
         [UserActionFilter]
+        [EnableCors("*", "*", "*", "*")]
         public HttpResponseMessage SaveAction(NotificationAction entity)
         {
             try
