@@ -80,6 +80,7 @@ namespace Notification.Business
                         {
                             item.AdministrativeUnit = SchoolBusiness.GetAUByPermission(userId, groupId, item.AdministrativeUnitSuperior);
                         }
+                        //Mesmo se a lista de unidades administrativas vier com valores, dentro do método é preciso garantir que o usuário tenha permissão nelas, por isso executo a verificação novamente dentro dele.
                         ltUser.AddRange(userRep.GetByVisionAll(userId, groupId, item.SystemId, item.GroupId, item.AdministrativeUnitSuperior, item.AdministrativeUnit).Select(u => u.Id));
                     }
 

@@ -66,8 +66,11 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="common\css\jquery-ui.min.css" />
     <Content Include="common\css\redactor.css" />
     <Content Include="common\fonts\fontawesome-webfont.svg" />
+    <Content Include="common\js\lib\date.js" />
+    <Content Include="common\js\lib\jquery-ui.min.js" />
     <Content Include="common\js\lib\pt_br.js" />
     <Content Include="Gruntfile.js" />
     <Content Include="node_modules\angular-resource\angular-resource.js" />
@@ -169,7 +172,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>6164</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:6164/</IISUrl>
+          <IISUrl>http://localhost:5003/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -29,7 +29,9 @@ namespace Notification.Repository.SGP
             var groupUser = groupRep.GetById(groupId);
 
             SchoolRepository school = new SchoolRepository();
-            IEnumerable<Guid> ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
+            IEnumerable<Guid> ltAUPermission = null;
+            if (groupUser.VisionId > 1)
+                ltAUPermission = school.GetAUByPermission(userId, groupId, ltSchoolSuperior, ltSchoolID);
 
             var ltCoursePeriod = coursePeriodId.Select(c => new { curId = c.Split('|')[0], crrId = c.Split('|')[1], crpId = c.Split('|')[2] });
 
