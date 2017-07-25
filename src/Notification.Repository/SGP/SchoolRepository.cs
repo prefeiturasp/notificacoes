@@ -19,8 +19,10 @@ namespace Notification.Repository.SGP
         {
             var groupRep = new GroupRepository();
             var groupUser = groupRep.GetById(groupId);
-
-            IEnumerable<Guid> ltAUPermission = GetAUByPermission(userId, groupId, ltSchoolSuperior);
+            
+            IEnumerable<Guid> ltAUPermission = null;
+            if (groupUser.VisionId > 1)
+                ltAUPermission = GetAUByPermission(userId, groupId, ltSchoolSuperior);
 
             using (var context = new SqlConnection(stringConnection))
             {
@@ -84,7 +86,9 @@ namespace Notification.Repository.SGP
             var groupRep = new GroupRepository();
             var groupUser = groupRep.GetById(groupId);
 
-            IEnumerable<Guid> ltAUPermission = GetAUByPermission(userId, groupId);
+            IEnumerable<Guid> ltAUPermission = null;
+            if (groupUser.VisionId > 1)
+                ltAUPermission = GetAUByPermission(userId, groupId);
 
             using (var context = new SqlConnection(stringConnection))
             {
