@@ -80,7 +80,7 @@ namespace Notification.Repository.SGP
             }
         }
 
-        [System.Obsolete("desuso. substituindo a função do core de permissões")]
+       
         public IEnumerable<School> GetBySuperior(Guid userId, Guid groupId, Guid schoolSuperiorId)
         {
             var groupRep = new GroupRepository();
