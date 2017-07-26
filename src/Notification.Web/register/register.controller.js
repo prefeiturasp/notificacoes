@@ -256,7 +256,7 @@
                     var element = $(this);
                     var text = element.text();
 
-                    //não deixa inserir mais nem um caracter a mais do limite
+                    //não deixa inserir mais nenhum caracter a mais do limite
                     if (text.length == ($scope.limitCharRedactor + 1)) {
                         return;
                     }
@@ -533,7 +533,7 @@
                         $scope.showFilter.showDRE = false;
                         $scope.showFilter.showShool = true;
                     }else if($scope.AdministrativeUnits && $scope.AdministrativeUnits.listGroups ==  0){
-                        toastr.warning("Não existe nem uma lista de unidades administrativas cadastrada!");
+                        toastr.warning("Não existe nenhuma lista de unidades administrativas cadastrada!");
                     }
                     $scope.load = false;
                 });
@@ -1016,7 +1016,7 @@
            }
 
             if(!flag) {
-                toastr.warning("Nem um filtro por "+ label +" foi selecionado!");
+                toastr.warning("Nenhum filtro por "+ label +" foi selecionado!");
             }else{
                 $scope.showTypeFilter[typeAccordion] = !$scope.showTypeFilter[typeAccordion];
             }
@@ -1044,17 +1044,6 @@
 
                 $scope.currentDate = data;
                 $scope.filters.DateStartNotification = new Date($scope.currentDate * 1000);
-
-                //$( "#datepicker1" ).datepicker({ dateFormat: 'yy-mm-dd', "setDate": $scope.filters.DateStartNotification});
-                //$( "#datepicker2" ).datepicker({ dateFormat: 'yy-mm-dd'});
-                //
-                //$( "#datepicker1").on('change', function(e){
-                //    checkDate($(this).val(), $(this), 'DateStartNotification');
-                //});
-                //
-                //$( "#datepicker2").on('change', function(e){
-                //    checkDate($(this).val(), $(this), 'DateEndNotification');
-                //});
             });
         }
 
