@@ -66,7 +66,7 @@
                     callback( JSON.parse(atob($window.sessionStorage.listVisionSystem)));
                 }else {
 
-                    httpModel(Model.getVisionSytem(), function (res) {
+                	httpModel(Model.getVisionSytem(groupSid), function (res) {
                         callback(res);
                         if(res && res.length > 0)
                             $window.sessionStorage.listVisionSystem = btoa(JSON.stringify(res));
