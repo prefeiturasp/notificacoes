@@ -18,15 +18,15 @@
             /*-----------------------------FILTROS POR SISTEMA------------------------------------*/
 
             function getVisionSytem() {
-                return getheaders('GET', null, $util.base_url_APICoreSSO('/Group'));
+            	return getheaders('GET', groupSid, $util.base_url_APICoreSSO('/Group'));
             }
 
             function getSystem(visionId) {
                 return getheaders('GET', null, $util.base_url_APICoreSSO('/System?groupSid=' + visionId));
             }
 
-            function getGroupsAU(id) {
-                return getheaders('GET', null, $util.base_url_APICoreSSO('/GroupDown?systemId=' + (id ? id : 0 )));
+            function getGroupsAU(params) {
+            	return getheaders('GET', params.groupSid, $util.base_url_APICoreSSO('/GroupDown?systemId=' + (params.id ? params.id : 0)));
             }
 
             function getUnitAdministrative(params) {

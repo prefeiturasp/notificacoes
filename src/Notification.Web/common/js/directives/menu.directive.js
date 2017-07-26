@@ -7,7 +7,7 @@
     angular.module('directives')
         .directive("menu", Menu);
 
-    Menu.$inject = ['$util', 'HttpServices', '$timeout', '$location'];
+    Menu.$inject = ['$util', 'HttpServices', '$timeout', '$location', '$window'];
 
     function Menu() {
         var directive = {
@@ -19,12 +19,13 @@
             transclude: false
         };
 
-        function MenuController($scope, $util, HttpServices, $timeout, $location) {
+        function MenuController($scope, $util, HttpServices, $timeout, $location, $window) {
 
             $scope.listMenuSystem = [];
             $scope.showListMenu = false;
             $scope.getListMenu = false;
             $scope.userName = [];
+            $scope.listSystem = $window.sessionStorage.listSystem ? $window.sessionStorage.listSystem : [];
 
             $scope.openMenuSytem = function __openMenuSytem() {
 
@@ -55,9 +56,14 @@
                         $scope.userName = data;
                     });
                 }catch(e){
-                    setTimeout(function(){ getUserName()}, 2000);
+                	$timeout(function () { getUserName() }, 2000);
                 }
             }
+
+            $scope.redirectSite = function __redirectSite(site) {
+            	$window.sessionStorage.visionSelected = "";
+            	$window.location.href = site.Url;
+            };
 
             /**
              * Efetua o logout do sistema

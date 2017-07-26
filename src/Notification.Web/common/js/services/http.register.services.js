@@ -60,7 +60,7 @@
                 }
             }
 
-            function getListVisionSystem(callback){
+            function getListVisionSystem(groupSid, callback) {
 
                 if($window.sessionStorage.listVisionSystem){
                     callback( JSON.parse(atob($window.sessionStorage.listVisionSystem)));
@@ -74,8 +74,8 @@
                 }
             }
 
-            function getListGroups(id, callback){
-                httpModel(Model.getGroupsAU(id), function (res) {
+            function getListGroups(params, callback){
+            	httpModel(Model.getGroupsAU(params), function (res) {
                     callback(res);
                     if(res && res.length > 0)
                         $window.sessionStorage.listGroups = btoa(JSON.stringify(res));
