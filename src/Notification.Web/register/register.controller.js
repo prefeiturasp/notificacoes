@@ -433,7 +433,7 @@
          */
         function getVisionSystem(){
 
-            HttpServices.getListVisionSystem(function(data){
+        	HttpServices.getListVisionSystem('00000000-0000-0000-0000-000000000000',function(data){
                 $scope.listVisionSystem = data;
                 if( data != null && data.length > 0) {
                     $window.sessionStorage.listVision = btoa(JSON.stringify(data));
@@ -477,8 +477,14 @@
          * Busca os grupos do sistema selecionado
          */
         function getGroups(){
-            $scope.load = true;
-            HttpServices.getListGroups($scope.SystemRecipient.SystemId[0],
+        	$scope.load = true;
+
+        	var getListGroups = {
+        		id: $scope.SystemRecipient.SystemId[0],
+        		groupSid: $scope.VisionSystem.Id
+        	}
+
+            HttpServices.getListGroups(,
                 function(data){
                     $scope.listGroups = data;
 
