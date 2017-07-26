@@ -43,29 +43,30 @@ namespace Notification.API.Areas.SGP.v1
             }
         }
 
-        ///// <summary>
-        ///// Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
-        ///// Necessário enviar o id do grupo no Header (groupSid)
-        ///// </summary>
-        ///// <param name="schoolSuperiorId">ID Diretoria de ensino (DRE)</param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //[Route("api/SGP/v1/School")]
-        //[ResponseType(typeof(IEnumerable<School>))]
-        //public HttpResponseMessage GetBySuperior(Guid schoolSuperiorId)
-        //{
-        //    try
-        //    {
+        /// <summary>
+        /// Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
+        /// Necessário enviar o id do grupo no Header (groupSid)
+        /// </summary>
+        /// <param name="schoolSuperiorId">ID Diretoria de ensino (DRE)</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/SGP/v1/School")]
+        [ResponseType(typeof(IEnumerable<School>))]
+        [EnableCors("*", "*", "*", "*")]
+        public HttpResponseMessage GetBySuperior(Guid schoolSuperiorId)
+        {
+            try
+            {
 
-        //        var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId);
-        //        return Request.CreateResponse(HttpStatusCode.OK, result);
+                var result = SchoolBusiness.Get(claimData.UserId, claimData.GroupId, schoolSuperiorId);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
 
-        //    }
-        //    catch (Exception exc)
-        //    {
-        //        var logId = LogBusiness.Error(exc);
-        //        return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
-        //    }
-        //}
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
+            }
+        }
     }
 }
