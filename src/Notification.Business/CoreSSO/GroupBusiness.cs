@@ -12,10 +12,10 @@ namespace Notification.Business.CoreSSO
     {
         public const string TYPE_GRU_ID = "groupSid";
 
-        public static IEnumerable<Group> GetGroupDown(Guid userId, int systemId)
+        public static IEnumerable<Group> GetGroupDown(Guid userId, int systemId, Guid groupId)
         {
             var repository = new GroupRepository();
-            return repository.GetGroupDown(userId, systemId);
+            return repository.GetGroupDown(userId, systemId, groupId);
         }
 
         /// <summary>

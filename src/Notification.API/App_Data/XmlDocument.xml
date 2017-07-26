@@ -12,7 +12,8 @@
         </member>
         <member name="M:Notification.API.Areas.CoreSSO.v1.GroupController.Get(System.Int32)">
             <summary>
-            Retorna todos os grupos cuja visão seja menor ou igual à do usuário logado.
+            Retorna todos os grupos cuja visão seja menor ou igual à que o usuário logado escolheu.
+            Enviar o id do grupo que usuário logado escolheu na entrada do sistema (groupSid) no header.
             </summary>
             <param name="systemId">ID do sistema selecionado para receber a notificação</param>
             <returns></returns>
@@ -21,6 +22,7 @@
             <summary>
             Busca todos os grupos do usuário logado que pertença ao sistema de Notificações.
             Depois de escolher 1 grupo, será necessário mandar o ID do mesmo no Header (groupSid)
+            Obs: Na chamada deste método, passar groupSid = '00000000-0000-0000-0000-000000000000' no Header
             </summary>
             <returns></returns>
         </member>

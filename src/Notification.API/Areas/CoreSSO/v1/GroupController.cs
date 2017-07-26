@@ -20,12 +20,13 @@ using System.Web.Http.Description;
 
 namespace Notification.API.Areas.CoreSSO.v1
 {
-    public class GroupController : AuthBaseController
+    public class GroupController : AuthUserGroupBaseController
     {
         private const string CHAVE_ID_SISTEMA = "SystemID";
 
         /// <summary>
-        /// Retorna todos os grupos cuja visão seja menor ou igual à do usuário logado.
+        /// Retorna todos os grupos cuja visão seja menor ou igual à que o usuário logado escolheu.
+        /// Enviar o id do grupo que usuário logado escolheu na entrada do sistema (groupSid) no header.
         /// </summary>
         /// <param name="systemId">ID do sistema selecionado para receber a notificação</param>
         /// <returns></returns>
@@ -37,7 +38,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         {
             try
             {
-                var result = GroupBusiness.GetGroupDown(claimData.UserId, systemId);
+                var result = GroupBusiness.GetGroupDown(claimData.UserId, systemId, claimData.GroupId);
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
@@ -50,6 +51,7 @@ namespace Notification.API.Areas.CoreSSO.v1
         /// <summary>
         /// Busca todos os grupos do usuário logado que pertença ao sistema de Notificações.
         /// Depois de escolher 1 grupo, será necessário mandar o ID do mesmo no Header (groupSid)
+        /// Obs: Na chamada deste método, passar groupSid = '00000000-0000-0000-0000-000000000000' no Header
         /// </summary>
         /// <returns></returns>
         [HttpGet]

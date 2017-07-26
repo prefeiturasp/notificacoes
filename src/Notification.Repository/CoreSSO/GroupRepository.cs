@@ -13,12 +13,13 @@ namespace Notification.Repository.CoreSSO
     public class GroupRepository : CoreSSORepository
     {
         /// <summary>
-        /// Busca os Grupos de mesma ou inferior visão do Grupo que o usuário está associado
+        /// Busca os Grupos de mesma ou inferior visão do Grupo que o usuário está logado
         /// </summary>
         /// <param name="userId">Id do usuário</param>
         /// <param name="systemId">Id do sistema</param>
+        /// <param name="groupId">Id do grupo passado no header</param>
         /// <returns></returns>
-        public IEnumerable<Group> GetGroupDown(Guid userId, int systemId)
+        public IEnumerable<Group> GetGroupDown(Guid userId, int systemId, Guid groupId)
         {
             using (var context = new SqlConnection(stringConnection))
             {
@@ -26,7 +27,8 @@ namespace Notification.Repository.CoreSSO
                     @"SELECT GP.gru_id AS Id, GP.gru_nome AS Name, GP.sis_id as SystemId, GP.vis_id AS VisionId
 	                    FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
-	                	INNER JOIN SYS_GRUPO AS GP WITH(NOLOCK) ON GP.sis_id = G.sis_id AND GP.vis_id >= G.vis_id
+	                	INNER JOIN SYS_GRUPO AS GP WITH(NOLOCK) ON GP.sis_id = G.sis_id 
+                            AND GP.vis_id >= (select vis_id from sys_grupo as gruVisao where gruVisao.gru_id=@groupId)
                         WHERE UG.usg_situacao = 1 
                         AND G.gru_situacao = 1 
                         AND GP.gru_situacao=1
@@ -34,7 +36,11 @@ namespace Notification.Repository.CoreSSO
                         AND UG.usu_id = @userId
                         GROUP BY GP.gru_id, GP.gru_nome, GP.sis_id, GP.vis_id
                         ORDER BY GP.gru_nome",
-                    new { systemId = systemId, userId = userId});
+                    
+                    new { systemId = systemId
+                            , userId = userId
+                            , groupId = groupId
+                    });
                 return query;
             }
         }
