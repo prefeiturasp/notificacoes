@@ -17,7 +17,7 @@
 
             /*-----------------------------FILTROS POR SISTEMA------------------------------------*/
 
-            function getVisionSytem() {
+        	function getVisionSytem(groupSid) {
             	return getheaders('GET', groupSid, $util.base_url_APICoreSSO('/Group'));
             }
 

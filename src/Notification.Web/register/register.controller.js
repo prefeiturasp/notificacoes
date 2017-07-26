@@ -479,12 +479,12 @@
         function getGroups(){
         	$scope.load = true;
 
-        	var getListGroups = {
+        	var params = {
         		id: $scope.SystemRecipient.SystemId[0],
         		groupSid: $scope.VisionSystem.Id
         	}
 
-            HttpServices.getListGroups(,
+        	HttpServices.getListGroups(params,
                 function(data){
                     $scope.listGroups = data;
 
