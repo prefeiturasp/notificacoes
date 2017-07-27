@@ -10,10 +10,10 @@ namespace Notification.Business.SGP
 {
     public class PositionBusiness
     {
-        public static IEnumerable<Position> Get()
+        public static IEnumerable<Position> Get(bool teacherPosition)
         {
             var repository = new PositionRepository();
-            return repository.Get();
+            return repository.Get(teacherPosition);
         }
     }
 }

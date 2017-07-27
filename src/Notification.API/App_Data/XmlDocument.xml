@@ -515,6 +515,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Notification.API.Areas.SGP.v1.PositionController.GetByContributor">
+            <summary>
+            Busca cargos de colaboradores que não são docentes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Notification.API.Areas.SGP.v1.PositionController.GetByTeacher">
+            <summary>
+            Busca cargos de docentes
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Notification.API.Areas.SGP.v1.SchoolClassificationController.Get(System.Collections.Generic.IEnumerable{System.Guid})">
             <summary>
             Retorna todas as classificações de escolas baseadas no usuário, grupo e diretoria

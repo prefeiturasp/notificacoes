@@ -16,15 +16,41 @@ namespace Notification.API.Areas.SGP.v1
 {
     public class PositionController : AuthBaseController
     {
+        /// <summary>
+        /// Busca cargos de colaboradores que não são docentes
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/SGP/v1/Position")]
+        [Route("api/SGP/v1/ContributorPosition")]
         [ResponseType(typeof(IEnumerable<Position>))]
         [EnableCors("*", "*", "*", "*")]
-        public HttpResponseMessage Get()
+        public HttpResponseMessage GetByContributor()
         {
             try
             {
-                var lt = PositionBusiness.Get();
+                var lt = PositionBusiness.Get(false);
+                return Request.CreateResponse(HttpStatusCode.OK, lt);
+            }
+            catch (Exception exc)
+            {
+                var logId = LogBusiness.Error(exc);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
+            }
+        }
+
+        /// <summary>
+        /// Busca cargos de docentes
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/SGP/v1/TeacherPosition")]
+        [ResponseType(typeof(IEnumerable<Position>))]
+        [EnableCors("*", "*", "*", "*")]
+        public HttpResponseMessage GetByTeacher()
+        {
+            try
+            {
+                var lt = PositionBusiness.Get(true);
                 return Request.CreateResponse(HttpStatusCode.OK, lt);
             }
             catch (Exception exc)

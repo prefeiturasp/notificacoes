@@ -12,10 +12,11 @@ namespace Notification.Repository.SGP
 {
     public class PositionRepository : SGPRepository
     {
-        public IEnumerable<Position> Get()
+        public IEnumerable<Position> Get(bool teacherPosition)
         {
             using (var context = new SqlConnection(stringConnection))
             {
+
                 var query = context.Query<Position>(
                     @"SELECT crg.crg_id as Id, crg.crg_nome as Name                        
                     FROM RHU_Cargo crg WITH(NOLOCK)
