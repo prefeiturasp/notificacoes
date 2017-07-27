@@ -52,7 +52,11 @@
             }
 
             function getPosition() {
-                return getheaders('GET', null, $util.base_url_APISGP('/Position'));
+            	return getheaders('GET', null, $util.base_url_APISGP('/ContributorPosition'));
+            }
+
+            function getTeacherPosition() {
+            	return getheaders('GET', null, $util.base_url_APISGP('/TeacherPosition'));
             }
 
             function getCorse(id) {
@@ -130,7 +134,8 @@
             getTeam: getTeam,
             postSave: postSave,
             getTimeStamp: getTimeStamp,
-            getUserName: getUserName
+            getUserName: getUserName,
+            getTeacherPosition: getTeacherPosition
         }
 
     }

@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="divisao-filtro">
-                    <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getPosition()">Cargo</h3>
+                    <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getTeacherPosition()">Cargo</h3>
                     <ul>
                         <li ng-repeat="item in listPosition" ng-if="!change.checkedPosition">
                             <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Position, item, TeacherRecipientClone.Position)">{{item.Name}}

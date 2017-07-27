@@ -605,6 +605,21 @@
                 $scope.TeacherRecipient.Position = [];
                 $scope.ContributorRecipient.Position = [];
             }
+        }; 
+
+        $scope.getTeacherPosition = function __getTeacherPosition() {
+        	$scope.change.checkedPosition = !$scope.change.checkedPosition;
+
+        	if (!$scope.change.checkedPosition) {
+        		$scope.load = true;
+        		HttpServices.getListTeacherPosition(function (data) {
+        			$scope.listPosition = data;
+        			$scope.load = false;
+        		});
+        	} else if ($scope.change.checkedPosition) {
+        		$scope.TeacherRecipient.Position = [];
+        		$scope.ContributorRecipient.Position = [];
+        	}
         };
 
         $scope.getSchool = function __getSchool(SchoolSuperior, SchoolClassification){

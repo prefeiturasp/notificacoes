@@ -126,18 +126,18 @@
                 httpModel(Model.getSchool(params), function (res) {callback(res);});
             }
 
-            function getListPosition(callback){
+            function getListPosition(callback){ 
+                httpModel(Model.getPosition(), function (res) {
+                    callback(res);                       
+                });
+                
+            }
 
-                if($window.sessionStorage.listPosition){
-                    callback(JSON.parse(atob($window.sessionStorage.listPosition)));
-                }else {
-
-                    httpModel(Model.getPosition(), function (res) {
-                        callback(res);
-                        if( res && res.length > 1)
-                            $window.sessionStorage.listPosition = btoa(JSON.stringify(res));
-                    });
-                }
+            function getListTeacherPosition(callback) {
+            	httpModel(Model.getTeacherPosition(), function (res) {
+            		callback(res);            		
+            	});
+            	
             }
 
             function getListCorse(id, callback){
@@ -212,7 +212,8 @@
                 postSave: postSave,
                 getListUnitAdministrative: getListUnitAdministrative,
                 getTimeStamp: getTimeStamp,
-                getUserName: getUserName
+                getUserName: getUserName,
+                getListTeacherPosition: getListTeacherPosition
             }
 
         };
