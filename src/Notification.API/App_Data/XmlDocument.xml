@@ -515,6 +515,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Notification.API.Areas.SGP.v1.PositionController.GetByContributor">
+            <summary>
+            Busca cargos de colaboradores que não são docentes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Notification.API.Areas.SGP.v1.PositionController.GetByTeacher">
+            <summary>
+            Busca cargos de docentes
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Notification.API.Areas.SGP.v1.SchoolClassificationController.Get(System.Collections.Generic.IEnumerable{System.Guid})">
             <summary>
             Retorna todas as classificações de escolas baseadas no usuário, grupo e diretoria
@@ -528,6 +540,14 @@
             </summary>
             <param name="schoolSuperiorId">Opcional. Repita este parâmetro para cada Id DRE que queira filtrar</param>
             <param name="schoolClassificationId">Opcional. Repita este parâmetro para cada classificação que queira filtrar</param>
+            <returns></returns>
+        </member>
+        <member name="M:Notification.API.Areas.SGP.v1.SchoolController.GetBySuperior(System.Guid)">
+            <summary>
+            Busca todas as escolas pela DRE cujo usuário logado tenha permissão.
+            Necessário enviar o id do grupo no Header (groupSid)
+            </summary>
+            <param name="schoolSuperiorId">ID Diretoria de ensino (DRE)</param>
             <returns></returns>
         </member>
         <member name="M:Notification.API.Areas.SGP.v1.SchoolSuperiorController.Get">

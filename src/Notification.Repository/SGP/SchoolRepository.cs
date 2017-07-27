@@ -80,7 +80,7 @@ namespace Notification.Repository.SGP
             }
         }
 
-        [System.Obsolete("desuso. substituindo a função do core de permissões")]
+       
         public IEnumerable<School> GetBySuperior(Guid userId, Guid groupId, Guid schoolSuperiorId)
         {
             var groupRep = new GroupRepository();
@@ -106,6 +106,7 @@ namespace Notification.Repository.SGP
                 //(SELECT uad_id FROM Synonym_FN_Select_UAs_By_PermissaoUsuario(@usu_idLogado, @gru_idLogado))
 
                 sb.Append(" AND esc.uad_idSuperiorGestao = @idDre");
+                sb.Append(" ORDER BY esc.esc_nome");
 
                 var query = context.Query<School>(
 
@@ -166,7 +167,7 @@ namespace Notification.Repository.SGP
 
 
         /// <summary>
-        /// MÉTODO EM CONSTRUÇÃO
+        /// Retorna todas as UAD's que um usuário tem permissão naquele grupo.
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="groupId"></param>

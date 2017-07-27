@@ -102,18 +102,10 @@
                 }
             }
 
-            function getListSchoolSuperior(visionGroupId, callback){
-
-                if($window.sessionStorage.listSchoolSuperior){
-                    callback(JSON.parse(atob($window.sessionStorage.listSchoolSuperior)));
-                }else {
-
-                    httpModel(Model.getSchoolSuperior(visionGroupId), function (res) {
-                        callback(res);
-                        if(res && res.length > 0)
-                            $window.sessionStorage.listSchoolSuperior = btoa(JSON.stringify(res));
-                    });
-                }
+            function getListSchoolSuperior(visionGroupId, callback) {
+                httpModel(Model.getSchoolSuperior(visionGroupId), function (res) {
+                    callback(res);
+                });
             }
 
             function getListSchoolClassification(params, callback){

@@ -29,9 +29,9 @@ namespace Notification.Repository.CoreSSO
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
 	                	INNER JOIN SYS_GRUPO AS GP WITH(NOLOCK) ON GP.sis_id = G.sis_id 
                             AND GP.vis_id >= (select vis_id from sys_grupo as gruVisao where gruVisao.gru_id=@groupId)
-                        WHERE UG.usg_situacao = 1 
-                        AND G.gru_situacao = 1 
-                        AND GP.gru_situacao=1
+                        WHERE UG.usg_situacao <> 3 
+                        AND G.gru_situacao <> 3 
+                        AND GP.gru_situacao <> 3
                         AND G.sis_id = @systemId 
                         AND UG.usu_id = @userId
                         GROUP BY GP.gru_id, GP.gru_nome, GP.sis_id, GP.vis_id
@@ -59,8 +59,8 @@ namespace Notification.Repository.CoreSSO
                     @"SELECT G.gru_id AS Id, G.gru_nome AS Name, G.sis_id as SystemId, G.vis_id AS VisionId
 	                    FROM SYS_UsuarioGrupo AS UG WITH(NOLOCK)
 	                    INNER JOIN SYS_Grupo AS G WITH(NOLOCK) ON UG.gru_id = G.gru_id
-                        WHERE UG.usg_situacao = 1 
-                            AND G.gru_situacao = 1 
+                        WHERE UG.usg_situacao <> 3 
+                            AND G.gru_situacao <> 3
                             AND G.sis_id = @systemId 
                             AND UG.usu_id = @userId
                             AND G.vis_id < 4
