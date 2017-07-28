@@ -63,7 +63,7 @@ namespace Notification.Repository
                 .Exclude(n => n.Recipient);
             var sort = Builders<Notification.Entity.Database.Notification>.Sort
                 .Descending(n => n.MessageType)
-                .Ascending(n => n.DateStartNotification);
+                .Descending(n => n.DateStartNotification);
 
             total = Collection
                 .Find(filter)
@@ -88,7 +88,7 @@ namespace Notification.Repository
                 .Exclude(n => n.Recipient);
             var sort = Builders<Notification.Entity.Database.Notification>.Sort
                 .Descending(n => n.MessageType)
-                .Ascending(n => n.DateStartNotification);
+                .Descending(n => n.DateStartNotification);
 
             total = Collection
                 .Find(filter)
