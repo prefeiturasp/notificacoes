@@ -17,7 +17,8 @@ namespace Notification.Repository.SGP
             var ltCoursePeriod = coursePeriodId.Select(c => new { curId = c.Split('|')[0], crrId = c.Split('|')[1], crpId = c.Split('|')[2] });
             
             StringBuilder sb = new StringBuilder();
-            sb.Append(@"SELECT tds.tds_id as Id, tds.tds_nome as Name
+            sb.Append(@"SELECT tds.tds_id as Id
+                , (SELECT CAST(tds.tds_nome AS VARCHAR(100)) + ' - '+ CAST(tne.tne_nome AS VARCHAR(100))) as Name
                 FROM ACA_CalendarioCurso cac WITH(NOLOCK)
                 INNER JOIN ACA_CalendarioAnual AS CAL WITH(NOLOCK) ON CAL.cal_id = CAC.cal_id
                 INNER JOIN ACA_Curso cur WITH(NOLOCK) ON cac.cur_id = cur.cur_id AND cur.cur_situacao <> 3
@@ -25,7 +26,9 @@ namespace Notification.Repository.SGP
                 INNER JOIN ACA_CurriculoPeriodo crp WITH(NOLOCK) ON crp.cur_id = crr.cur_id AND crp.crr_id = crr.crr_id AND crp.crp_situacao <> 3
                 INNER JOIN ACA_CurriculoDisciplina crd WITH(NOLOCK) ON crd.cur_id = crp.cur_id AND crd.crr_id = crp.crr_id AND crd.crp_id = crp.crp_id AND crd.crd_situacao <> 3
                 INNER JOIN ACA_Disciplina dis WITH(NOLOCK) ON dis.dis_id = crd.dis_id AND dis.dis_situacao <> 3
-                INNER JOIN ACA_TipoDisciplina tds WITH(NOLOCK) ON tds.tds_id = dis.tds_id AND tds.tds_situacao <> 3");
+                INNER JOIN ACA_TipoDisciplina tds WITH(NOLOCK) ON tds.tds_id = dis.tds_id AND tds.tds_situacao <> 3
+                INNER JOIN ACA_TipoNivelEnsino as tne WITH(NOLOCK) ON tne.tne_id= tds.tne_id AND tne.tne_situacao <> 3
+                ");
 
             if (ltCoursePeriod.Any())
             {
@@ -45,7 +48,7 @@ namespace Notification.Repository.SGP
             if (courseId != null && courseId.Any())
                 sb.Append(" AND cac.cur_id IN @courseId");                       
 
-            sb.Append(" GROUP BY tds.tds_id, tds.tds_nome ORDER BY tds.tds_nome");
+            sb.Append(" GROUP BY tds.tds_id, tds.tds_nome, tne.tne_nome ORDER BY tds.tds_nome, tne.tne_nome");
 
             using (var context = new SqlConnection(stringConnection))
             {
