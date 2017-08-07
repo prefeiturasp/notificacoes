@@ -20,6 +20,12 @@
     <body ng-app="appNotification" ng-cloak>
 
         <ng-view></ng-view>
+		
+		 <!-- build:js xyz.js -->
+		 <script src="common/js/lib/jquery.min.js" type="text/javascript"></script>
+		 <script src="common/js/lib/xml2json.min.js" type="text/javascript"></script>
+         <script src="config.js" type="text/javascript"></script>
+        <!-- endbuild -->
 
         <!-- build:js common/js/lib/vendor.js -->
         <script src="node_modules/angular/angular.min.js" type="text/javascript"></script>
@@ -29,26 +35,22 @@
         <script src="node_modules/angular-animate/angular-animate.min.js" type="text/javascript"></script>
         <!-- endbuild -->
 
-        <!-- build:js common/js/lib/toastr.js -->
+        <!-- build:js common/js/lib/toastr.min.js -->
         <script src="../node_modules/angular-toastr/dist/angular-toastr.tpls.min.js" type="text/javascript"></script>
         <!-- endbuild -->
 
 
-        <!-- build:js common/js/lib/plugin.js -->
-        <script src="common/js/lib/jquery.min.js" type="text/javascript"></script>
+        <!-- build:js common/js/lib/plugin.min.js -->        
         <script src="common/js/lib/jquery-ui.min.js" type="text/javascript"></script>
         <script src="common/js/lib/jquery.signalR.min.js" type="text/javascript"></script>
         <script src="common/js/lib/oidc-client.js" type="text/javascript"></script>
         <script src="common/js/lib/plg-notify.min.js" type="text/javascript"></script>
         <script src="common/js/lib/redactor.js" type="text/javascript"></script>
         <script src="common/js/lib/pt_br.js" type="text/javascript"></script>
-		<script src="common/js/lib/date.js" type="text/javascript"></script>
-        <!-- endbuild -->
-        <!-- build:js xyx.js -->
-        <script src="config.js" type="text/javascript"></script>
-        <!-- endbuild -->
+		<script src="common/js/lib/date.js" type="text/javascript"></script>		
+        <!-- endbuild -->       
 
-        <!-- build:js common/js/lib/modules.js -->
+        <!-- build:js common/js/lib/modules.min.js -->
         <script src="common/js/module/app.module.js" type="text/javascript"></script>
         <script src="common/js/factorys/factory.js" type="text/javascript"></script>
         <script src="common/js/directives/directive.js" type="text/javascript"></script>
@@ -57,7 +59,7 @@
         <script src="common/js/factorys/route.factory.js" type="text/javascript"></script>
         <!-- endbuild -->
 
-        <!-- build:js common/js/lib/services.js -->
+        <!-- build:js common/js/lib/services.min.js -->
         <script src="common/js/lib/limiter.js" type="text/javascript"></script>
         <script src="common/js/services/utils.js" type="text/javascript"></script>
         <script src="common/js/services/model.js" type="text/javascript"></script>
@@ -65,7 +67,7 @@
         <script src="common/js/directives/menu.directive.js" type="text/javascript"></script>
         <!-- endbuild -->
 
-        <!-- build:js register/main.js -->
+        <!-- build:js register/main.min.js -->
         <script src="register/register.controller.js" type="text/javascript"></script>
         <!-- endbuild -->
 

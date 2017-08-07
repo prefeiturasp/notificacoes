@@ -72,6 +72,8 @@
     <Content Include="common\js\lib\date.js" />
     <Content Include="common\js\lib\jquery-ui.min.js" />
     <Content Include="common\js\lib\pt_br.js" />
+    <Content Include="common\js\lib\xml2json.min.js" />
+    <Content Include="config.xml" />
     <Content Include="Gruntfile.js" />
     <Content Include="node_modules\angular-animate\angular-animate.js" />
     <Content Include="node_modules\angular-animate\angular-animate.min.js" />
