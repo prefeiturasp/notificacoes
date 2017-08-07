@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.SignalRServer"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityModel.Owin.BasicAuthentication", "IdentityModel.Owin.BasicAuthentication\IdentityModel.Owin.BasicAuthentication.csproj", "{46FF27D2-98CB-4A12-9712-A8A00B36479C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Tests", "Notification.Test\Notification.Tests.csproj", "{F34D9CB9-3756-42FC-B387-AC4CBF1F1E88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{46FF27D2-98CB-4A12-9712-A8A00B36479C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46FF27D2-98CB-4A12-9712-A8A00B36479C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46FF27D2-98CB-4A12-9712-A8A00B36479C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F34D9CB9-3756-42FC-B387-AC4CBF1F1E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F34D9CB9-3756-42FC-B387-AC4CBF1F1E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F34D9CB9-3756-42FC-B387-AC4CBF1F1E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F34D9CB9-3756-42FC-B387-AC4CBF1F1E88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
