@@ -23,6 +23,11 @@ namespace Notification.API.Areas.v1
             try
             {
                 var result = DisturbTimeBusiness.Get();
+                if (result == null || !result.Any())
+                {
+                    Save();
+                    result = DisturbTimeBusiness.Get();
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)
@@ -31,7 +36,7 @@ namespace Notification.API.Areas.v1
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new ErrorModel(logId));
             }
         }
-        
+
         [HttpPost]
         [Route("api/v1/DisturbTime")]
         [ResponseType(typeof(IEnumerable<DisturbTime>))]

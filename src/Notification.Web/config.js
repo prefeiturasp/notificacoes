@@ -30,7 +30,7 @@ function loadXMLDoc() {
 		  callback(this);
 		}
 	  };
-	  xmlhttp.open("GET", "config.xml", true);
+	  xmlhttp.open("GET", "config.config", true);
 	  xmlhttp.send();
 	  
 	}else{

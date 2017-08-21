@@ -23,6 +23,11 @@ namespace Notification.API.Areas.v1
             try
             {
                 var result = DelayTimeBusiness.Get();
+                if (result == null || !result.Any())
+                {
+                    Save();
+                    result = DelayTimeBusiness.Get();
+                }
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             }
             catch (Exception exc)

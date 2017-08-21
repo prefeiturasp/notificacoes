@@ -103,5 +103,10 @@ namespace Notification.Repository
 
             return result.ToList();
         }
+
+        public void CreateIndexNotificationRepository()
+        {
+            Collection.Indexes.CreateOne("{ MessageType : -1.0, DateStartNotification : 1.0}");
+        }
     }
 }

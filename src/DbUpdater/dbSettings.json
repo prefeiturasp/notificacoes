@@ -1,0 +1,31 @@
+﻿{
+  "SystemId": "$SystemId$",
+  "DbSettings": [
+    {
+      "ProjectDatabase": "CoreSSO.Database",
+      "DeployConnectionString": "$DeployConnectionStringCore$",
+      "RestoreInitialVersion": "False",
+      "BackupFilePath": "",
+      "Variables": {
+        "SystemName": "$SystemName$",
+        "UserName": "$UserName$",
+        "UserPass": "$UserPass$",
+        "UrlNotificacoesLogin": "$UrlNotificacoesLogin$"
+      }
+    },
+    {
+      "ProjectDatabase": "CoreIDS.Database",
+      "DeployConnectionString": "$DeployConnectionStringCoreIDS$",
+      "RestoreInitialVersion": "False",
+      "BackupFilePath": "",
+      "Variables": {
+        "ClientIdMvc": "$ClientIdMvc$",
+        "ClientIdJs": "$ClientIdJs$",
+        "UrlNotificacoes": "$UrlNotificacoes$",
+        "UrlNotificacoesAPI": "$UrlNotificacoesAPI$",
+        "UrlCore": "$UrlCore$",
+        "UrlNotificacoesUri": "$UrlNotificacoesUri$"
+      }
+    }
+  ]
+}

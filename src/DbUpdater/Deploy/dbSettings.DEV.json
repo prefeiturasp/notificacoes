@@ -1,0 +1,31 @@
+﻿{
+  "SystemId": "219",
+  "DbSettings": [
+    {
+      "ProjectDatabase": "CoreSSO.Database",
+      "DeployConnectionString": "Server=localhost\\MSSQLSERVER2014;Database=Local_CoreSSO;Integrated Security=SSPI;;Connection Timeout=30;",
+      "RestoreInitialVersion": "False",
+      "BackupFilePath": "",
+      "Variables": {
+        "SystemName": "Notificacoes",
+        "UserName": "user_Name",
+        "UserPass": "User_pass@123",
+        "UrlNotificacoesLogin": "http://localhost/Notificacoes"
+      }
+    },
+    {
+      "ProjectDatabase": "CoreIDS.Database",
+      "DeployConnectionString": "Server=localhost\\MSSQLSERVER2014;Database=Local_CoreIDS;Integrated Security=SSPI;Connection Timeout=30;",
+      "RestoreInitialVersion": "False",
+      "BackupFilePath": "",
+      "Variables": {
+        "ClientIdMvc": "clientmvc",
+        "ClientIdJs": "clientjs",
+        "UrlNotificacoes": "http://localhost/Notificacoes",
+        "UrlNotificacoesAPI": "http://localhost/NotificacoesAPI",
+        "UrlCore": "http://localhost/",
+        "UrlNotificacoesUri": "http://localhost/callback.html"
+      }
+    }
+  ]
+}

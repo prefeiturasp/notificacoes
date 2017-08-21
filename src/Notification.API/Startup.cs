@@ -13,6 +13,7 @@ using Notification.Business;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using IdentityModel.Owin.BasicAuthentication;
+using Notification.Repository;
 
 [assembly: OwinStartup(typeof(Notification.API.Startup))]
 
@@ -48,6 +49,9 @@ namespace Notification.API
             var database = new MongoUrlBuilder(stringConnection).DatabaseName;
 
             GlobalConfiguration.Configuration.UseMongoStorage(stringConnection, database);
+
+            var repository = new NotificationRepository();
+            repository.CreateIndexNotificationRepository();
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();

@@ -40,7 +40,7 @@ namespace Notification.Repository.Connections
                 }
             }
 
-            return dicConnection[connectionName];            
+            return Encryptor.DecryptTripleDES(dicConnection[connectionName]);
         }
 
         private static string GetFromConfig(string connectionName)
@@ -66,7 +66,7 @@ namespace Notification.Repository.Connections
 
             if (config == null)
                 return null;
-            
+
             return config.ConnectionString;
         }
     }
