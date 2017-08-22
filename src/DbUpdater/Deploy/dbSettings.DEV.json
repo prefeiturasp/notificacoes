@@ -4,7 +4,7 @@
     {
       "ProjectDatabase": "CoreSSO.Database",
       "DeployConnectionString": "Server=localhost\\MSSQLSERVER2014;Database=Local_CoreSSO;Integrated Security=SSPI;;Connection Timeout=30;",
-      "RestoreInitialVersion": "False",
+      "InitialVersionRestoreType": "None",
       "BackupFilePath": "",
       "Variables": {
         "SystemName": "Notificacoes",
@@ -16,7 +16,7 @@
     {
       "ProjectDatabase": "CoreIDS.Database",
       "DeployConnectionString": "Server=localhost\\MSSQLSERVER2014;Database=Local_CoreIDS;Integrated Security=SSPI;Connection Timeout=30;",
-      "RestoreInitialVersion": "False",
+      "InitialVersionRestoreType": "None",
       "BackupFilePath": "",
       "Variables": {
         "ClientIdMvc": "clientmvc",

@@ -4,7 +4,7 @@
     {
       "ProjectDatabase": "CoreSSO.Database",
       "DeployConnectionString": "$DeployConnectionStringCore$",
-      "RestoreInitialVersion": "False",
+      "InitialVersionRestoreType": "None",
       "BackupFilePath": "",
       "Variables": {
         "SystemName": "$SystemName$",
@@ -16,7 +16,7 @@
     {
       "ProjectDatabase": "CoreIDS.Database",
       "DeployConnectionString": "$DeployConnectionStringCoreIDS$",
-      "RestoreInitialVersion": "False",
+      "InitialVersionRestoreType": "None",
       "BackupFilePath": "",
       "Variables": {
         "ClientIdMvc": "$ClientIdMvc$",
