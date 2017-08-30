@@ -4,8 +4,8 @@
     {
       "ProjectDatabase": "CoreSSO.Database",
       "DeployConnectionString": "$DeployConnectionStringCore$",
-      "InitialVersionRestoreType": "None",
-      "BackupFilePath": "",
+      "InitialVersionRestoreType": "$InitialVersionRestoreType$",
+      "BackupFilePath": "$BackupFilePathCore$",
       "Variables": {
         "SystemName": "$SystemName$",
         "UserName": "$UserName$",

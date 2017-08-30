@@ -21,6 +21,9 @@
 bld/
 [Bb]in/
 [Oo]bj/
+*.cache   
+Debug/
+[o]bj/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -255,3 +258,16 @@ ModelManifest.xml
 !/plg-notify/bower.json
 !/plg-notify/plugin.js
 !plg-notify.min.js
+
+# Build related
+tools/**
+!tools/packages.config	
+[Oo]utput/	 
+
+[Bb]uild/**
+!build/*.cake
+!build/*.targets
+!build/*.json
+
+
+
