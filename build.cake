@@ -4,6 +4,8 @@
 #load "./build/ms-helpers.cake"
 #load "./build/ms-tasks.cake"
 
+                                       
+
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -52,6 +54,7 @@ Task("Default")
 .IsDependentOn("Clean")
     .IsDependentOn("WebProject")  
     .IsDependentOn("Database") 
+    .IsDependentOn("WindowsServices")         
     .IsDependentOn("Zip");
 
 

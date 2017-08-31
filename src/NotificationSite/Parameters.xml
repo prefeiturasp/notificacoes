@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" defaultValue="$SiteName$" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" />
+  </parameter>
+
+  <!--Identity-->  
+  <parameter name="URL_SIGGNALR" defaultvalue="$URL_SIGGNALR$" description="URL_SIGGNALR description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/add[@key='URL_SIGGNALR']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="IDENTITY" defaultvalue="$IDENTITY$" description="IDENTITY description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/add[@key='IDENTITY']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="API" defaultvalue="$API$" description="API description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/add[@key='API']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="APICoreSSO" defaultvalue="$APICoreSSO$" description="APICoreSSO description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/add[@key='APICoreSSO']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="APISGP" defaultvalue="$APISGP$" description="APISGP description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/add[@key='APISGP']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="APINotification" defaultvalue="$APINotification$" description="APINotification description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/add[@key='APINotification']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="authority" defaultvalue="$authority$" description="authority description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/OIDCCLIENT/add[@key='authority']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="client_id" defaultvalue="$client_id$" description="client_id description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/OIDCCLIENT/add[@key='client_id']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="redirect_uri" defaultvalue="$redirect_uri$" description="redirect_uri description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/OIDCCLIENT/add[@key='redirect_uri']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="response_type" defaultvalue="$response_type$" description="response_type description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/OIDCCLIENT/add[@key='response_type']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="scope" defaultvalue="$scope$" description="scope description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/OIDCCLIENT/add[@key='scope']/@value" scope="\\config.config$" />
+  </parameter>
+  <parameter name="post_logout_redirect_uri" defaultvalue="$post_logout_redirect_uri$" description="post_logout_redirect_uri description." tags="">
+    <parameterentry kind="XmlFile" match="/CONFIG/OIDCCLIENT/add[@key='post_logout_redirect_uri']/@value" scope="\\config.config$" />
+  </parameter>
+</parameters>

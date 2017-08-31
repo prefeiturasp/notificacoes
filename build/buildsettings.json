@@ -1,0 +1,39 @@
+{
+  "BuildName": "notificacoes",
+  "SolutionFile": "./src/Notification.sln",
+  "Configuration": "Release",
+  "SemVer": null,
+  "WebProjects": [
+    {
+      "UpdateVersionXml": true,
+      "ProjectName": "NotificationSite",
+      "ProjectFile": "./src/Notification.Web/Notification.Web.csproj",
+      "PublishMethod": {
+        "Type": "Package"
+      }
+    },
+    {
+      "UpdateVersionXml": true,
+      "ProjectName": "NotificationAPI",
+      "ProjectFile": "./src/Notification.API/Notification.API.csproj",
+      "PublishMethod": {
+        "Type": "Package"
+      }
+    },
+    {
+      "UpdateVersionXml": true,
+      "ProjectName": "NotificationSignalR",
+      "ProjectFile": "./src/Notification.SignalRServer/Notification.SignalRServer.csproj",
+      "PublishMethod": {
+        "Type": "Package"
+      }
+    }
+  ],
+  "DatabaseProjects": [
+    {
+      "DatabaseProjectType": "DbUp",
+      "ProjectName": "DbUpdater",
+      "ProjectFile": "./src/DbUpdater/DbUpdater.csproj"
+    }
+  ]
+}
