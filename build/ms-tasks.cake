@@ -63,4 +63,25 @@ Task("Zip")
 });
 
 
+Task("NPM-Install")
+.Does(() =>
+{
+    var projectWebPath = Directory("src") + Directory("Notification.Web");
+    Information("Project web path: {0}", projectWebPath);
 
+    var settings = new NpmInstallSettings();
+
+    settings.LogLevel = NpmLogLevel.Info;
+    settings.WorkingDirectory = projectWebPath;
+    settings.Production = true;
+
+    NpmInstall(settings);
+});
+
+Task("Grunt")
+  .Does(() =>
+{
+    var projectWebPath = Directory("src") + Directory("Notification.Web");
+    Information("Project web path: {0}", projectWebPath);
+    Grunt.Global.Execute(settings => settings.WithGruntFile( projectWebPath + File("Gruntfile.js") ));
+});
