@@ -3,9 +3,8 @@
 #tool "nuget:?package=GitVersion.CommandLine"
 #load "./build/ms-helpers.cake"
 #load "./build/ms-tasks.cake"
-
-                                       
-
+#addin "Cake.Grunt"
+#addin "Cake.Npm"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -38,6 +37,10 @@ Setup(context =>
     parameters.OutputArtifacts = parameters.ZipFileName;
     parameters.ServerRepositoryBuild = parameters.ServerRepository + "\\" + buildSettings.BuildName;
     parameters.IsPublishBuild = IsBuildTaggedOnJenkins() || IsReleaseBranchOnJenkins();
+
+    Information("Server repository: {0}", parameters.ServerRepository);
+    Information("Output artifacts: {0}", parameters.OutputArtifacts);
+    Information("Server repository build: {0}", parameters.ServerRepositoryBuild);
 });
 
 Teardown(context =>
@@ -52,10 +55,11 @@ Teardown(context =>
 
 Task("Default")
 .IsDependentOn("Clean")
-    .IsDependentOn("WebProject")  
-    .IsDependentOn("Database") 
-    .IsDependentOn("WindowsServices")         
-    .IsDependentOn("Zip");
+.IsDependentOn("NPM-install")
+.IsDependentOn("Grunt")
+.IsDependentOn("WebProject")
+.IsDependentOn("Database") 
+.IsDependentOn("Zip");
 
 
 //////////////////////////////////////////////////////////////////////
