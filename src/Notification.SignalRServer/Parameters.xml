@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" defaultValue="$SiteName$" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" />
+  </parameter>
+  
+  <!--WebConfig-->  
+  <parameter name="ConnectionString.Notification" defaultvalue="$ConnectionString.Notification$" description="Conexão com o banco de dados Notification." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/connectionStrings/add[@key='Notification']/@value" scope="\\web.config$" />
+  </parameter>  
+  <parameter name="urlIdentityServer" defaultvalue="$urlIdentityServer$" description="urlIdentityServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='urlIdentityServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="scopesIdentityServer" defaultvalue="$scopesIdentityServer$" description="scopesIdentityServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='scopesIdentityServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="UserCredentialSignalRServer" defaultvalue="$UserCredentialSignalRServer$" description="UserCredentialSignalRServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='UserCredentialSignalRServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="PasswordCredentialSignalRServer" defaultvalue="$PasswordCredentialSignalRServer$" description="PasswordCredentialSignalRServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='PasswordCredentialSignalRServer']/@value" scope="\\web.config$" />
+  </parameter>
+
+</parameters>

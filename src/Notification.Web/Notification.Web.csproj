@@ -73,7 +73,8 @@
     <Content Include="common\js\lib\jquery-ui.min.js" />
     <Content Include="common\js\lib\pt_br.js" />
     <Content Include="common\js\lib\xml2json.min.js" />
-    <None Include="config.config">
+    <Content Include="build-tasks.wpp.targets" />
+    <None Include="config.xml">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Gruntfile.js" />
@@ -187,6 +188,7 @@
     <Content Include="common\view\menu.directive.html" />
     <Content Include="config.js" />
     <Content Include="index.html" />
+    <Content Include="Parameters.xml" />
     <Content Include="register\register.controller.js" />
     <Content Include="register\register.view.html" />
     <Content Include="Web.config" />
