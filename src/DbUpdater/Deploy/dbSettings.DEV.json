@@ -27,5 +27,14 @@
         "UrlNotificacoesUri": "http://localhost/callback.html"
       }
     }
+  ],
+  "MongoSettings": [
+    {
+      "ServerName": "localhost:27017",
+      "Database": "Notification",
+      "DumpFilePath": "C:\\Mongo\\DB\\Dump",
+      "InitialVersionRestoreType": "Database",
+      "CompressedFile": false
+    }
   ]
 }

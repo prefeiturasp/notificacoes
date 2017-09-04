@@ -27,5 +27,14 @@
         "UrlNotificacoesUri": "$UrlNotificacoesUri$"
       }
     }
+  ],
+  "MongoSettings": [
+    {
+      "ServerName": "$MongoServerName$",
+      "Database": "$MongoDatabase$",
+      "DumpFilePath": "$MongoDumpFilePath$",
+      "InitialVersionRestoreType": "$MongoInitialVersionRestoreType$",
+      "CompressedFile": "$MongoCompressedFile$"
+    }
   ]
 }
