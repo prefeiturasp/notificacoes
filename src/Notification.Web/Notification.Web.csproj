@@ -74,9 +74,9 @@
     <Content Include="common\js\lib\pt_br.js" />
     <Content Include="common\js\lib\xml2json.min.js" />
     <Content Include="build-tasks.wpp.targets" />
-    <None Include="config.xml">
+    <Content Include="config.xml">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <Content Include="Gruntfile.js" />
     <Content Include="node_modules\angular-animate\angular-animate.js" />
     <Content Include="node_modules\angular-animate\angular-animate.min.js" />
