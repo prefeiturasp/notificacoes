@@ -153,6 +153,7 @@
     <Content Include="node_modules\angular-animate\LICENSE.md" />
     <Content Include="node_modules\angular-animate\package.json" />
     <Content Include="node_modules\angular-animate\README.md" />
+    <Content Include="MSTech.Data.Common.dll.config" />
     <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
     <Content Include="common\js\lib\plg-notify.min.js.map" />
     <None Include="Web.Debug.config">

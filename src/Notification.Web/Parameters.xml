@@ -5,6 +5,27 @@
     <parameterEntry kind="ProviderPath" scope="setAcl" />
   </parameter>
 
+  <parameter name="ConnectionString.CoreSSO" defaultValue="$ConnectionString.CoreSSO$"
+           description="Conexão com o banco de dado do CoreSSO." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+          scope="\\bin\\MSTech.Data.Common.dll.config$"
+          match="/configuration/connectionStrings/add[@name='CoreSSO']/@connectionString" />
+  </parameter>
+
+  <parameter name="ConnectionString.SGP" defaultValue="$ConnectionString.SGP$"
+             description="Conexão com o banco de dado do SGP." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+        scope="\\bin\\MSTech.Data.Common.dll.config$"
+        match="/configuration/connectionStrings/add[@name='SGP']/@connectionString" />
+  </parameter>
+
+  <parameter name="ConnectionString.IDS" defaultValue="$ConnectionString.IDS$"
+             description="Conexão com o banco de dado do IDS." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+        scope="\\bin\\MSTech.Data.Common.dll.config$"
+        match="/configuration/connectionStrings/add[@name='IDS']/@connectionString" />
+  </parameter>
+
   <!--Identity-->
   <parameter name="URL_SIGGNALR" defaultvalue="$URL_SIGGNALR$" description="URL_SIGGNALR description." tags="">
     <parameterentry kind="XmlFile" match="/config/URL_SIGGNALR/text()" scope="\\config.xml$" />
