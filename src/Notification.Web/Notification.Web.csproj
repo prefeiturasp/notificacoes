@@ -191,6 +191,7 @@
     <Content Include="Parameters.xml" />
     <Content Include="register\register.controller.js" />
     <Content Include="register\register.view.html" />
+    <Content Include="version.xml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
