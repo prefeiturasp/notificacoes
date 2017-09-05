@@ -7,11 +7,9 @@
   </ItemGroup>
   <PropertyGroup>
     <CopyAllFilesToSingleFolderForPackageDependsOn>
-      IncludeConnectionStringFile;
       $(CopyAllFilesToSingleFolderForPackageDependsOn);
     </CopyAllFilesToSingleFolderForPackageDependsOn>
     <CopyAllFilesToSingleFolderForMsdeployDependsOn>
-      IncludeConnectionStringFile;
       $(CopyAllFilesToSingleFolderForMsdeployDependsOn);
     </CopyAllFilesToSingleFolderForMsdeployDependsOn>
   </PropertyGroup>
