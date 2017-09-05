@@ -4,11 +4,32 @@
     <parameterEntry kind="ProviderPath" scope="IisApp" />
     <parameterEntry kind="ProviderPath" scope="setAcl" />
   </parameter>
-  
-  <!--WebConfig-->  
+
+  <parameter name="ConnectionString.CoreSSO" defaultValue="$ConnectionString.CoreSSO$"
+          description="Conexão com o banco de dado do CoreSSO." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+          scope="\\bin\\MSTech.Data.Common.dll.config$"
+          match="/configuration/connectionStrings/add[@name='CoreSSO']/@connectionString" />
+  </parameter>
+
+  <parameter name="ConnectionString.SGP" defaultValue="$ConnectionString.SGP$"
+             description="Conexão com o banco de dado do SGP." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+        scope="\\bin\\MSTech.Data.Common.dll.config$"
+        match="/configuration/connectionStrings/add[@name='SGP']/@connectionString" />
+  </parameter>
+
+  <parameter name="ConnectionString.IDS" defaultValue="$ConnectionString.IDS$"
+             description="Conexão com o banco de dado do IDS." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+        scope="\\bin\\MSTech.Data.Common.dll.config$"
+        match="/configuration/connectionStrings/add[@name='IDS']/@connectionString" />
+  </parameter>
+
+  <!--WebConfig-->
   <parameter name="ConnectionString.Notification" defaultvalue="$ConnectionString.Notification$" description="Conexão com o banco de dados Notification." tags="">
-    <parameterentry kind="XmlFile" match="/configuration/connectionStrings/add[@key='Notification']/@value" scope="\\web.config$" />
-  </parameter>  
+    <parameterentry kind="XmlFile" match="/configuration/connectionStrings/add[@name='Notification']/@connectionString" scope="\\web.config$" />
+  </parameter>
   <parameter name="urlIdentityServer" defaultvalue="$urlIdentityServer$" description="urlIdentityServer description." tags="">
     <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='urlIdentityServer']/@value" scope="\\web.config$" />
   </parameter>
@@ -21,5 +42,4 @@
   <parameter name="PasswordCredentialSignalRServer" defaultvalue="$PasswordCredentialSignalRServer$" description="PasswordCredentialSignalRServer description." tags="">
     <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='PasswordCredentialSignalRServer']/@value" scope="\\web.config$" />
   </parameter>
-
 </parameters>
