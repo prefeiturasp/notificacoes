@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Validador de estilo</title>
+
+</head>
+<body>
+
+<link href="http://10.10.10.37:5021/common/css/font.css" rel="stylesheet">
+<link href="http://10.10.10.37:5021/common/css/font-awesome.css" rel="stylesheet">
+<link href="http://10.10.10.37:5021/common/css/redactor.css" rel="stylesheet">
+<link href="http://10.10.10.37:5021/common/css/style.css" rel="stylesheet">
+<link href="http://10.10.10.37:5021/node_modules/angular-toastr/dist/angular-toastr.css" rel="stylesheet">
+<link href="css.css" rel="stylesheet">
+
+<!--Plugin-->
+<div class="plg">
+    <div draggable="true" class="float-menu plg-notify" style="left: 14px; top: 664px;">
+        <div class="circulo">
+            <div class="lateral"><a class="mover plg-notify-move">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z"></path>
+                </svg>
+            </a><a class="esconder plg-notify-hide">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"></path>
+                </svg>
+            </a></div>
+            <div class="sino plg-notify-bell">
+                <svg width="40" height="40" viewBox="0 0 24 24">
+                    <path d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z"></path>
+                </svg>
+            </div>
+            <a class="numeracao hitbox"><span class="plg-notify-counter" style="font-size: 14px;">17</span></a></div>
+        <div class="plg-notificacoes plgtab" style="left: 40px; top: 0px; z-index: 101;">
+            <button class="plgtablink novas visited" id="unread">Novas</button>
+            <button class="plgtablink lidas " id="read">Lidas</button>
+            <button class="plgtablink-setting plgtablink " title="Configurações">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="white"
+                          d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"></path>
+                </svg>
+            </button>
+            <div class="plg-list novas" id="unread">
+                <ul class="plgnot novas " id="7295a959-7aad-4dd9-8c5d-2ccf6a6a534b">
+                    <svg class="plg-nu" width="34" height="34" viewBox="0 0 24 24">
+                        <path fill="#d11d1d"
+                              d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path>
+                    </svg>
+                    <span>plg-notify.min.js.map</span>
+                    <div><p>plg-notify.min.js.map​​</p></div>
+                </ul>
+                <ul class="plgnot novas " id="444f072c-3374-4fe8-a9a2-cf27931f0403">
+                    <svg class="plg-nu" width="34" height="34" viewBox="0 0 24 24">
+                        <path fill="#d11d1d"
+                              d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path>
+                    </svg>
+                    <span>plg-notify.min.js.map</span>
+                    <div><p>plg-notify.min.js.map​</p></div>
+                </ul>
+                <ul class="plgnot novas " id="a7fc045b-cd59-4779-b704-e654d92ca726">
+                    <svg class="plg-nu" width="34" height="34" viewBox="0 0 24 24">
+                        <path fill="#d11d1d"
+                              d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path>
+                    </svg>
+                    <span>123</span>
+                    <div><p>123</p></div>
+                </ul>
+                <ul class="plgnot novas " id="7232274b-e244-47aa-8947-b7e60dec642d"><span>layout.domcounter.innerHTML = counter;</span>
+                    <div><p>layout.domcounter.innerHTML = counter;</p></div>
+                </ul>
+                <ul class="plgnot novas " id="54c46631-3af8-498a-b6f6-da8f7251c57f"><span>Validando notificação</span>
+                    <div><p>Validando se a notificação está sendo enviada pelo signalr enquanto o usuário está usando
+                        algum dos sistemas.​</p></div>
+                </ul>
+                <ul class="plgnot novas " id="f089dcb8-fac0-4f11-8d6d-2c1d7e501936">
+                    <span>What country are you from?</span>
+                    <div><p>What country are you from?​​</p>
+                        <p>​</p></div>
+                </ul>
+                <ul class="plgnot novas " id="6d83b0ad-87d7-4e60-974e-b67c83ff68fd"><span>q</span>
+                    <div><p>q</p>
+                        <p></p></div>
+                </ul>
+                <ul class="plgnot novas " id="291e20bb-1aee-4c97-b545-ec8ee739b172"><span>Alê</span>
+                    <div><p>Alê​</p></div>
+                </ul>
+                <ul class="plgnot novas " id="190f4913-d48e-4c5a-ad56-8f6e773c943e"><span>}</span>
+                    <div><p>}
+                    </p></div>
+                </ul>
+                <ul class="plgnot novas " id="1eeb6419-8aa7-4ee4-8c1d-a016a8de0449"><span>1499716057960</span>
+                    <div><p>​1499716057960​</p></div>
+                </ul>
+                <ul class="plgnot plg-pag"><span> Carregar mais</span>
+                    <div class="plgloader fix24 hide"></div>
+                </ul>
+            </div>
+            <div class="plg-list lidas" id="read">
+                <ul class="plgnot plg-pag">
+                    <div class="plgloader fix24"></div>
+                </ul>
+            </div>
+            <div class="plg-list configuracoes ">
+                <ul class="disturb interactive unselectable"><strong>Silenciar por:</strong>
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="gray"
+                              d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"></path>
+                    </svg>
+                    <p>1 dia</p></ul>
+                <ul title="Cancelar não perturbe" class="disturb cancelar"><p>Cancelar</p></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal-->
+<div class="plgmodal" id="plgmodal" aria-hidden="true" style="width: 50%;height:70%;top:10%;left:30%;">
+    <div class="plgmodal-dialog" style="top:0;">
+        <div class="plgmodal-header">
+            <h2 class="title">
+                Título Título Título Título Título Título Título Título Título Título Título Título Título Título
+                Título Título Título Título Título Título Título Título Título Título Título Título Título Título
+            </h2>
+            <div class="unselectable interactive plgmodal-xclose" aria-hidden="true">×</div>
+        </div>
+        <div class="plgmodal-body">
+            <p>
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+                Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal Texto do modal
+            </p>
+        </div>
+        <div class="plgmodal-footer">
+            <div class="sender">
+                <small>De:
+                    <span class="senderName"> Bli bla bla blu blu blu</span>
+                </small>
+            </div>
+            <div class="plgmodal-left plg-icon-btn unselectable" id="plg-modal-adiar" title="Ler mais tarde">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="gray"
+                          d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                </svg>
+            </div>
+            <div class="plgmodal-right">
+                <div class="plgmodal-btn-close interactive plgmodal-btn unselectable">Fechar</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Toaster-->
+
+<div class="unselectable plgsnackbar" style="opacity: 1;visibility: visible;bottom:50px;">
+    <div class="plgsnackbar-center" id="" title="Ler mensagem">
+        <span class="plgsnackbar-header">Titulo</span>
+        <span class="plgsnackbar-body">Conteúdo da mensagem</span>
+    </div>
+    <button class="plgsnackbar-right" title="Ler mais tarde">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+            <path fill="white"
+                  d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+        </svg>
+    </button>
+</div>
+
+</body>
+</html>

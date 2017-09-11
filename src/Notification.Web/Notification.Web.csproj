@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{66BAF58F-A6EE-442E-B9D2-1641C7AAC715}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Notification.Web</RootNamespace>
+    <AssemblyName>Notification.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="common\css\jquery-ui.min.css" />
+    <Content Include="common\css\redactor.css" />
+    <Content Include="common\fonts\fontawesome-webfont.svg" />
+    <Content Include="common\js\lib\date.js" />
+    <Content Include="common\js\lib\jquery-ui.min.js" />
+    <Content Include="common\js\lib\pt_br.js" />
+    <Content Include="common\js\lib\xml2json.min.js" />
+    <Content Include="build-tasks.wpp.targets" />
+    <Content Include="config.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="favicon.ico" />
+    <Content Include="Gruntfile.js" />
+    <Content Include="node_modules\angular-animate\angular-animate.js" />
+    <Content Include="node_modules\angular-animate\angular-animate.min.js" />
+    <Content Include="node_modules\angular-animate\index.js" />
+    <Content Include="node_modules\angular-resource\angular-resource.js" />
+    <Content Include="node_modules\angular-resource\angular-resource.min.js" />
+    <Content Include="node_modules\angular-resource\index.js" />
+    <Content Include="node_modules\angular-route\angular-route.js" />
+    <Content Include="node_modules\angular-route\angular-route.min.js" />
+    <Content Include="node_modules\angular-route\index.js" />
+    <Content Include="node_modules\angular-sanitize\angular-sanitize.js" />
+    <Content Include="node_modules\angular-sanitize\angular-sanitize.min.js" />
+    <Content Include="node_modules\angular-sanitize\index.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.css" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.min.css" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.min.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.tpls.js" />
+    <Content Include="node_modules\angular-toastr\dist\angular-toastr.tpls.min.js" />
+    <Content Include="node_modules\angular-toastr\gulpfile.js" />
+    <Content Include="node_modules\angular-toastr\index.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\progressbar\progressbar.directive.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\progressbar\progressbar.html" />
+    <Content Include="node_modules\angular-toastr\src\directives\toast\toast.controller.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\toast\toast.directive.js" />
+    <Content Include="node_modules\angular-toastr\src\directives\toast\toast.html" />
+    <Content Include="node_modules\angular-toastr\src\toastr.config.js" />
+    <Content Include="node_modules\angular-toastr\src\toastr.js" />
+    <Content Include="node_modules\angular\angular-csp.css" />
+    <Content Include="node_modules\angular\angular.js" />
+    <Content Include="node_modules\angular\angular.min.js" />
+    <Content Include="node_modules\angular\index.js" />
+    <Content Include="packages.config" />
+    <Content Include="common\css\style.scss" />
+    <Content Include="node_modules\angular-resource\angular-resource.min.js.map" />
+    <Content Include="node_modules\angular-resource\bower.json" />
+    <Content Include="node_modules\angular-resource\LICENSE.md" />
+    <Content Include="node_modules\angular-resource\package.json" />
+    <Content Include="node_modules\angular-resource\README.md" />
+    <Content Include="node_modules\angular-route\angular-route.min.js.map" />
+    <Content Include="node_modules\angular-route\bower.json" />
+    <Content Include="node_modules\angular-route\LICENSE.md" />
+    <Content Include="node_modules\angular-route\package.json" />
+    <Content Include="node_modules\angular-route\README.md" />
+    <Content Include="node_modules\angular-sanitize\angular-sanitize.min.js.map" />
+    <Content Include="node_modules\angular-sanitize\bower.json" />
+    <Content Include="node_modules\angular-sanitize\LICENSE.md" />
+    <Content Include="node_modules\angular-sanitize\package.json" />
+    <Content Include="node_modules\angular-sanitize\README.md" />
+    <Content Include="node_modules\angular\angular.min.js.gzip" />
+    <Content Include="node_modules\angular\angular.min.js.map" />
+    <Content Include="node_modules\angular\bower.json" />
+    <Content Include="node_modules\angular\LICENSE.md" />
+    <Content Include="node_modules\angular\package.json" />
+    <Content Include="node_modules\angular\README.md" />
+    <Content Include="package.json" />
+    <Content Include="common\fonts\fontawesome-webfont.eot" />
+    <Content Include="common\fonts\fontawesome-webfont.ttf" />
+    <Content Include="common\fonts\fontawesome-webfont.woff" />
+    <Content Include="common\fonts\fontawesome-webfont.woff2" />
+    <Content Include="common\fonts\FontAwesome.otf" />
+    <Content Include="node_modules\angular-toastr\.jshintrc" />
+    <Content Include="node_modules\angular-toastr\.npmignore" />
+    <Content Include="node_modules\angular-toastr\.travis.yml" />
+    <Content Include="node_modules\angular-toastr\bower.json" />
+    <Content Include="node_modules\angular-toastr\CHANGELOG.md" />
+    <Content Include="node_modules\angular-toastr\CONTRIBUTING.md" />
+    <Content Include="node_modules\angular-toastr\LICENSE" />
+    <Content Include="node_modules\angular-toastr\package.json" />
+    <Content Include="node_modules\angular-toastr\README.md" />
+    <Content Include="node_modules\angular-toastr\src\toastr.less" />
+    <Content Include="node_modules\angular-animate\angular-animate.min.js.map" />
+    <Content Include="node_modules\angular-animate\bower.json" />
+    <Content Include="node_modules\angular-animate\LICENSE.md" />
+    <Content Include="node_modules\angular-animate\package.json" />
+    <Content Include="node_modules\angular-animate\README.md" />
+    <None Include="Properties\PublishProfiles\Web-IIS03.pubxml" />
+    <Content Include="common\js\lib\plg-notify.min.js.map" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="callback.html" />
+    <Content Include="common\css\font-awesome.css" />
+    <Content Include="common\css\font.css" />
+    <Content Include="common\css\style.css" />
+    <Content Include="common\img\pattern.png" />
+    <Content Include="common\js\directives\directive.js" />
+    <Content Include="common\js\directives\menu.directive.js" />
+    <Content Include="common\js\factorys\factory.js" />
+    <Content Include="common\js\factorys\route.factory.js" />
+    <Content Include="common\js\filters\filter.js" />
+    <Content Include="common\js\lib\jquery.min.js" />
+    <Content Include="common\js\lib\jquery.signalR.min.js" />
+    <Content Include="common\js\lib\limiter.js" />
+    <Content Include="common\js\lib\oidc-client.js" />
+    <Content Include="common\js\lib\plg-notify.min.js" />
+    <Content Include="common\js\lib\redactor.js" />
+    <Content Include="common\js\module\app.module.js" />
+    <Content Include="common\js\services\http.register.services.js" />
+    <Content Include="common\js\services\model.js" />
+    <Content Include="common\js\services\notification.js" />
+    <Content Include="common\js\services\services.js" />
+    <Content Include="common\js\services\utils.js" />
+    <Content Include="common\view\menu.directive.html" />
+    <Content Include="config.js" />
+    <Content Include="index.html" />
+    <Content Include="Parameters.xml" />
+    <Content Include="register\register.controller.js" />
+    <Content Include="register\register.view.html" />
+    <Content Include="version.xml" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>6164</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:5003/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,20 @@
+{
+  "name": "plugin_notificacao",
+  "authors": [
+    "Alexandre Calil Blasizza Paravani <alexandre.paravani@mstech.com.br>"
+  ],
+  "description": "",
+  "main": "plugin.js",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "signalr": "^2.2.2"
+  }
+}

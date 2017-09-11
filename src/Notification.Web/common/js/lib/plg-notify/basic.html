@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>teste plugin</title>
+
+    <style>
+        * {
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+             -webkit-transition: all .3s ease;
+             -moz-transition: all .3s ease;
+             -ms-transition: all .3s ease;
+             -o-transition: all .3s ease;
+            transition: all .3s ease;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<!--<link href="css.css" rel="stylesheet">-->
+
+
+<!-- build:js scripts/main.min.js -->
+<script src="../jquery.min.js"></script>
+<script src="../jquery.signalR.min.js"></script>
+<script src="plugin.js"></script>
+<!--<script src="../plg-notify.min.js"></script>-->
+
+<script type="text/javascript">
+    //    new plgnotify();
+
+    new plgnotify(
+            {
+                url  :'http://notificacaoapi.mstech.com.br',
+                userId:
+                        "1538694e-12f2-e111-a89d-00155d02e702"
+                ,
+                groupSid:
+                        "23890515-6a57-e711-80c7-00155d000d29"
+                ,
+                tokenType: 'Bearer ',
+                token:
+                        "eyJhbGciOiJSUzI1NiIsImtpZCI6IjEyN0ExREZGMzgzM0E3NzM0MTQwRkUxRjVEMDEwODQ4NEUxNjgwMjciLCJ0eXAiOiJKV1QiLCJ4NXQiOiJFbm9kX3pnenAzTkJRUDRmWFFFSVNFNFdnQ2MifQ.eyJuYmYiOjE1MDEwNzIyNzQsImV4cCI6MTUwMTA3NTg3NCwiaXNzIjoiaHR0cDovL2lkZW50aXR5Lm1zdGVjaC5jb20uYnIiLCJhdWQiOlsiaHR0cDovL2lkZW50aXR5Lm1zdGVjaC5jb20uYnIvcmVzb3VyY2VzIiwibXN0ZWNoYXBpIl0sImNsaWVudF9pZCI6Im1zdGVjaGpzIiwic3ViIjoiMTUzODY5NGUtMTJmMi1lMTExLWE4OWQtMDAxNTVkMDJlNzAyIiwiYXV0aF90aW1lIjoxNTAxMDcyMjQ4LCJpZHAiOiJsb2NhbCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcHJpbWFyeXNpZCI6IjZjZjQyNGRjLThlYzMtZTAxMS05YjM2LTAwMTU1ZDAzMzIwNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiI2OTQxNTgzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoicm9uYWxkb2pvc2VzaWx2ZWlyYUBnbWFpbC5jb20xMTEiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwibXN0ZWNoYXBpIl0sImFtciI6WyJwd2QiXX0.k9eWhzt9Be7B_DuausVwdeBj6dldenDrHYig1uar_JWpB_dHW63zvEDW0yc_bcRMf2oR8w3F6_HdL8gSFrPanCgVSaD3hRNe80XGDc0ltATFlDUR_c9hRdUgVa5XwGcW204eCQXy1Rc6HPj3qbB03LRXRaqpejiyBraugTcw0CJse_SP98rHmyEcWrFWZrve1jIhaLLA5--0GtzNX2PiMcJ6MsiSpGLTFqp2xO0pJIS4uhr1IUftx9xWMtsgzmxEGEb0FNKB3r6Coo07xNNA_xPpX5N4J1wP5N4MwYIvR91XzdvPm6MbYHBQ1gq7sbPQIvrfQnjiQnsLHDkDMH362A"
+
+                ,ws:{
+                    url:'http://notificacaoservice.mstech.com.br/signalr/'
+                }
+            }
+    );
+
+</script>
+<!-- endbuild -->
+
+
+</body>
+</html>

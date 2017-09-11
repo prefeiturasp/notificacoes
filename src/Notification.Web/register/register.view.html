@@ -1,0 +1,460 @@
+    <div class="loading" ng-if="load"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i></div>
+    <menu ng-show="redirect"></menu>
+
+    <section class="body-content"  ng-if="VisionSystem.VisionId == 4 && listVisionSystem.length == 0">
+        <div class="headerCustom">
+            <div class="max-width-menor">
+                <h4><i class="fa fa-bell-o" aria-hidden="true"></i> CADASTRO DE NOTIFICAÇÃO<span> <strong>Usuários do tipo individual não tem permissão para acessar o sistema de notificação!</strong></span></h4>
+            </div>
+        </div>
+    </section>
+
+    <section class="body-content" ng-show="redirect" ng-if="VisionSystem.VisionId != 4 && listVisionSystem.length != 0">
+        <alert></alert>
+
+        <div class="headerCustom">
+            <div class="max-width-menor">
+                <h4><i class="fa fa-bell-o" aria-hidden="true"></i> CADASTRO DE NOTIFICAÇÃO<span> <strong>Escreva sua mensagem</strong> para enviar<br> uma notificação para os <strong>grupos de usuários</strong>.</span></h4>
+            </div>
+        </div>
+
+        <div class="remetente">
+            <div class="max-width-menor">
+                <input type="text" placeholder="Digite o nome do remetente" ng-model="filters.SenderName" maxlength="150">
+            </div>
+        </div>
+        <!--filtro por usuario-->
+        <div class="filtro-modal" ng-class="{'abre': showTypeFilter.typeUser, 'some': !showTypeFilter.typeUser}">
+          <div class="setas">
+            <span class="seta"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+            <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+          </div>
+
+          <div class="filtro-conteudo" ng-class="{'aparece': showTypeFilter.typeModalTypeUser, 'some': !showTypeFilter.typeModalTypeUser}">
+            <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
+            <h2>Escolha o tipo de usuário</h2>
+            <ul>
+                <li><input type="radio" class="primeiro" name="sistemas" value="Docente" ng-click="selectedTtypeUser('Docente')">Docente</li>
+                <li><input type="radio" class="primeiro" name="sistemas" value="Colaborador" ng-click="selectedTtypeUser('Colaborador')">Colaborador</li>
+            </ul>
+            <a class="continuar" ng-click="openFilterTypeUser($event)">Continuar filtro</a>
+        </div>
+            <!--usuário docente-->
+          <div class="filtro-conteudo filtro-por-usuario" ng-class="{'aparece': showTypeFilter.typeUserTeacher, 'some': !showTypeFilter.typeUserTeacher}">
+              <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
+            <h2>Filtro por tipo de usuário: Docente</h2>
+
+              <select name="status" ng-options="status.Name for status in listCalendar track by status.Name" ng-model="TeacherRecipient.Calendar"></select>
+            <div class="por-usuario">
+                <div class="divisao-filtro">
+                    <h3><input type="checkbox" class="primeiro" name="DRE" value="DRE" ng-checked="change.checkedDRE" ng-click="searchDREs()">DRE</h3>
+                    <ul>
+                        <li ng-repeat="item in listDREs" ng-if="!change.checkedDRE">
+                            <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.SchoolSuperior, item, TeacherRecipientClone.SchoolSuperior); resetdListClassification()">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedDRE">
+                            <input type="checkbox" class="primeiro" name="DRE" value="todas" checked disabled>Todas DREs
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="divisao-filtro">
+                    <h3><input type="checkbox" class="primeiro" name="Classificação" value="Classificação" ng-checked="change.checkedClassification" ng-click="getSchoolClassification(TeacherRecipient.SchoolSuperior);">Classificação</h3>
+                    <ul>
+                        <li ng-repeat="item in listListSchoolClassification" ng-if="!change.checkedClassification">
+                            <input type="checkbox" class="primeiro" name="Classificação" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.SchoolClassification, item, TeacherRecipientClone.SchoolClassification); resetListSchool()">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedClassification">
+                            <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas Classificações
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="divisao-filtro">
+                    <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool" ng-click="getSchool(TeacherRecipient.SchoolSuperior, TeacherRecipientClone.SchoolClassification)">Escola</h3>
+                    <ul>
+                        <li  ng-repeat="item in listSchool" ng-if="!change.checkedSchool">
+                            <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.School, item, TeacherRecipientClone.School); resetListTeam();">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedSchool">
+                            <input type="checkbox" class="primeiro" name="Escolas" value="todas" checked disabled>Todas as Escolas
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="divisao-filtro">
+                    <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getTeacherPosition()">Cargo</h3>
+                    <ul>
+                        <li ng-repeat="item in listPosition" ng-if="!change.checkedPosition">
+                            <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Position, item, TeacherRecipientClone.Position)">{{item.Name}}
+                        </li>
+
+                        <li ng-if="change.checkedPosition">
+                            <input type="checkbox" class="primeiro" name="Cargo" value="todas" checked disabled>Todos os Cargo
+                        </li>
+                    </ul>
+                </div>
+            </div>
+              <div class="por-usuario">
+                  <div class="divisao-filtro">
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Curso" ng-checked="change.checkedCourse" ng-click="getCorse()">Curso</h3>
+                      <ul>
+                          <li ng-repeat="item in listCorse"  ng-if="!change.checkedCourse">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Course, item, TeacherRecipientClone.Course); resetListCoursePeriod()">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedCourse">
+                              <input type="checkbox" class="primeiro" name="Curso" value="todas" checked disabled>Todos os Curso
+                          </li>
+                      </ul>
+                  </div>
+
+                  <div class="divisao-filtro">
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Período" ng-checked="change.checkedCoursePeriod" ng-click="getCoursePeriod()">Período</h3>
+                      <ul>
+                          <li ng-repeat="item in listCoursePeriod"  ng-if="!change.checkedCoursePeriod">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.CoursePeriod, item, TeacherRecipientClone.CoursePeriod); resetListDiscipline()">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedCoursePeriod">
+                              <input type="checkbox" class="primeiro" name="Período" value="todas" checked disabled>Todos os Período
+                          </li>
+                      </ul>
+                  </div>
+
+                  <div class="divisao-filtro">
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Disciplina" ng-checked="change.checkedDiscipline" ng-click="getDiscipline()">Disciplina</h3>
+                      <ul>
+                          <li ng-repeat="item in listDiscipline"  ng-if="!change.checkedDiscipline">
+                              <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Discipline, item, TeacherRecipientClone.Discipline); resetListTeam()">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedDiscipline">
+                              <input type="checkbox" class="primeiro" name="Disciplina" value="todas" checked disabled>Todas as Disciplinas
+                          </li>
+                      </ul>
+                  </div>
+
+                  <div class="divisao-filtro">
+                      <h3><input type="checkbox" class="primeiro" name="Cargo" value="Turma" ng-checked="change.checkedTeam" ng-model="change.checkedTeam" ng-click="getTeam()">Turma</h3>
+                      <ul>
+                          <li ng-repeat="item in listTeam"  ng-if="!change.checkedTeam">
+                                  <input type="checkbox" class="primeiro" name="Curso" value="{{item}}" ng-click="selectTypeFilter(TeacherRecipient.Team, item, TeacherRecipientClone.Team);">{{item.Name}}
+                          </li>
+
+                          <li ng-if="change.checkedTeam">
+                              <input type="checkbox" class="primeiro" name="Turma" value="todas" checked disabled>Todas as Turmas
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+              <a class="enviar" ng-click="emitFilters('TeacherRecipient', TeacherRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+          </div>
+
+            <!--usuário colaborador-->
+          <div class="filtro-conteudo filtro-por-usuario" ng-class="{'aparece': showTypeFilter.typeUserContributor, 'some': !showTypeFilter.typeUserContributor}">
+                <a class="fechar" ng-click="closeModal($event, 'user')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>Filtro por tipo de usuário: Colaborador</h2>
+              <select name="calendar" ng-options="status.Name for status in listCalendar track by status.Name" ng-model="ContributorRecipient.Calendar"></select>
+                <div class="por-usuario">
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="DRE" value="DRE" ng-checked="change.checkedDRE" ng-click="searchDREs()">DRE</h3>
+                        <ul>
+                            <li ng-repeat="item in listDREs" ng-if="!change.checkedDRE">
+                                <input type="checkbox" class="primeiro" name="DRE" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolSuperior, item, ContributorRecipientClone.SchoolSuperior); resetdListClassification()">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedDRE">
+                                <input type="checkbox" class="primeiro" name="DRE" value="todas" checked disabled>Todas DREs
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="Classificação" value="Classificação" ng-checked="change.checkedClassification" ng-click="getSchoolClassification(ContributorRecipient.SchoolSuperior);">Classificação</h3>
+                        <ul>
+                            <li ng-repeat="item in listListSchoolClassification" ng-if="!change.checkedClassification">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.SchoolClassification, item, ContributorRecipientClone.SchoolClassification ); resetListSchool()">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedClassification">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas as Classificações
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="por-usuario">
+
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="Escola" value="Escola" ng-checked="change.checkedSchool"  ng-click="getSchool(ContributorRecipient.SchoolSuperior, ContributorRecipient.SchoolClassification)">Escola</h3>
+                        <ul>
+                            <li  ng-repeat="item in listSchool" ng-if="!change.checkedSchool">
+                                <input type="checkbox" class="primeiro" name="grupos" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.School, item, ContributorRecipientClone.School)">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedSchool">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todas as Escolas
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="divisao-filtro">
+                        <h3><input type="checkbox" class="primeiro" name="Cargo" value="Cargo" ng-checked="change.checkedPosition" ng-click="getPosition()">Cargo</h3>
+                        <ul>
+                            <li ng-repeat="item in listPosition" ng-if="!change.checkedPosition">
+                                <input type="checkbox" class="primeiro" name="Cargo" value="{{item}}" ng-click="selectTypeFilter(ContributorRecipient.Position, item, ContributorRecipientClone.Position)">{{item.Name}}
+                            </li>
+
+                            <li ng-if="change.checkedPosition">
+                                <input type="checkbox" class="primeiro" name="Classificação" value="todas" checked disabled>Todos os Cargo
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <a class="enviar" ng-click="emitFilters('ContributorRecipient', ContributorRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i>Enviar</a>
+            </div>
+        </div>
+
+        <!--filtro por tipo de usuario-->
+        <div class="filtro-modal" ng-class="{'abre': showTypeFilter.typeVision, 'some': !showTypeFilter.typeVision}">
+            <div class="setas">
+                <span class="seta"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+            </div>
+
+            <div class="filtro-conteudo aparece">
+                <h2>Grupos de Sistemas</h2>
+                <ul>
+                    <li ng-repeat="vision in listVisionSystem" ng-if="vision.VisionId != 4">
+                        <input type="radio" class="primeiro" name="sistemas" value="{{vision}}" ng-click="selectedVisionGroupSystem(vision)">{{vision.Name}}
+                    </li>
+                </ul>
+                <a class="continuar" ng-if="VisionSystem.Name" ng-click="closeVisionGroupSystem()">Fechar</a>
+            </div>
+        </div>
+
+        <!--filtro por sistema-->
+        <div class="filtro-modal" ng-class="{'abre': showTypeFilter.typeSystem, 'some': !showTypeFilter.typeSystem}">
+            <div class="setas">
+                <span class="seta"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+            </div>
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showSystem, 'some': !showFilter.showSystem}">
+                <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>Sistemas</h2>
+                <ul>
+                    <li ng-repeat="systemType in listSystem">
+                        <input type="radio" class="primeiro" name="sistemas" value="{{systemType}}" ng-click="selectedSystemGroup('system', systemType)">{{systemType.Name}}
+                    </li>
+                </ul>
+                <a class="enviar" ng-if="SystemRecipient.SystemId.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="SystemRecipient.SystemId.length > 0" ng-click="nextFilterSytem(typeFilter.system)">Continuar filtro</a>
+            </div>
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showGroup, 'some': !showFilter.showGroup}">
+                <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>Grupos</h2>
+                <ul>
+                    <li ng-repeat="keyGroup in listGroups">
+                        <input type="radio" class="primeiro" name="grupos" value="{{keyGroup.Name}}" ng-click="selectedSystemGroup('group', keyGroup)" >{{keyGroup.Name}}
+                    </li>
+                </ul>
+                <a class="enviar" ng-if="SystemRecipient.GroupId.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipientClone.GroupId.VisionId, 1, SystemRecipient.GroupId.length)" ng-click="nextFilterSytem(typeFilter.group)">Continuar filtro</a>
+            </div>
+
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showDRE, 'some': !showFilter.showDRE}">
+                <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>DREs</h2>
+                <ul>
+                    <li ng-repeat="dre in listDREs">
+                        <input type="radio" class="primeiro" name="grupos" value="{{dre.Name}}" ng-click="selectedSystemGroup('dre', dre)">{{dre.Name}}
+                    </li>
+                </ul>
+                <a class="enviar" ng-if="SystemRecipient.AdministrativeUnitSuperior.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+                <a class="continuar" ng-if="checkVisionUser(SystemRecipientClone.GroupId.VisionId, 2, SystemRecipient.AdministrativeUnitSuperior.length)" ng-click="nextFilterSytem(typeFilter.dre)">Continuar filtro</a>
+            </div>
+
+            <div class="filtro-conteudo" ng-class="{'aparece': showFilter.showShool, 'some': !showFilter.showShool}">
+                <a class="fechar" ng-click="closeModal($event, 'system')"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <h2>Unidade administrativa</h2>
+                <ul>
+                    <li ng-repeat="adm in AdministrativeUnits">
+                        <input type="radio" class="primeiro" name="grupos" value="{{adm.Name}}" ng-click="selectedSystemGroup('school', adm)">{{adm.Name}}
+                    </li>
+                </ul>
+                <a class="enviar" ng-if="SystemRecipient.AdministrativeUnit.length > 0" ng-click="emitFilters('SystemRecipient', SystemRecipient)"><i class="fa fa-paper-plane" aria-hidden="true"></i> Enviar</a>
+            </div>
+        </div>
+
+        <!--modal que exibirar os registros selecionados por tipo de usuário-->
+        <div class="filtro-modal" ng-class="{'abre': showTypeFilter.typeViewRegisters, 'some': !showTypeFilter.typeViewRegisters}">
+            <div class="setas">
+                <span class="seta"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                <span class="seta"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+            </div>
+
+            <div class="filtro-conteudo aparece">
+                <h2>Destinatarios selecionados</h2>
+
+                <ul>
+                    <li class="lista-destinatarios"><strong>DREs</strong></li>
+                    <li ng-repeat="item in registresSelected.SchoolSuperior" >{{item.Name}}</li>
+                    <li ng-if="registresSelected.SchoolSuperior.length == 0" >Todas as DREs</li>
+
+                    <li class="lista-destinatarios"><strong>Classificações</strong></li>
+                    <li ng-repeat="item in registresSelected.SchoolClassification">{{item.Name}}</li>
+                    <li ng-if="registresSelected.SchoolClassification.length == 0">Todas as Classificações</li>
+
+                    <li class="lista-destinatarios"><strong>Escolas</strong></li>
+                    <li ng-repeat="item in registresSelected.School">{{item.Name}}</li>
+                    <li ng-if="registresSelected.School.length == 0">Todas as Escolas</li>
+
+                    <li class="lista-destinatarios"><strong>Cargos</strong></li>
+                    <li ng-repeat="item in registresSelected.Position">{{item.Name}}</li>
+                    <li ng-if="registresSelected.Position.length == 0">Todos os Cargos</li>
+
+                    <li class="lista-destinatarios" ng-if="registresSelected.Course"><strong>Cursos</strong></li>
+                    <li ng-repeat="item in registresSelected.Course">{{item.Name}}</li>
+                    <li ng-if="registresSelected.Course.length == 0">Todos os Cursos</li>
+
+                    <li class="lista-destinatarios" ng-if="registresSelected.CoursePeriod"><strong>Períodos</strong></li>
+                    <li ng-repeat="item in registresSelected.CoursePeriod">{{item.Name}}</li>
+                    <li ng-if="registresSelected.CoursePeriod.length == 0">Todos os Períodos</li>
+
+                    <li class="lista-destinatarios" ng-if="registresSelected.Discipline"><strong>Diciplinas</strong></li>
+                    <li ng-repeat="item in registresSelected.Discipline">{{item.Name}}</li>
+                    <li ng-if="registresSelected.Discipline.length == 0">Todas as Diciplinas</li>
+
+                    <li class="lista-destinatarios" ng-if="registresSelected.Team"><strong>Turmas</strong></li>
+                    <li ng-repeat="item in registresSelected.Team">{{item.Name}}</li>
+                    <li ng-if="registresSelected.Team.length == 0">Todas as Turmas</li>
+
+                </ul>
+                <a class="continuar" ng-click="closeModalViewRegisters()">Fechar</a>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a class="filtro sistemas" ng-click="openModalSystem($event)"><i class="fa fa-filter" aria-hidden="true"></i> Filtrar por sistema</a>
+            <a class="filtro user" ng-click="openModalUser($event)"><i class="fa fa-filter" aria-hidden="true"></i> Filtrar por usuário</a>
+        </div>
+
+        <form class="maxWidthNotf">
+            <div class="card selecionados">
+                <label class="accordion" ng-click="openCloseAccordion('typeAccordionSys')" ng-class="{'active': showTypeFilter.typeAccordionSys}">
+                    <i class="fa fa-chevron-down remove-transiton" aria-hidden="true" ng-if="showTypeFilter.typeAccordionSys"></i>
+                    <i class="fa fa-chevron-right remove-transiton" aria-hidden="true" ng-if="!showTypeFilter.typeAccordionSys"></i>
+                    Filtros por sistema:</label>
+                <div class="panel" style="display: none" ng-class="{'panel-block': showTypeFilter.typeAccordionSys}">
+                  <div ng-repeat="Recipient in listRecipient" class="bloco-panel">
+                    <p>
+                      {{Recipient.SystemId.Name}} <span ng-if="Recipient.GroupId.Name">/</span>
+                      {{Recipient.GroupId.Name}} <span ng-if="Recipient.AdministrativeUnitSuperior.Name">/</span>
+                      {{Recipient.AdministrativeUnitSuperior.Name}} <span ng-if="Recipient.AdministrativeUnit.Name">/</span>
+                      {{Recipient.AdministrativeUnit.Name}}
+                      <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('SystemRecipient', $index)"></i>
+                    </p>
+                  </div>
+                </div>
+                <label class="accordion" ng-click="openCloseAccordion('typeAccordionUser')" ng-class="{'active': showTypeFilter.typeAccordionUser}">
+                    <i class="fa fa-chevron-down remove-transiton" aria-hidden="true" ng-if="showTypeFilter.typeAccordionUser"></i>
+                    <i class="fa fa-chevron-right remove-transiton" aria-hidden="true" ng-if="!showTypeFilter.typeAccordionUser"></i>
+                    Filtros por usuário:
+                </label>
+                <div class="panel" style="display: none" ng-class="{'panel-block': showTypeFilter.typeAccordionUser}">
+                    <div ng-repeat="filter in listRecipientUser" class="bloco-panel">
+
+                        <p ng-click="openModalViewRegisters(filter)" ng-if="checkTypeRegisterUser(filter, 7)">
+                            <span>{{filter.userType}} /</span>
+                            <span ng-if="filter.SchoolSuperior.length == 0">Todas as DREs</span>
+                            <span ng-if="filter.SchoolSuperior.length > 0">Total de DREs {{filter.SchoolSuperior.length}}</span>/
+
+                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>
+                            <span ng-if="filter.SchoolClassification.length > 0">Total das Classificações {{filter.SchoolClassification.length}}</span>/
+
+                            <span ng-if="filter.School.length == 0">Todas as Escolas</span>
+                            <span ng-if="filter.School.length > 0">Total de Escolas {{filter.School.length}}</span>/
+
+                            <span ng-if="filter.Position.length == 0">Todos os Cargos</span>
+                            <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>
+                            <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('ContributorRecipient', $index)"></i>
+                        </p>
+
+                        <p ng-click="openModalViewRegisters(filter)" ng-if="checkTypeRegisterUser(filter, 11)">
+                            <span>{{filter.userType}} /</span>
+                            <span ng-if="filter.SchoolSuperior.length == 0">Todas as DREs</span>
+                            <span ng-if="filter.SchoolSuperior.length > 0">Total de DREs {{filter.SchoolSuperior.length}}</span>/
+
+                            <span ng-if="filter.SchoolClassification.length == 0">Todas as Classificações</span>
+                            <span ng-if="filter.SchoolClassification.length > 0">Total das Classificações {{filter.SchoolClassification.length}}</span>/
+
+                            <span ng-if="filter.School.length == 0">Todas as Escolas</span>
+                            <span ng-if="filter.School.length > 0">Total de Escolas {{filter.School.length}}</span>/
+
+                            <span ng-if="filter.Position.length == 0">Todos os Cargos</span>
+                            <span ng-if="filter.Position.length > 0">Total de Cargos {{filter.Position.length}}</span>/
+
+                            <span ng-if="filter.Course.length == 0">Todos os Cursos</span>
+                            <span ng-if="filter.Course.length > 0">Total de Cursos {{filter.Course.length}}</span>/
+
+                            <span ng-if="filter.CoursePeriod.length == 0">Todos os Períodos</span>
+                            <span ng-if="filter.CoursePeriod.length > 0">Total de Períodos {{filter.CoursePeriod.length}}</span>/
+
+                            <span ng-if="filter.Discipline.length == 0">Todas as Disciplinas</span>
+                            <span ng-if="filter.Discipline.length > 0">Total de Disciplinas {{filter.Discipline.length}}</span>/
+
+                            <span ng-if="filter.Team.length == 0">Todas as Turmas</span>
+                            <span ng-if="filter.Team.length > 0">Total de Turmas {{filter.Team.length}}</span>
+
+                            <i class="fa fa-times" aria-hidden="true" ng-click="removeFilterSelected('TeacherRecipient', $index)"></i>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card tipo-mensagem">
+                <label>Tipo da mensagem: </label>
+                <p class="off baixa type-message" ng-click="selectMessageType($event, 1)">Baixa</p>
+                <p class="off media type-message" ng-click="selectMessageType($event, 2)">Média</p>
+                <p class="off alta type-message" ng-click="selectMessageType($event, 3)">Alta</p>
+                <p class="off urgente type-message" ng-click="selectMessageType($event, 4)">Urgente</p>
+
+            </div>
+            <div class="card">
+                <div class="divisao">
+                    <div>
+                        <label>Data de envio da notificação</label>
+                        <input placeholder="dd-MM-yyyy" ui-date="dateOptions" type="text" ng-model="filters.DateStartNotification" ng-change="checkDateSelected('DateStartNotification')">
+                    </div>
+                    <div>
+                        <label>Data de validade da notificação</label>
+                        <input placeholder="dd-MM-yyyy" ui-date="dateOptions" type="text" ng-model="filters.DateEndNotification" ng-change="checkDateSelected('DateEndNotification')">
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="divisao">
+                    <div>
+                        <label>Título</label>
+                        <input type="text" ng-model="filters.Title" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="card mensagem ultimo">
+                <label>Mensagem </label>
+                <textarea id="content" name="content" rows="9" placeholder="Digite aqui sua mensagem" ></textarea>
+            </div>
+            <button class="enviar" ng-click="sendNotification()">Enviar</button>
+        </form>
+    </section>
+
+    <footer class="footer" ng-show="redirect" ng-if="VisionSystem.VisionId != 4 && listVisionSystem.length != 0">
+        <div class="max-width">
+            <p>Sistema para cadastro de notificação<span>Todos os direitos reservados.</span></p>
+        </div>
+    </footer>

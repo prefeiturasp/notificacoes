@@ -1,0 +1,28 @@
+{
+  "name": "plugin_notificacao",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "npm install && bower install",
+    "server": "./node_modules/.bin/http-server ../ -g -c-1 -o -q -p 5003",
+    "minify:css": "./node_modules/.bin/cleancss -O2 all -o css.min.css css.css",
+    "inject:css": "./node_modules/.bin/inject-files-cli ./plugin.template.js ./plugin.js",
+    "minify:js": "./node_modules/.bin/uglifyjs ./plugin.js -o ../plg-notify.min.js -c dead_code,drop_debugger,inline,drop_console,passes,hoist_vars,hoist_funs,reduce_vars -m -p bare_returns --source-map --overwrite",
+    "gzip": "gzip -9 -k `find ../ -type f -name '*.css' -o -name '*.js' -o -name '*.html'` -f",
+    "deploy": "npm run minify:css && npm run inject:css && npm run minify:js && npm run gzip && npm run clear",
+    "clear": "rm `find .. -type f -name '*.gz'`"
+  },
+  "author": "alexandre calil blasizza paravani",
+  "license": "MIT",
+  "devDependencies": {
+    "clean-css": "^4.1.4",
+    "clean-css-cli": "^4.1.5",
+    "html-minifier": "^3.5.2",
+    "http-server": "^0.10.0",
+    "inject-files": "^1.0.3",
+    "inject-files-cli": "^1.0.7",
+    "uglify-js": "^3.0.18",
+    "uglifyjs": "^2.4.11",
+    "usemin": "^0.5.0",
+    "usemin-cli": "^0.5.1"
+  }
+}

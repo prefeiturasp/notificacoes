@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" defaultValue="$SiteName$" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" />
+  </parameter>
+
+ <parameter name="ConnectionString.CoreSSO" defaultValue="$ConnectionString.CoreSSO$"
+          description="Conexão com o banco de dado do CoreSSO." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+          scope="\\bin\\MSTech.Data.Common.dll.config$"
+          match="/configuration/connectionStrings/add[@name='CoreSSO']/@connectionString" />
+  </parameter>
+
+  <parameter name="ConnectionString.SGP" defaultValue="$ConnectionString.SGP$"
+             description="Conexão com o banco de dado do SGP." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+        scope="\\bin\\MSTech.Data.Common.dll.config$"
+        match="/configuration/connectionStrings/add[@name='SGP']/@connectionString" />
+  </parameter>
+  
+  <parameter name="ConnectionString.IDS" defaultValue="$ConnectionString.IDS$"
+             description="Conexão com o banco de dado do IDS." tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile"
+        scope="\\bin\\MSTech.Data.Common.dll.config$"
+        match="/configuration/connectionStrings/add[@name='IDS']/@connectionString" />
+  </parameter>
+  
+  <!--WebConfig-->  
+  <parameter name="ConnectionString.Notification" defaultvalue="$ConnectionString.Notification$" description="Conexão com o banco de dados Notification." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/connectionStrings/add[@key='Notification']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="urlIdentityServer" defaultvalue="$urlIdentityServer$" description="urlIdentityServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='urlIdentityServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="scopesIdentityServer" defaultvalue="$scopesIdentityServer$" description="scopesIdentityServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='scopesIdentityServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="NotificationSite" defaultvalue="$NotificationSite$" description="NotificationSite description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='NotificationSite']/@value" scope="\\web.config$" />
+  </parameter>  
+  <parameter name="UrlSignalRServerHub" defaultvalue="$UrlSignalRServerHub$" description="UrlSignalRServerHub description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='UrlSignalRServerHub']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="UserCredentialSignalRServer" defaultvalue="$UserCredentialSignalRServer$" description="UserCredentialSignalRServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='UserCredentialSignalRServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="PasswordCredentialSignalRServer" defaultvalue="$PasswordCredentialSignalRServer$" description="PasswordCredentialSignalRServer description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='PasswordCredentialSignalRServer']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="UserCredentialBasicAuth" defaultvalue="$UserCredentialBasicAuth$" description="UserCredentialBasicAuth description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='UserCredentialBasicAuth']/@value" scope="\\web.config$" />
+  </parameter>
+  <parameter name="PasswordCredentialBasicAuth" defaultvalue="$PasswordCredentialBasicAuth$" description="PasswordCredentialBasicAuth description." tags="">
+    <parameterentry kind="XmlFile" match="/configuration/appSettings/add[@key='PasswordCredentialBasicAuth']/@value" scope="\\web.config$" />
+  </parameter>
+  
+</parameters>

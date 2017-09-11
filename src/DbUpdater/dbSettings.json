@@ -1,0 +1,40 @@
+﻿{
+  "SystemId": "$SystemId$",
+  "DbSettings": [
+    {
+      "ProjectDatabase": "CoreSSO.Database",
+      "DeployConnectionString": "$DeployConnectionStringCore$",
+      "InitialVersionRestoreType": "None",
+      "BackupFilePath": "",
+      "Variables": {
+        "SystemName": "$SystemName$",
+        "UserName": "$UserName$",
+        "UserPass": "$UserPass$",
+        "UrlNotificacoesLogin": "$UrlNotificacoesLogin$"
+      }
+    },
+    {
+      "ProjectDatabase": "CoreIDS.Database",
+      "DeployConnectionString": "$DeployConnectionStringCoreIDS$",
+      "InitialVersionRestoreType": "None",
+      "BackupFilePath": "",
+      "Variables": {
+        "ClientIdMvc": "$ClientIdMvc$",
+        "ClientIdJs": "$ClientIdJs$",
+        "UrlNotificacoes": "$UrlNotificacoes$",
+        "UrlNotificacoesAPI": "$UrlNotificacoesAPI$",
+        "UrlCore": "$UrlCore$",
+        "UrlNotificacoesUri": "$UrlNotificacoesUri$"
+      }
+    }
+  ],
+  "MongoSettings": [
+    {
+      "ServerName": "$MongoServerName$",
+      "Database": "$MongoDatabase$",
+      "DumpFilePath": "$MongoDumpFilePath$",
+      "InitialVersionRestoreType": "$MongoInitialVersionRestoreType$",
+      "CompressedFile": "$MongoCompressedFile$"
+    }
+  ]
+}
