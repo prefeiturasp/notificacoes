@@ -3,8 +3,8 @@
 #tool "nuget:?package=GitVersion.CommandLine"
 #load "./build/ms-helpers.cake"
 #load "./build/ms-tasks.cake"
-#addin "Cake.Grunt"
-#addin "Cake.Npm"
+#addin nuget:?package=Cake.Grunt&version=0.11.0
+#addin nuget:?package=Cake.Npm&version=0.11.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
